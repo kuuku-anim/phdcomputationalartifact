@@ -1,0 +1,120 @@
+@prefix : <https://w3id.org/ontology/uslcp#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix xml: <http://www.w3.org/XML/1998/namespace>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix lkif-legal-action: <http://www.estrellaproject.org/lkif-core/legal-action.owl#>.
+@prefix lkif-mereology: <http://www.estrellaproject.org/lkif-core/mereology.owl#>.
+@prefix lkif-role: <http://www.estrellaproject.org/lkif-core/role.owl#>.
+@prefix wd: <http://www.wikidata.org/entity/>.
+@prefix wdt: <http://www.wikidata.org/prop/direct/>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix tvc: <http://www.essepuntato.it/2012/04/tvc/#>.
+@prefix ti: <http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#>.
+@prefix time: <http://www.w3.org/2006/time#>.
+
+@base <https://w3id.org/ontology/uslcpo#> .
+
+<https://w3id.org/ontology/uslcpo#> rdf:type owl:Ontology .
+
+#defines all prefixes used in at least one sh:sparql below.
+:PrefixesEmbeddedSHsparql sh:declare 
+	[sh:prefix"";sh:namespace"https://w3id.org/ontology/uslcp#"^^xsd:anyURI],
+	[sh:prefix"rdf";sh:namespace"http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI],
+	[sh:prefix"rdfs";sh:namespace"http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI],
+	[sh:prefix"owl";sh:namespace"http://www.w3.org/2002/07/owl#"^^xsd:anyURI],
+	[sh:prefix"xsd";sh:namespace"http://www.w3.org/2001/XMLSchema#"^^xsd:anyURI],
+	[sh:prefix"xml";sh:namespace"http://www.w3.org/XML/1998/namespace"^^xsd:anyURI],
+	[sh:prefix"lkif-legal-action";sh:namespace"http://www.estrellaproject.org/lkif-core/legal-action.owl#"^^xsd:anyURI],
+	[sh:prefix"lkif-mereology";sh:namespace"http://www.estrellaproject.org/lkif-core/mereology.owl#"^^xsd:anyURI],
+	[sh:prefix"lkif-role";sh:namespace"http://www.estrellaproject.org/lkif-core/role.owl#"^^xsd:anyURI],
+	[sh:prefix"wd";sh:namespace"http://www.wikidata.org/entity/"^^xsd:anyURI],
+	[sh:prefix"wdt";sh:namespace"http://www.wikidata.org/prop/direct/"^^xsd:anyURI],
+	[sh:prefix"tvc";sh:namespace"http://www.essepuntato.it/2012/04/tvc/#"^^xsd:anyURI],
+	[sh:prefix"ti";sh:namespace"http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#"^^xsd:anyURI],
+	[sh:prefix"time";sh:namespace"http://www.w3.org/2006/time#"^^xsd:anyURI].
+
+###########################################################################################################
+#
+
+#this shape checks that the date for a closed area is not within the start and end dates for a license.
+:CheckClosedAreaIsNotWithinTheStartOrEndDateOfAnyLicense rdf:type sh:NodeShape; sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "{$this} is invalid: the closed area date is within the the start and end date of a license" ;
+sh:select """SELECT $this ?cad ?lsd ?led ?elsd ?eled
+WHERE
+{
+$this :has-closed-area-date ?cad.
+$this :has-licence-start-date ?lsd.
+$this :has-licence-end-date ?led.
+$this :has-extended-licence-start-date ?elsd.
+$this :has-extended-licence-end-date ?eled.
+FILTER((?cad>=?lsd)&&(?cad<=?led)||(?cad>=?elsd)&&(?cad<=?eled)).
+}"""
+];
+sh:targetObjectsOf :has-closed-area-date.
+
+#this shape checks that the date for a closed area is not within the start and end dates for a petroleum agreement.
+:CheckClosedAreaIsNotWithinTheStartOrEndDateOfAnyPetroleumAgreement rdf:type sh:NodeShape; sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "{$this} is invalid: the closed area date is within the start and end date of a petroleum agreement" ;
+sh:select """SELECT $this ?cad ?pasd ?paed ?epasd ?epaed
+WHERE
+{
+$this :has-closed-area-date ?cad.
+$this :has-petroleum-agreement-start-date ?pasd.
+$this :has-petroleum-agreement-end-date ?paed.
+$this :has-extended-petroleum-agreement-start-date ?epasd.
+$this :has-extended-petroleum-agreement-end-date ?epaed.
+FILTER((?cad>=?pasd)&&(?cad<=?paed)||(?cad>=?epasd)&&(?cad<=?epaed)).
+}"""
+];
+sh:targetObjectsOf :has-closed-area-date.
+
+#this shape checks that the date for a redefined area is not within the start and end dates for a license.
+:CheckRedefinedOpenedAreaIsNotWithinTheStartOrEndDateOfAnyLicense rdf:type sh:NodeShape; sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "{$this} is invalid: the redefined opened area date is within the start and end date of a license" ;
+sh:select """SELECT $this ?rad ?lsd ?led ?elsd ?eled
+WHERE
+{
+$this :has-redefinde-opened-area-date ?rad.
+$this :has-licence-start-date ?lsd.
+$this :has-licence-end-date ?led.
+$this :has-extended-licence-start-date ?elsd.
+$this :has-extended-licence-end-date ?eled.
+FILTER((?rad>=?lsd)&&(?rad<=?led)||(?rad>=?elsd)&&(?rad<=?eled)).
+}"""
+];
+sh:targetObjectsOf :has-redefinde-opened-area-date.
+
+#this shape checks that the date for a redefined opened area is not within the start and end dates for a petroleum agreement.
+:CheckRedefinedOpenedAreaIsNotWithinTheStartOrEndDateOfAnyPetroleumAgreement rdf:type sh:NodeShape; sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "{$this} is invalid: the redefined area date is within the start and end date of a petroleum agreement" ;
+sh:select """SELECT $this ?rad ?pasd ?paed ?epasd ?epaed
+WHERE
+{
+$this :has-redefinde-opened-area-date ?rad.
+$this :has-petroleum-agreement-start-date ?pasd.
+$this :has-petroleum-agreement-end-date ?paed.
+$this :has-extended-petroleum-agreement-start-date ?epasd.
+$this :has-extended-petroleum-agreement-end-date ?epaed.
+FILTER((?rad>=?pasd)&&(?rad<=?paed)||(?rad>=?epasd)&&(?rad<=?epaed)).
+}"""
+];
+sh:targetObjectsOf :has-redefinde-opened-area-date.
+
+#this shape checks that all instances or individuals of the :SubContractArea are not subjects of the property :has-sub-contract-area.
+:CheckSubjectsOfHasSubContractAreaNotIndividualsOfSubContractArea rdf:type sh:NodeShape;
+    sh:sparql [
+        sh:prefixes :PrefixesEmbeddedSHsparql;
+        sh:message "{$this} is invalid: the subject is an instance of :SubcontractArea";
+        sh:select """
+            SELECT $this ?sca
+            WHERE
+            {
+                $this :has-sub-contract-area ?sca.
+                $this rdf:type :SubcontractArea.
+            }
+        """
+    ];
+    sh:targetSubjectsOf :has-sub-contract-area.
+

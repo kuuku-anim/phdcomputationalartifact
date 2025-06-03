@@ -1,0 +1,823 @@
+@prefix : <https://w3id.org/ontology/uslcp#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix xml: <http://www.w3.org/XML/1998/namespace>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix lkif-legal-action: <http://www.estrellaproject.org/lkif-core/legal-action.owl#>.
+@prefix lkif-mereology: <http://www.estrellaproject.org/lkif-core/mereology.owl#>.
+@prefix lkif-role: <http://www.estrellaproject.org/lkif-core/role.owl#>.
+@prefix wd: <http://www.wikidata.org/entity/>.
+@prefix wdt: <http://www.wikidata.org/prop/direct/>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix tvc: <http://www.essepuntato.it/2012/04/tvc/#>.
+@prefix ti: <http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#>.
+@prefix time: <http://www.w3.org/2006/time#>.
+@base <https://w3id.org/ontology/uslcpo#> .
+
+<https://w3id.org/ontology/uslcpo#> rdf:type owl:Ontology .
+
+###########################################################################################################
+#
+#	Classes and individuals to describe the entities operating in the oil and gas domain. 
+#	Classes are subclasses of those in http://www.estrellaproject.org/lkif-core/legal-action.owl#
+#	Some relevant concepts are imported from Wikidata, e.g., the individual "Petroleum Commission" 
+#	(https://www.wikidata.org/wiki/Q85793009).
+#
+
+#disjoint relationship between the super classes.
+lkif-legal-action:Public_Body owl:disjointWith lkif-legal-action:Company, :Department, :Committee, lkif-legal-action:Natural_Person, wd:Q231002, lkif-role:Role.
+lkif-legal-action:Company owl:disjointWith :Department, :Committee, lkif-legal-action:Natural_Person, wd:Q231002, lkif-role:Role.
+:Department owl:disjointWith :Committee, lkif-legal-action:Natural_Person, wd:Q231002, lkif-role:Role.
+:Committee owl:disjointWith lkif-legal-action:Natural_Person, wd:Q231002, lkif-role:Role.
+lkif-legal-action:Natural_Person owl:disjointWith wd:Q231002, lkif-role:Role.
+wd:Q231002 owl:disjointWith lkif-role:Role.
+
+
+###########################################################################################################
+
+
+:OilCompany rdf:type owl:Class;
+	rdfs:subClassOf lkif-legal-action:Company;
+	rdfs:comment "the set of all companies that undertake E&P activities I.E., they undertake exploration and production activities.".
+
+:ServiceProvider rdf:type owl:Class;
+	rdfs:subClassOf [rdf:type owl:Class; owl:unionOf (lkif-legal-action:Company lkif-legal-action:Natural_Person)];
+	rdfs:comment "the set of companies or individuals that have a petroleum subcontract or any other contract to provide needed services to contractors, licensees or even other subcontractors.".
+
+:has-description rdf:type owl:DatatypeProperty;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (wd:Q285759 )];
+rdfs:range xsd:string;
+rdfs:comment "this property associates every individual that needs a textual description with the string that contains the description.".
+
+#:is-awardee-of-project rdf:type owl:ObjectProperty;
+#rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+#rdfs:range :Project;
+#rdfs:comment "this property associates an awarded project  with the oil company or service provider which was the awardee of that project".
+
+:is-awardee-of-contract rdf:type owl:ObjectProperty;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+rdfs:range wd:Q93288;
+rdfs:comment "this property associates a contract with the oil company or service provider which was the awardee of that contract".
+
+#:is-awardee-of-purchase-order rdf:type owl:ObjectProperty;
+#rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+#rdfs:range wd:Q643327;
+#rdfs:comment "this property associates a purchase order with the oil company or service provider which was the awardee of that purchase order".
+
+#LIVIO: I don't understand this property. Which payment are you talking about? Who is the payer... the government? The clients?
+#kuuku: yes, to some extent, The client. in this case, the payment is coming from the company to whom the service was rendered to.
+#LIVIO: Ok, let's leave the property for now. It seems to me it's a more complex object because you should also model "the company to whom the service was rendered to". Also, this payment refers to an year, but... where is the modelling of this year?
+#kuuku: yes, i was thinking that since at the end of the day, this property can only exist if the companies have provided the said information in one of the document, then we should rather generate a shacl rule which updates this ontology by adding the payor, the payee and the amount for every year. because that information will be in the document the companies submit. so all this ontology would have is payments received, the paor and the payee for every year. or even every quarter of the year where appropriate. so for instance, 2021, would have the said information and it will come from the 2021 submitted document, same for the continuous years, and if applicable, same for every quarter in a year onwards.
+
+#:has-awarded-project rdf:type owl:ObjectProperty;
+#rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+#rdfs:range :Project;
+#rdfs:comment "this property associates a project  with the oil company or service provider which awarded  that project".
+
+#:Project rdf:type owl:Class;
+#rdfs:comment "this classifies all the projects undertaken by companies".
+
+:has-awarded-contract rdf:type owl:ObjectProperty;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+rdfs:range wd:Q93288;
+rdfs:comment "this property associates a contract with the oil company or service provider which awarded that contract".
+
+#:has-awarded-purchase-order rdf:type owl:ObjectProperty;
+#rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+#rdfs:range wd:Q643327;
+#rdfs:comment "this property associates a purchase order with the oil company or service provider which awarded that purchase order".
+
+#:has-research-and-development-project rdf:type owl:ObjectProperty;
+#rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+#rdfs:range :ResearchAndDevelopmentProject;
+#rdfs:comment "this property associates the R&D project  with the oil company or service provider which is undertaking it".
+
+#:ResearchAndDevelopmentProject rdf:type owl:Class;
+#rdfs:subClassOf :Project;
+#rdfs:comment "this classifies all rnd projects".
+
+:has-asset-insured rdf:type owl:ObjectProperty;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+rdfs:range :InsuredAsset;
+rdfs:comment "this property associates the assets insured with the oil company or service provider which has insured  them".
+
+:InsuredAsset rdf:type owl:Class;
+rdfs:comment "this classifies all assets which have been insured by the companies".
+
+:has-asset-insured-description rdf:type owl:DatatypeProperty;
+rdfs:domain :InsuredAsset;
+rdfs:range xsd:string;
+rdfs:comment "this property associates the description or details of the assets with the oil company or service provider which has insured  them".
+
+
+#write a rule which gathers all the string entries for asset-insured as asset belonging to the oil company or service provider for that year.
+
+
+:has-asset-reinsured rdf:type owl:ObjectProperty;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+rdfs:range :ReInsuredAsset;
+rdfs:comment "this property associates the assets reinsured with the oil company or service provider which has reinsured  them".
+
+:ReInsuredAsset rdf:type owl:Class;
+rdfs:comment "this classifies all assets which have been reinsured by the companies".
+
+:has-asset-reinsured-description rdf:type owl:DatatypeProperty;
+rdfs:domain :ReInsuredAsset;
+rdfs:range xsd:string;
+rdfs:comment "this property associates the description of the reinsured assets with the oil company or service provider which has insured  them".
+
+
+
+#same for asset reinsured.
+
+:has-sum-for-asset-insured rdf:type owl:DatatypeProperty;
+rdfs:domain :InsuredAsset;
+rdfs:range xsd:integer;
+rdfs:comment "this property associates the sum  insured for the assets with the oil company or service provider which has insured  them".
+
+:has-sum-reinsured-for-asset rdf:type owl:DatatypeProperty;
+rdfs:domain :ReInsuredAsset;
+rdfs:range xsd:integer;
+rdfs:comment "this property associates the sum  reinsured for the assets with the oil company or service provider which has insured  them".
+
+
+:has-insurance-cover-type-for-asset rdf:type owl:DatatypeProperty;
+rdfs:domain :InsuredAsset;
+rdfs:range xsd:string;
+rdfs:comment "this property associates the types of insurance cover  for the assets with the oil company or service provider which has insured  them".
+
+:has-reason-or-explanation-for-not-insuring-or-reinsuring rdf:type owl:DatatypeProperty;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+rdfs:range xsd:string;
+rdfs:comment "this property specifies the reason why an oil company or a service provider did not insure or reinsure its assets at all or by a foreign insurance or reinsurance firm".
+
+
+
+
+:procure-legal-service rdf:type owl:ObjectProperty;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+rdfs:range :LegalService;
+rdfs:comment "this property associates the legal services obtained with the oil company or service provider".
+
+:has-past-six-month-legal-service rdf:type owl:DatatypeProperty;
+rdfs:domain :LegalService;
+rdfs:range xsd:string;
+rdfs:comment "this specifies the legal services obtained in the past six months".
+
+:has-projected-six-month-legal-service rdf:type owl:DatatypeProperty;
+rdfs:domain :LegalService;
+rdfs:range xsd:string;
+rdfs:comment "this specifies the legal services projected for the next six months".
+
+:has-past-six-month-legal-service-expenditure rdf:type owl:DatatypeProperty;
+rdfs:domain :LegalService;
+rdfs:range xsd:integer;
+rdfs:comment "this specifies the expenditure on legal services obtained in the past six months".
+
+:has-projected-six-month-legal-service-expenditure rdf:type owl:DatatypeProperty;
+rdfs:domain :LegalService;
+rdfs:range xsd:integer;
+rdfs:comment "this specifies the expenditure on legal services projected for the next six months".
+
+
+:LegalService rdf:type owl:Class;
+rdfs:comment "this classifies legal services".
+
+:procure-financial-service rdf:type owl:ObjectProperty;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+rdfs:range :FinancialService;
+rdfs:comment "this property associates the financial  services obtained with the oil company or service provider".
+
+:has-past-six-month-financial-service rdf:type owl:DatatypeProperty;
+rdfs:domain :FinancialService;
+rdfs:range xsd:string;
+rdfs:comment "this specifies the financial services obtained in the past six months".
+
+:has-projected-six-month-financial-service rdf:type owl:DatatypeProperty;
+rdfs:domain :FinancialService;
+rdfs:range xsd:string;
+rdfs:comment "this specifies the financial services projected for the next six months".
+
+:has-past-six-month-financial-service-expenditure rdf:type owl:DatatypeProperty;
+rdfs:domain :FinancialService;
+rdfs:range xsd:integer;
+rdfs:comment "this specifies the expenditure on financial services obtained in the past six months".
+
+:has-projected-six-month-financial-service-expenditure rdf:type owl:DatatypeProperty;
+rdfs:domain :FinancialService;
+rdfs:range xsd:integer;
+rdfs:comment "this specifies the expenditure on financial services projected for the next six months".
+
+
+:FinancialService rdf:type owl:Class;
+rdfs:comment "this classifies financial  services".
+
+
+:has-account-number rdf:type owl:DatatypeProperty;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+rdfs:range xsd:integer;
+rdfs:comment "this property associates the account number with the oil company or service provider".
+
+
+:has-bank-service-utilized rdf:type owl:ObjectProperty;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+rdfs:range :BankService;
+rdfs:comment "this property associates the bank services with the oil company or service provider which utilized them".
+
+:BankService rdf:type owl:Class;
+rdfs:subClassOf :FinancialService;
+rdfs:comment "this classifies bank services utilized by companies".
+
+:has-bank-service-description rdf:type owl:DatatypeProperty;
+rdfs:domain :BankService;
+rdfs:range xsd:string;
+rdfs:comment "this specifies the bank services used by the companies".
+
+:has-bank-service-expenditure rdf:type owl:DatatypeProperty;
+rdfs:domain :BankService;
+rdfs:range xsd:integer;
+rdfs:comment "this specifies the expenditure for the bank services used by the companies".
+
+
+
+#write a rule which gathers all the string entries for bank services as instances of the bank service clas.
+
+
+
+
+:has-registered-company-name rdf:type owl:DatatypeProperty;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+rdfs:range xsd:string;
+rdfs:comment "this property associates the registered name with the oil company or service provider".
+
+:has-registered-company-number   rdf:type owl:DatatypeProperty;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+rdfs:range xsd:string;
+rdfs:comment "this property associates the registered name with the oil company or service provider".
+
+
+
+
+:has-tax-identification-number rdf:type owl:DatatypeProperty;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+rdfs:range xsd:string;
+rdfs:comment "this property associates the tax identification number with an oil company or service provider".
+
+:has-date-of-incorporation rdf:type owl:DatatypeProperty;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+rdfs:range xsd:dateTime;
+rdfs:comment "this property associates the date of incorporation with an oil company or service provider".
+
+:has-date-of-business-commencement rdf:type owl:DatatypeProperty;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+rdfs:range xsd:dateTime;
+rdfs:comment "this property associates the date of business commencement  with an oil company or service provider".
+
+#:has-share-holder-and-percentage rdf:type owl:ObjectProperty;
+#rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+#rdfs:range :ShareHolderAndPercentage;
+#rdfs:comment "this property associates the shareholders and their share percentages with the oil companies or service providers they hold the shares in".
+
+#:ShareHolderAndPercentage rdf:type owl:Class;
+#rdfs:comment "this classifies all shareholders and their respective share percentages".
+
+:ServicesProvided      rdf:type owl:Class;
+rdfs:comment "this classifies the  Services Provided as stated on PC Permit".
+
+
+:has-service-provided rdf:type owl:ObjectProperty;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+rdfs:range :ServicesProvided      ;
+rdfs:comment "this property associates the services provided  with the oil company or service provider".
+
+#:has-company-postal-address rdf:type owl:DatatypeProperty;
+#rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+#rdfs:range xsd:string;
+#rdfs:comment "this property associates the postal-address with an oil company or service provider".
+
+
+
+#:has-company-house-or-plot-number    rdf:type owl:DatatypeProperty;
+#rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+#rdfs:range xsd:string;
+#rdfs:comment "this property associates the house-or-plot-number  with an oil company or service provider".
+
+#:has-company-street-name       rdf:type owl:DatatypeProperty;
+#rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+#rdfs:range xsd:string;
+#rdfs:comment "this property associates the street-name with an oil company or service provider".
+
+#:has-company-city-or-town           rdf:type owl:DatatypeProperty;
+#rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+#rdfs:range xsd:string;
+#rdfs:comment "this property associates the city-or-town with an oil company or service provider".
+
+#:has-company-region               rdf:type owl:DatatypeProperty;
+#rdfs:domain [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+#rdfs:range xsd:string;
+#rdfs:comment "this property associates the region  with an oil company or service provider".
+
+
+
+:JointVentureCompany  rdf:type owl:Class;
+	rdfs:subClassOf [rdf:type owl:Class; owl:unionOf (:ServiceProvider :OilCompany)];
+	rdfs:comment "the set of companies incorporated in Ghana, in accordance with the laws of the Republic of Ghana, between non-indigenous (foreign) Ghanaian companies and indigenous Ghanaian companies  for the purpose of undertaking petroleum activities".
+
+#:incorporated-in rdf:type owl:ObjectProperty;
+#rdfs:domain [rdf:type owl:Class; owl:unionOf (:ServiceProvider :OilCompany)];
+#rdfs:domain lkif-legal-action:Company;
+#rdfs:range wd:Q6256;
+#rdfs:comment "wd:Q6256 refers to countries. this object property indicate that a service provider or an oil company has been incorporated in a country I.E., properly registered as a company to do business in the said country.".
+
+#:has-date-of-incorporation rdf:type owl:DatatypeProperty;
+#rdfs:domain [rdf:type owl:Class; owl:unionOf (:ServiceProvider :OilCompany)];
+#rdfs:domain lkif-legal-action:Company;
+#rdfs:range xsd:date;
+#rdfs:comment "this property specifies the exact date an oil company or a service provider was incorporated in Ghana. according to LI 2204 as ammended, depending on the number of years an oil company or a service provider has been incorporated in Ghana, it assumes certain responsibilities. for example the percentage of ghanaian employees it ought to employ.".
+
+#:has-office-address rdf:type owl:DatatypeProperty;
+#rdfs:domain [rdf:type owl:Class; owl:unionOf (:ServiceProvider :OilCompany)];
+#rdfs:domain lkif-legal-action:Company;
+#rdfs:range xsd:string;
+#rdfs:comment "this object property indicate that a service provider or an oil company has its office at a specific address.".
+
+:NationalOilCompany rdf:type owl:Class;
+	rdfs:subClassOf :OilCompany;
+	owl:disjointWith :IndigenousGhanaianCompany, :nonIndigenousGhanaianCompany;
+	rdfs:comment "the set of all state owned oil companies, i.e., oil companies which have a large part of their shares held by the government of their resident or originating countries. (e.g., Saudi Aramco, GNPC, etc.)".
+
+:IndigenousGhanaianCompany  rdf:type owl:Class;
+	rdfs:subClassOf lkif-legal-action:Company;
+	owl:disjointWith :nonIndigenousGhanaianCompany, :NationalOilCompany;
+	rdfs:comment "the set of all private companies incorporated in Ghana under act 992 and fully owned by ghanaian/s and have at least 80% of their executive and senior management positions held by Ghanaians and 100% of their non-managerial and other positions held by Ghanaians".
+
+:nonIndigenousGhanaianCompany rdf:type owl:Class;
+	rdfs:subClassOf lkif-legal-action:Company;
+	owl:disjointWith :IndigenousGhanaianCompany, :NationalOilCompany;
+	rdfs:comment "the set of all companies which are not IndigenousGhanaianCompany nor National oil company.".			
+
+:InternationalOilCompany rdf:type owl:Class;
+	rdfs:subClassOf :OilCompany, :nonIndigenousGhanaianCompany;
+	rdfs:comment "the set of all large multinational corporations which are primarily involved in the exploration, production and sale of petroleum. they have quite a massive global presence and operate accross numerous countries and regions examples include, Tullow oil, ENI, etc.".
+			
+:RelevantAgency rdf:type owl:Class;
+	rdfs:subClassOf lkif-legal-action:Public_Body, wd:Q327333;
+	owl:disjointWith :OilCompany, :IndigenousGhanaianCompany, :nonIndigenousGhanaianCompany;
+	rdfs:comment "the set of all government agency under which competence petroleum activities are undertaking; the most important relevant agency in the upstream industry is the Petroleum Commission (Q85793009)".
+
+wd:Q85793009 rdf:type :RelevantAgency;
+rdfs:comment "wd:Q85793009  is the petroleum commission which is the main regulator of the upstream petroleum industry in Ghana.".
+
+:NationalInsuranceCommission rdf:type :RelevantAgency;
+rdfs:comment "  National Insurance Commission  which is the government agency in Ghana which is the regulator of the insurance space. all actors in the upstream industry that seeks to acquire insurance offshore services relating to petroleum activities must obtain the written approval of the national insurance commission".
+
+
+
+#:Department rdf:type owl:Class;
+#	rdfs:comment "the various departments of lkif-legal-action:Public_body and lkif-legal-action:Company; departments are connected with their companies or public bodies via the object property department-of".
+
+
+:Committee rdf:type owl:Class;
+rdfs:comment "The class for a group or body of people setup to perform a specific function either by a public body such as the petroleum commission, or a company".
+
+:LocalContentCommittee rdf:type :Committee;
+rdfs:comment "Local Content Committee  which is a committee established by the petroleum commission to deal with local content and participation".
+
+
+#:department-of rdf:type owl:ObjectProperty;
+#	rdfs:subPropertyOf lkif-mereology:component_of;
+#	owl:inverseOf :has-department;
+#	rdfs:domain :Department;
+#	rdfs:range [rdf:type owl:Class; owl:unionOf (lkif-legal-action:Company lkif-legal-action:Public_Body)];
+#	rdfs:comment "this property is used to show that the class department is a part of the company and or public body class".
+
+#:has-department rdf:type owl:ObjectProperty;
+#	rdfs:subPropertyOf lkif-mereology::composes;
+#	owl:inverseOf :department-of;
+#	rdfs:domain [rdf:type owl:Class; owl:unionOf (lkif-legal-action:Company lkif-legal-action:Public_Body)];
+#	rdfs:range :Department;
+#	rdfs:comment "this property is used to show that the class department is a part of the company and or public body class".
+			
+
+
+
+:Employee rdf:type owl:Class;
+	rdfs:subClassOf lkif-legal-action:Natural_Person;
+	owl:equivalentClass wd:Q703534;
+	rdfs:comment "the set of persons employed by public bodies and companies".
+
+:has-employee-name rdf:type owl:DatatypeProperty;
+rdfs:domain :Employee;
+rdfs:range xsd:string;
+rdfs:comment "this property specifies the name of an employee".
+
+#:has-employee-position  rdf:type owl:DatatypeProperty;
+#rdfs:domain :Employee;
+#rdfs:range xsd:string;
+#rdfs:comment "this property specifies the possition  of an employee held in a company".
+
+#:has-third-party-employee-agency-or-company  rdf:type owl:DatatypeProperty;
+#rdfs:domain :Employee;
+#rdfs:range xsd:string;
+#rdfs:comment "this property specifies the employment agency or company   of a third party employee held in a company".
+
+
+:has-employee-nationality rdf:type owl:DatatypeProperty;
+rdfs:domain :Employee;
+rdfs:range xsd:string;
+rdfs:comment "this property links an employee to his or her nationality".
+
+:has-employee-job-description  rdf:type owl:DatatypeProperty;
+rdfs:domain :Employee;
+rdfs:range xsd:string;
+rdfs:comment "this property specifies the job description  of an employee".
+
+#:has-employee-employment-category rdf:type owl:DatatypeProperty;
+#rdfs:domain :Employee;
+#rdfs:range xsd:string;
+#rdfs:comment "this property specifies the Employment Category  of an employee".
+
+
+:has-employee-required-skills-or-expertise rdf:type owl:DatatypeProperty;
+rdfs:domain :Employee;
+rdfs:range xsd:string;
+rdfs:comment "this property links the required-skills-or-expertise to an employee".
+
+:has-employee-gender rdf:type owl:DatatypeProperty;
+rdfs:domain :Employee;
+rdfs:range xsd:string;
+rdfs:comment "this property links an employee to his or her gender".
+
+
+#:has-employment-start-date rdfs:subPropertyOf   ti:hasIntervalStartDate;
+#rdfs:domain :Employee;
+#rdfs:comment "this property links the employment start date to the employee".
+
+#:has-employment-end-date rdfs:subPropertyOf   ti:hasIntervalEndDate;
+#rdfs:domain :Employee;
+#rdfs:comment "this property links the employment end date to the employee".
+
+#:has-employment-position-start-date rdfs:subPropertyOf   ti:hasIntervalStartDate;
+#rdfs:domain :Employee;
+#rdfs:comment "this property links the employment possition start date to the employee".
+
+#:has-employment-position-end-date rdfs:subPropertyOf   ti:hasIntervalEndDate;
+#rdfs:domain :Employee;
+#rdfs:comment "this property links the the employee possition end date to the employee".
+
+
+:GhanaianEmployee rdf:type owl:Class;
+	rdfs:subClassOf :Employee;
+	rdfs:comment "the set of Ghanaian persons employed by public bodies and companies".
+
+:ExpatriateEmployee rdf:type owl:Class;
+	rdfs:subClassOf :Employee;
+	rdfs:comment "the set of foreign persons employed by public bodies and companies".
+
+
+:employ rdf:type owl:ObjectProperty;
+	owl:inverseOf :employed-by;
+	rdfs:domain [rdf:type owl:Class; owl:unionOf (lkif-legal-action:Company lkif-legal-action:Public_Body)];
+	rdfs:range :Employee;
+	rdfs:comment "this property links the employees with the company and or the public body that employ them".
+
+:employed-by rdf:type owl:ObjectProperty;
+	owl:inverseOf :employ;
+	rdfs:domain :Employee;
+	rdfs:range [rdf:type owl:Class; owl:unionOf (lkif-legal-action:Company lkif-legal-action:Public_Body)];
+	rdfs:comment "this property links the employees with the company and or the public body that employ them".			
+
+:has-directly-employed rdfs:subPropertyOf   :employed-by;
+	rdfs:domain [rdf:type owl:Class; owl:unionOf (lkif-legal-action:Company lkif-legal-action:Public_Body)];
+	rdfs:range :Employee;
+	rdfs:comment "this property links the employees with the company and or the public body that employ them directly".			
+
+#:has-third-party-employee rdfs:subPropertyOf   :employed-by;
+#	rdfs:domain [rdf:type owl:Class; owl:unionOf (lkif-legal-action:Company lkif-legal-action:Public_Body)];
+#	rdfs:range :Employee;
+#	rdfs:comment "this property links the employees with the company and or the public body that employ them as third party employees".			
+
+
+wd:Q231002 rdf:type owl:Class;
+rdfs:comment "the set of all nationalities natural persons belong to".
+
+#wdt:P27 rdf:type owl:ObjectProperty;
+#rdfs:domain lkif-legal-action:Natural_Person;
+#rdfs:range wd:Q231002;
+#rdfs:comment "this property links individuals with their respective nationalities".
+
+wd:Q2073644 rdf:type owl:Class;
+	rdfs:subClassOf :ServiceProvider;
+rdfs:comment "this is the set of all brokerage firms".
+
+
+:IndigenousBrokerageFirm rdf:type owl:Class;
+	rdfs:subClassOf wd:Q2073644, :IndigenousGhanaianCompany;
+	rdfs:comment "the set of indigenous brokerage firms which all companies that undertake petroleum activities must insure their insurable risks related to their petroleum activities through".
+
+wd:Q285759 rdf:type owl:Class;
+	rdfs:subClassOf :ServiceProvider;
+	rdfs:comment "the class of insurance brokers".
+
+:IndigenousInsuranceBroker rdf:type owl:Class;
+	rdfs:subClassOf wd:Q285759;
+	rdfs:comment "the class of local Ghanaian insurance brokers".
+
+:has-insurance-name rdf:type owl:DatatypeProperty;
+rdfs:domain [rdf:type owl:Class ; owl:unionOf (wd:Q285759 wd:Q2073644)];
+rdfs:range xsd:string;
+rdfs:comment "this links the names of the insurance firms to the insurance firms".
+
+:has-insurance-office-location rdf:type owl:DatatypeProperty;
+rdfs:domain [rdf:type owl:Class ; owl:unionOf (wd:Q285759 wd:Q2073644)];
+rdfs:range xsd:string;
+rdfs:comment "this links the office locations  of the insurance firms to the insurance firms".
+
+
+:LegalPractitionerOrFirm rdf:type owl:Class;
+rdfs:subClassOf :ServiceProvider;
+rdfs:comment "this contains all lawfirms and legal practitioners".
+
+:has-name-of-legal-practitioner-or-firm rdf:type owl:DatatypeProperty;
+rdfs:domain :LegalPractitionerOrFirm;
+rdfs:range xsd:string;
+rdfs:comment "this specifies the names of the legal practitioners and or law firms".
+
+:has-legal-practitioner-or-firm-date-of-engagement rdf:type owl:DatatypeProperty;
+rdfs:domain :LegalPractitionerOrFirm;
+rdfs:range xsd:dateTime;
+rdfs:comment "this specifies the date on which the legal services of the legal practitioners and or law firms were employed".
+
+:has-location-of-legal-practitioner-or-firm rdf:type owl:DatatypeProperty;
+rdfs:domain :LegalPractitionerOrFirm;
+rdfs:range xsd:string;
+rdfs:comment "this specifies the location of the legal practitioners and or law firms".
+
+wd:Q613142 rdf:type owl:Class;
+rdfs:subClassOf :LegalPractitionerOrFirm ;
+rdfs:comment "Q613142 is the WikiData entity for law firms".
+
+
+
+:IndigenousLawFirm  rdf:type owl:Class;
+	rdfs:subClassOf wd:Q613142, :IndigenousGhanaianCompany, :ServiceProvider;
+	rdfs:comment "a set of all law firms which have their principal offices in Ghana. These are the only law firms a contractor, subcontractor, licensee or allied entity can employ to handle its legal services".
+
+:has-law-firm-name rdfs:subPropertyOf :has-name-of-legal-practitioner-or-firm;
+rdfs:domain wd:Q613142;
+rdfs:range xsd:string;
+rdfs:comment "this associates a law firm  to its name".
+
+
+wd:Q650241 rdf:type owl:Class;
+	rdfs:subClassOf :ServiceProvider;
+rdfs:comment "the class of all financial institutions".
+
+
+:GhanaianFinancialInstitution rdf:type owl:Class;
+	rdfs:subClassOf wd:Q650241, :IndigenousGhanaianCompany;
+	rdfs:comment "a set of all ghanaian institutions which provide financial services. all contractors, subcontractors, licensees and other allied entities should employ for their financial services related to their petroleum activities".
+
+:has-financial-institution-name rdf:type owl:DatatypeProperty;
+rdfs:domain wd:Q650241;
+rdfs:range xsd:string;
+rdfs:comment "this links a financial institution to its name".
+
+:has-financial-institution-location-or-branch rdf:type owl:DatatypeProperty;
+rdfs:domain wd:Q650241;
+rdfs:range xsd:string;
+rdfs:comment "this links a financial institution to its location or branch".
+
+:has-financial-engagement-date rdf:type owl:DatatypeProperty;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (wd:Q650241 wd:Q22687)];
+rdfs:range xsd:dateTime;
+rdfs:comment "this property associates the date of engagement for the financial  services with the oil company or service provider".
+
+
+wd:Q22687 rdf:type owl:Class;
+	rdfs:subClassOf :ServiceProvider;
+rdfs:comment "the class of banks".
+
+
+:IndigenousGhanaianBank rdf:type owl:Class;
+	rdfs:subClassOf wd:Q22687, :IndigenousGhanaianCompany;
+rdfs:comment "a set of banks that have 100% Ghanaian share holding or a majority Ghanaian share holding. all contractors, subcontractors, licensees and allied entities must maintain a bank account and transact business with".
+
+:has-bank-name rdf:type owl:DatatypeProperty;
+rdfs:domain wd:Q22687;
+rdfs:range xsd:string;
+rdfs:comment "this links a bank to its name".
+
+:has-bank-location-or-branch rdf:type owl:DatatypeProperty;
+rdfs:domain wd:Q22687;
+rdfs:range xsd:string;
+rdfs:comment "this links a bank to its location or branch".
+
+
+:ReinsuranceServiceProvider rdf:type owl:Class;
+rdfs:subClassOf :ServiceProvider;
+rdfs:comment "this classifies all the companies/people who provide reinsurance services".
+
+:IndigenousReinsuranceProvider rdf:type owl:Class;
+	rdfs:subClassOf lkif-legal-action:Natural_Person, :ReinsuranceServiceProvider;
+	rdfs:comment "the set of all indigenous reinsurance brokers who companies that undertake petroleum activities can employ to broker reinsurance on their behalves".
+
+:has-reinsurance-name rdf:type owl:DatatypeProperty;
+rdfs:domain :ReinsuranceServiceProvider;
+rdfs:range xsd:string;
+rdfs:comment "this links the names of the reinsurance service providers  to the reinsurance service providers".
+
+
+wd:Q40348 rdf:type owl:Class;
+rdfs:subClassOf :LegalPractitionerOrFirm ;
+rdfs:comment "Q40348  is the WikiData entity for legal practitioners or lawyers".
+
+
+:GhanaianLegalPractitioner rdf:type owl:Class;
+	rdfs:subClassOf wd:Q40348, lkif-legal-action:Natural_Person;
+	rdfs:comment "a set of all Ghanaian legal practitioners who hold a legal license to work as lawyers in Ghana and have their principal offices in Ghana. these are the only lawyers contractors, subcontractors, licensees and other allied entities are allowed to employ to handle their legal services".
+
+:has-legal-practitioner-name rdfs:subPropertyOf :has-name-of-legal-practitioner-or-firm;
+rdfs:domain wd:Q40348;
+rdfs:range xsd:string;
+rdfs:comment "this associates a legal practitioner to his or her name".
+
+#:UpstreamIndustryStakeHolder rdf:type owl:Class;
+#	rdfs:comment "a set of persons or entities that have interests and or influence in the upstream petroleum industry of Ghana. this include any person or entity be they governmental or private, that have an interest and or role to play in the upstream industry. E.G., the government of Ghana, the ministry responsible for the sector, the minister of the said ministry, regulatory bodies for the sector, such as the petroleum commission, the oil companies and the service providers, civil society organazation, etc.".
+
+:employ-the-service-of rdf:type owl:ObjectProperty;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (:ServiceProvider :OilCompany)];
+rdfs:range :ServiceProvider;
+rdfs:comment "this property specifies all upstream sector companies which have enlisted the services of a service provider such as banks, financial institutions, law firms, etc".
+
+:address-of-principal-law-office rdfs:subPropertyOf :has-location-of-legal-practitioner-or-firm;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (wd:Q613142 wd:Q40348)];
+rdfs:range xsd:string;
+rdfs:comment "this property specifies the exact office address of a Ghanaian law firm or Ghanaian legal practitioner. this is because, contractors, subcontractors, licensees and other allied entities must only retain law firms or lawyers who have their principal offices in Ghana.".
+
+:has-date-of-engagement rdfs:subPropertyOf :has-legal-practitioner-or-firm-date-of-engagement;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (wd:Q613142 wd:Q40348)];
+rdfs:range xsd:dateTime;
+rdfs:comment "this property specifies the date on which the law firm or lawyer was engaged by the oil company or service provider".
+
+
+
+
+###########################################################################################################
+#
+#    Classes to describe the roles operating in the oil and gas domain (subclasses of lkif-role:Role)
+#
+###########################################################################################################
+
+:UpstreamCompanyRole rdf:type owl:Class;		
+	rdfs:subClassOf lkif-role:Role;
+	rdfs:comment"all the roles played by companies in the upstream sector.".
+
+:contractor rdf:type :UpstreamCompanyRole;
+	rdfs:comment "a set of oil companies that have entered into a petroleum agreement with Ghana to undertake petroleum exploration and production activities under Act 919".
+
+:subcontractor rdf:type :UpstreamCompanyRole;
+rdfs:comment "a set of third parties (service providers) to whom the GNPC or a contractor has entered into a petroleum contract for the provision of services for petroleum operations".
+
+:licensee rdf:type :UpstreamCompanyRole;
+	rdfs:comment "a set of oil companies or service providers that have been granted a licence to undertake petroleum activities under the Act 919".
+
+:alliedEntity rdf:type :UpstreamCompanyRole;
+	rdfs:comment "a set of entities having some form of affiliation with the contractor, subcontractor or licensee such as subsidiaries or parent companies".
+
+#:operator rdf:type :UpstreamCompanyRole;
+#	rdfs:comment "a set of contractors or GNPC carrying out the petroleum activities on behalf of the contractors or the Corporation under a petroleum agreement or of the licensees under a licence".
+
+:TechnicalCoreStaff rdf:type owl:Class;
+	rdfs:subClassOf lkif-role:Role;
+	rdfs:comment "a set of employees of contractors, subcontractors, licensees and other allied entities who are employed to execute technical work. they include, engineers, technicians , geo-scientists among many others".
+
+:ExecutiveAndSeniorManagementPosition rdf:type owl:Class;
+	rdfs:subClassOf :ManagementStaff;
+	rdfs:comment "a set of high-level leadership roles within an organization. executive possitions include, CEO (Chief Executive Officer), COO (Chief Operating Officer), CFO (Chief Financial Officer), CMO (Chief Marketing Officer),, CTO (Chief Technology Officer), etc. seniour management possitions include, Vice President, managing Director, General Manager, etc.".
+
+:ManagementStaff rdf:type owl:Class;
+	rdfs:subClassOf lkif-role:Role;
+	rdfs:comment "a set of employees within an organization who are responsible for overseeing and directing the work of other employees. They are typically responsible for planning, organizing, coordinating, and controlling the resources of an organization to achieve its goals and objectives. Management staff can hold a variety of different roles within an organization, including: Executive management: This includes positions such as CEO, COO, and CFO, who are responsible for the overall direction and strategy of the organization. Middle management: These are managers who oversee specific departments or functions within an organization, such as marketing, operations, or human resources. Front-line management: These managers supervise employees who are directly involved in the production or delivery of goods or services, such as supervisors in a manufacturing plant or customer service team leaders".
+
+:OtherStaff rdf:type owl:Class;
+	rdfs:subClassOf lkif-role:Role;
+	rdfs:comment "a set of employees who are not management nor executive staff nor technical core staff".
+
+:JuniourLevelPosition rdf:type owl:Class;
+	rdfs:subClassOf :OtherStaff;
+	rdfs:comment "a set of employees who are below the employee hierarchy they may include, foreman, supervisor or any corresponding position designated as such".
+
+:MiddleLevelPosition rdf:type owl:Class;
+	rdfs:subClassOf :OtherStaff;
+	rdfs:comment "a set of employees who are in between juniour level staff and management staff on the employee hierarchy they may include, foreman, supervisor or any corresponding position designated as such".
+
+#:DesignatedAgentOfPetroleumCommission rdf:type owl:Class;
+#	rdfs:subClassOf lkif-role:Role;
+#	rdfs:comment "a set of agents designated by the petroleum commission to perform specific tasks".
+
+#:DesignatedOfficialOfPetroleumCommission rdf:type owl:Class;
+#rdfs:subClassOf lkif-role:Role;
+#rdfs:comment "a set of officials designated by the petroleum commission to perform specific tasks".
+
+:Minister rdf:type owl:Class;
+	rdfs:subClassOf lkif-role:Role;
+	rdfs:comment "a class of ministers such as the minister of energy, minister of finance, etc.".
+
+:ministerOfEnergy rdf:type :Minister;
+rdfs:comment "the role of minister of energy or the head of the Ministry of Energy".
+
+
+
+
+#sub-properties for lkif-role:plays.
+
+:plays-upstream-company-role rdfs:subPropertyOf lkif-role:plays;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (:ServiceProvider :OilCompany)];
+rdfs:domain lkif-legal-action:Company;
+rdfs:range :UpstreamCompanyRole;
+rdfs:comment "this property associates oil companies or service providers to their upstream company roles.".
+
+#:plays-upstream-company-employment-role rdfs:subPropertyOf lkif-role:plays;
+#rdfs:domain :Employee, wd:Q703534;
+#rdfs:range [rdf:type owl:Class; owl:unionOf (:TechnicalCoreStaff :ManagementStaff :OtherStaff)];
+#	rdfs:comment "this property relates employees to the roles listed in the range.".
+
+:play-public-body-employment-role rdfs:subPropertyOf lkif-role:plays;
+rdfs:domain :PublicBodyEmployee, wd:Q3796928;
+rdfs:range :Minister;
+	rdfs:comment "this property links employees of public bodies to their public service roles. in this case, there is only one public service role specified and it is the role of a minister.".
+
+:has-public-employee-name rdf:type owl:DatatypeProperty;
+rdfs:domain :PublicBodyEmployee, wd:Q3796928;
+rdfs:range xsd:string;
+rdfs:comment "this property specifies the name of the public body employee".
+
+#minister of energy.
+:Minister1 rdf:type wd:Q3796928;
+:has-public-employee-name "Minister 1"^^xsd:string;
+:play-public-body-employment-role :ministerOfEnergy.
+
+:Minister2 rdf:type wd:Q3796928;
+:has-public-employee-name "Minister 2"^^xsd:string;
+:play-public-body-employment-role :ministerOfEnergy.
+
+#    TVC (value in time and context) subclasses
+#
+#
+###########################################################################################################
+
+:EmploymentPeriod rdf:type owl:Class;
+	rdfs:subClassOf tvc:ValueInTime ;
+	rdfs:comment"this classifies all the value in time individuals for the employment periods.".
+
+:EmploymentRolePeriod rdf:type owl:Class;
+	rdfs:subClassOf tvc:ValueInTime ;
+	rdfs:comment"this classifies all the value in time individuals for the employment role periods.".
+
+###########################################################################################################
+#
+#    TVC (value in time and context) subproperties
+#
+###########################################################################################################
+
+ti:TimeInterval rdfs:subClassOf time:Interval.
+ti:hasIntervalStartDate rdfs:range xsd:dateTime.
+ti:hasIntervalEndDate rdfs:range xsd:dateTime.
+
+:has-employment-role rdfs:subPropertyOf tvc:hasValue;
+rdfs:domain :Employee;
+rdfs:range :EmploymentRolePeriod;
+rdfs:comment "this is to demonstrate that has employment role is a sub-property of has value which indicate that every employee has a certain employment role within a particular context and timeframe .".
+
+:has-employment rdfs:subPropertyOf tvc:hasValue;
+rdfs:domain :Employee;
+rdfs:range :EmploymentPeriod;
+rdfs:comment "this is a subproperty which specify that an employee is being employed by a company within a particular timeframe ".
+
+:within-employment-context rdfs:subPropertyOf tvc:withinContext;
+rdfs:domain :EmploymentRolePeriod;
+rdfs:range :EmploymentPeriod;
+rdfs:comment "this specifies the employment period and context in which the employee plays his or her employment role.".
+
+:at-time-of-employment rdfs:subPropertyOf tvc:atTime;
+rdfs:domain :EmploymentPeriod;
+rdfs:range ti:TimeInterval;
+rdfs:comment "this specifies the timeframe within which the employee is employed. (the start date and or the the end date)".
+
+:at-employment-role-time rdfs:subPropertyOf tvc:atTime;
+rdfs:domain :EmploymentRolePeriod;
+rdfs:range ti:TimeInterval;
+rdfs:comment "this specifies the timeframe within which the employee holds his or her employment role".
+
+
+:with-company rdfs:subPropertyOf :withValue;
+rdfs:domain :EmploymentPeriod;
+rdfs:range [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+rdfs:comment "this specifies that a particular employment period has a certain upstream company .".
+
+:with-role rdfs:subPropertyOf :withValue;
+rdfs:domain :EmploymentRolePeriod;
+rdfs:range [rdf:type owl:Class; owl:unionOf (:ManagementStaff :OtherStaff  :TechnicalCoreStaff)];
+rdfs:comment "this specifies that a particular employment role period has a certain management staff, technical core staff and other staff role.".

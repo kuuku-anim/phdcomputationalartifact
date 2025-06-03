@@ -1,0 +1,129 @@
+@prefix :  <https://w3id.org/ontology/uslcp#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xml:  <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+:PrefixesEmbeddedSHsparql sh:declare 
+	[sh:prefix"rdf";sh:namespace"http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI],
+	[sh:prefix"rdfs";sh:namespace"http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI],
+	[sh:prefix"xsd";sh:namespace"http://www.w3.org/2001/XMLSchema#"^^xsd:anyURI],
+	[sh:prefix"";sh:namespace"https://w3id.org/ontology/uslcp#"^^xsd:anyURI].
+	
+#The next shape checks the values in all fields of InsuranceAndReinsuranceServicesSubPlan
+:CheckInsuranceServiceProviderName rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-name-of-insurance-service-provider ;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-name-of-insurance-service-provider;
+sh:message "has-name-of-insurance-service-provider: name of insurance service provider  must not be empty"
+].
+
+:CheckOfficeLocationInsuranceServiceProviderName rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-office-location-of-insurance-service-provider ;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-office-location-of-insurance-service-provider;
+sh:message "has-office-location-of-insurance-service-provider: office-location-of-insurance-service-provider must not be empty"
+].
+
+:CheckAssetInsured rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-asset-insured ;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-asset-insured;
+sh:message "has-asset-insured: assets insured must not be empty"
+].
+
+:CheckSumInsured rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-sum-insured ;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-sum-insured;
+  sh:datatype xsd:decimal;
+  sh:minInclusive 1;
+sh:message "has-sum-insured: sum insured must not be empty and must be higher than zero"
+].
+
+:CheckTypeOfInsurance rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-type-of-insurance-cover ;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-type-of-insurance-cover;
+sh:message "has-type-of-insurance-cover: type of insurance cover must not be empty"
+].
+
+:CheckNameReinsuranceProvider rdf:type sh:NodeShape ;
+sh:targetSubjectsOf :has-name-of-reinsurance-service-provider ;
+sh:sparql [
+	sh:message "has-name-of-reinsurance-service-provider: If either 'Asset Reinsured', 'Sum Reinsured (USD)', or 'Reason for Omission and explanation' is specified, then this field cannot be empty." ;
+	sh:prefixes :PrefixesEmbeddedSHsparql;
+	sh:select """SELECT $this 
+		WHERE{	{$this :has-sum-reinsured ?sumReinsured .
+				 FILTER (STRLEN(STR(?sumReinsured)) > 0)
+				 OPTIONAL{$this :has-name-of-reinsurance-service-provider ?provider }
+				 FILTER(!BOUND(?provider)||STRLEN(STR(?provider))=0)}
+				UNION
+				{$this :has-asset-reinsured ?assetReinsured .
+				 FILTER(STRLEN(STR(?assetReinsured)) > 0)
+				 OPTIONAL{$this :has-name-of-reinsurance-service-provider ?provider}
+				 FILTER(!BOUND(?provider)||STRLEN(STR(?provider))=0)}
+				UNION
+				{$this :has-reason-for-omission-and-explanation ?reasonsForOmissionAndExplanation .
+				 FILTER(STRLEN(STR(?reasonsForOmissionAndExplanation)) > 0)
+				 OPTIONAL{$this :has-name-of-reinsurance-service-provider ?provider}
+				 FILTER(!BOUND(?provider)||STRLEN(STR(?provider))=0)}}"""].
+
+:CheckAssetReinsured rdf:type sh:NodeShape ;
+sh:targetSubjectsOf :has-asset-reinsured ;
+sh:sparql [
+	sh:message "has-asset-reinsured: If either 'Name of Reinsurance Service Provider', 'Sum Reinsured (USD)', or 'Reason for Omission and explanation' is specified, then this field cannot be empty." ;
+	sh:prefixes :PrefixesEmbeddedSHsparql;
+	sh:select """SELECT $this 
+		WHERE{	{$this :has-sum-reinsured ?sumReinsured .
+				 FILTER (STRLEN(STR(?sumReinsured)) > 0)
+				 OPTIONAL{$this :has-asset-reinsured ?provider }
+				 FILTER(!BOUND(?provider)||STRLEN(STR(?provider))=0)}
+				UNION
+				{$this :has-name-of-reinsurance-service-provider ?assetReinsured .
+				 FILTER(STRLEN(STR(?assetReinsured)) > 0)
+				 OPTIONAL{$this :has-asset-reinsured ?provider}
+				 FILTER(!BOUND(?provider)||STRLEN(STR(?provider))=0)}
+				UNION
+				{$this :has-reason-for-omission-and-explanation ?reasonsForOmissionAndExplanation .
+				 FILTER(STRLEN(STR(?reasonsForOmissionAndExplanation)) > 0)
+				 OPTIONAL{$this :has-asset-reinsured ?provider}
+				 FILTER(!BOUND(?provider)||STRLEN(STR(?provider))=0)}}"""].
+
+:CheckSumReinsured rdf:type sh:NodeShape ;
+sh:targetSubjectsOf :has-sum-reinsured ;
+sh:sparql [
+	sh:message "has-sum-reinsured: If any of 'Name of Reinsurance Service Provider', 'Asset Reinsured', or 'Reason for Omission and explanation' is specified, then this field cannot be empty." ;
+	sh:prefixes :PrefixesEmbeddedSHsparql;
+	sh:select """SELECT $this 
+		WHERE{	{$this :has-name-of-reinsurance-service-provider ?sumReinsured .
+				 FILTER (STRLEN(STR(?sumReinsured)) > 0)
+				 OPTIONAL{$this :has-sum-reinsured ?provider }
+				 FILTER(!BOUND(?provider)||STRLEN(STR(?provider))=0)}
+				UNION
+				{$this :has-asset-reinsured ?assetReinsured .
+				 FILTER(STRLEN(STR(?assetReinsured)) > 0)
+				 OPTIONAL{$this :has-sum-reinsured ?provider}
+				 FILTER(!BOUND(?provider)||STRLEN(STR(?provider))=0)}
+				UNION
+				{$this :has-reason-for-omission-and-explanation ?reasonsForOmissionAndExplanation .
+				 FILTER(STRLEN(STR(?reasonsForOmissionAndExplanation)) > 0)
+				 OPTIONAL{$this :has-sum-reinsured ?provider}
+				 FILTER(!BOUND(?provider)||STRLEN(STR(?provider))=0)}}"""].
+				 
+:CheckSumReinsuredPositiveNumber rdf:type sh:NodeShape ;
+sh:targetSubjectsOf :has-sum-reinsured ;
+sh:property [
+	sh:path :has-sum-reinsured ;
+	sh:or ( 
+		[sh:not [ sh:datatype xsd:decimal ] ]  # Allows non-decimal values, including empty string
+		[sh:datatype xsd:decimal; sh:minInclusive 1]  # Must be ≥ 1 if provided
+	) ;
+	sh:message "has-sum-reinsured: it must be higher than zero." ;
+].

@@ -1,0 +1,250 @@
+@prefix : <https://w3id.org/ontology/uslcp#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix xml: <http://www.w3.org/XML/1998/namespace>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix lkif-legal-action: <http://www.estrellaproject.org/lkif-core/legal-action.owl#>.
+@prefix lkif-mereology: <http://www.estrellaproject.org/lkif-core/mereology.owl#>.
+@prefix lkif-role: <http://www.estrellaproject.org/lkif-core/role.owl#>.
+@prefix wd: <http://www.wikidata.org/entity/>.
+@prefix wdt: <http://www.wikidata.org/prop/direct/>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix tvc: <http://www.essepuntato.it/2012/04/tvc/#>.
+@prefix ti: <http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#>.
+@prefix time: <http://www.w3.org/2006/time#>.
+@prefix xmldsig: <http://www.w3.org/2000/09/xmldsig#>.
+@base <https://w3id.org/ontology/uslcpo#> .
+
+<https://w3id.org/ontology/uslcpo#> rdf:type owl:Ontology .
+
+#defines all prefixes used in at least one sh:sparql below.
+:PrefixesEmbeddedSHsparql sh:declare 
+	[sh:prefix"";sh:namespace"https://w3id.org/ontology/uslcp#"^^xsd:anyURI],
+	[sh:prefix"rdf";sh:namespace"http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI],
+	[sh:prefix"rdfs";sh:namespace"http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI],
+	[sh:prefix"owl";sh:namespace"http://www.w3.org/2002/07/owl#"^^xsd:anyURI],
+	[sh:prefix"xsd";sh:namespace"http://www.w3.org/2001/XMLSchema#"^^xsd:anyURI],
+	[sh:prefix"xml";sh:namespace"http://www.w3.org/XML/1998/namespace"^^xsd:anyURI],
+	[sh:prefix"lkif-legal-action";sh:namespace"http://www.estrellaproject.org/lkif-core/legal-action.owl#"^^xsd:anyURI],
+	[sh:prefix"lkif-mereology";sh:namespace"http://www.estrellaproject.org/lkif-core/mereology.owl#"^^xsd:anyURI],
+	[sh:prefix"lkif-role";sh:namespace"http://www.estrellaproject.org/lkif-core/role.owl#"^^xsd:anyURI],
+	[sh:prefix"wd";sh:namespace"http://www.wikidata.org/entity/"^^xsd:anyURI],
+	[sh:prefix"wdt";sh:namespace"http://www.wikidata.org/prop/direct/"^^xsd:anyURI],
+	[sh:prefix"tvc";sh:namespace"http://www.essepuntato.it/2012/04/tvc/#"^^xsd:anyURI],
+	[sh:prefix"ti";sh:namespace"http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#"^^xsd:anyURI],
+	[sh:prefix"time";sh:namespace"http://www.w3.org/2006/time#"^^xsd:anyURI].
+
+###########################################################################################################
+#
+
+#this SHACL shape check that all ranges of ti:hasIntervalStartDate are xsd:dateTime datatypes.
+:CheckTiHasIntervalStartDateIsXSDdateTime rdf:type sh:NodeShape;
+	sh:property[
+		sh:datatype xsd:dateTime;
+		sh:message "Invalid datatype: it must be xsd:dateTime"];
+sh:targetObjectsOf ti:hasIntervalStartDate.
+
+#this SHACL shape check that all ranges of ti:hasIntervalEndDate are xsd:dateTime datatypes.
+:CheckTiHasIntervalEndDateIsXSDdateTime rdf:type sh:NodeShape;
+	sh:property[
+		sh:datatype xsd:dateTime;
+		sh:message "Invalid datatype: it must be xsd:dateTime"];
+sh:targetObjectsOf ti:hasIntervalEndDate.
+
+
+#this shape checks that the relevant agency which the public body employee mus consult in granting a petroleum reconnaissance licence is the petroleum commission.
+:CheckObjectOfPetroleumReconnaissanceLicenseGrantInConsultationWithAsPetroleumCommission rdf:type sh:NodeShape;
+sh:property[
+sh:hasValue wd:Q85793009;
+sh:message "Invalid object: it must be wd:Q85793009"];
+sh:targetObjectsOf :grant-in-consultation-with.
+
+#this shape checks that a reconnaissance licence shall not exceed 3years.
+:CheckDurationOfReconnaissanceLicenseIsNotMoreThanThreeYears rdf:type sh:NodeShape; sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "{$this} is invalid: the duration is more than three years" ;
+sh:select """SELECT $this ?rlsd ?rled
+WHERE
+{
+$this :has-petroleum-reconnaissance-licence-start-date ?rlsd.
+$this :has-petroleum-reconnaissance-licence-end-date ?rled.
+FILTER((?rled-?rlsd)>1095)
+}"""
+];
+sh:targetClass :PetroleumReconnaissanceLicence.
+
+#this shape checks that an extended reconnaissance licence shall not exceed two years.
+:CheckDurationOfExtendedReconnaissanceLicenseIsNotMoreThanTwoYears rdf:type sh:NodeShape; sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "{$this} is invalid: the duration is more than two years" ;
+sh:select """SELECT $this ?erlsd ?erled
+WHERE
+{
+$this :has-extended-petroleum-reconnaissance-licence-start-date ?erlsd.
+$this :has-extended-petroleum-reconnaissance-licence-end-date ?erled.
+FILTER((?erled-?erlsd)>730)
+}"""
+];
+sh:targetClass :ExtendedPetroleumReconnaissanceLicence.
+
+#this shape checks that the start date for an extended reconnaissance licence must come after the end date of a reconnaissance licence.
+:CheckTheStartDateForAnExtendedReconnaissanceLicenseComesAfterTheEndDateForAReconnaissanceLicense rdf:type sh:NodeShape; sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "{$this} is invalid: the start date of an extended reconnaissance licence comes before the end date of a reconnaissance licence" ;
+sh:select """SELECT $this ?erlsd ?erled ?rlsd ?rled
+WHERE
+{
+$this :has-petroleum-reconnaissance-licence-start-date ?rlsd.
+$this :has-petroleum-reconnaissance-licence-end-date ?rled.
+$this :has-extended-petroleum-reconnaissance-licence-start-date ?erlsd.
+$this :has-extended-petroleum-reconnaissance-licence-end-date ?erled.
+FILTER(?erlsd<?rled)
+}"""
+];
+sh:targetObbjectsOf :has-extended-petroleum-reconnaissance-licence-start-date.
+
+#this shape ensures that there is at least one contractor, i.e., oil company, for every petroleum agreement.
+:CheckWhetherHasPetroleumAgreementPartyHasAtLeastOneContractor rdf:type sh:NodeShape;
+	sh:property[
+		sh:path :has-petroleum-agreement-contractor-party;
+		sh:class :OilCompany;
+		sh:minCount 1;
+		sh:message "Invalid: it must have at least one oil company associated to it"];
+sh:targetObbjectsOf :has-petroleum-agreement-contractor-party.
+
+#this SHACL shape checks that the state party to petroleum agreement is Ghana.
+:CheckObjectOfHasPetroleumAgreementStatePartyAsGhana rdf:type sh:NodeShape;
+sh:property[
+sh:hasValue wd:Q117;
+sh:message "Invalid object: it must be wd:Q117"];
+sh:targetObjectsOf :has-petroleum-agreement-state-party.
+
+#this shape checks that a petroleum agreement shall not exceed 25 years.
+:CheckDurationOfPetroleumAgreementIsNotMoreThanTwentyFiveYears rdf:type sh:NodeShape; sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "{$this} is invalid: the duration is more than 25years" ;
+sh:select """SELECT $this ?pasd ?paed
+WHERE
+{
+$this :has-petroleum-agreement-start-date ?pasd.
+$this :has-petroleum-agreement-end-date ?paed.
+FILTER((?paed-?pasd)>9131.25)
+}"""
+];
+sh:targetClass :PetroleumAgreement.
+
+#this shape checks that an extended petroleum agreement shall not exceed 25 years.
+:CheckDurationOfExtendedPetroleumAgreementIsNotMoreThanTwentyFiveYears rdf:type sh:NodeShape; sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "{$this} is invalid: the duration is more than 25 years" ;
+sh:select """SELECT $this ?epasd ?epaed
+WHERE
+{
+$this :has-extended-petroleum-agreement-start-date ?epasd.
+$this :has-extended-petroleum-agreement-end-date ?epaed.
+FILTER((?epaed-?epasd)>9131.25)
+}"""
+];
+sh:targetClass :ExtendedPetroleumAgreement.
+
+#this shape checks that the start date for an extended petroleum agreement must come after the end date of a petroleum agreement.
+:CheckTheStartDateForAnExtendedPetroleumAgreementComesAfterTheEndDateForAPetroleumAgreement rdf:type sh:NodeShape; sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "{$this} is invalid: the start date of an extended petroleum agreement comes before the end date of a petroleum agreement" ;
+sh:select """SELECT $this ?epasd ?epaed ?pasd ?paed
+WHERE
+{
+$this :has-petroleum-agreement-start-date ?pasd.
+$this :has-petroleum-agreement-end-date ?paed.
+$this :has-extended-petroleum-agreement-start-date ?epasd.
+$this :has-extended-petroleum-agreement-end-date ?epaed.
+FILTER(?epasd<?paed)
+}"""
+];
+sh:targetObbjectsOf :has-extended-petroleum-agreement-start-date.
+
+#this shape ensures that the awarding  party I.e., oil companies or service providers should be only one for every subcontract.
+:CheckWhetherHasSubcontractAwardingPartyHasOnlyOneCompany rdf:type sh:NodeShape;
+	sh:property[
+		sh:path :has-subcontract-awarding-party;
+		sh:class [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+		sh:minCount 1;
+		sh:maxCount 1;
+		sh:message "Invalid: it must have exactly one oil company or service provider associated to it"];
+sh:targetObbjectsOf :has-subcontract-awarding-party.
+
+#this shape ensures that the awardee party I.e., oil companies or service providers should be at least one for every subcontract.
+:CheckWhetherHasSubcontractAwardeePartyHasAtLeastOneCompany rdf:type sh:NodeShape;
+	sh:property[
+		sh:path :has-subcontract-awardee-party;
+		sh:class [rdf:type owl:Class; owl:unionOf (:OilCompany :ServiceProvider)];
+		sh:minCount 1;
+		sh:message "Invalid: it must have at least one oil company or service provider associated to it"];
+sh:targetObbjectsOf :has-subcontract-awardee-party.
+
+
+#this shape checks that for the class subcontract written approvals,  the range of the property written approval by must be the petroleum commission.
+:PetroleumSubcontractWrittenApprovalShape rdf:type sh:NodeShape ;
+    sh:property [
+        sh:path :written-approval-by ;
+        sh:hasValue  wd:Q85793009 ;
+        sh:message "The property :written-approval-by must have the value :petroleumCommission." ;
+    ] ;
+sh:targetObbjectsOf :has-subcontract-awarding-party.
+
+#this shape checks that the object or range of the property issued by is the petroleum commission.
+:CheckObjectOfIssuedByIsPetroleumCommission rdf:type sh:NodeShape;
+sh:property[
+sh:hasValue wd:Q85793009;
+sh:message "Invalid object: it must be wd:Q85793009 (petroleum commission)"];
+sh:targetObjectsOf :issued-by.
+
+#this SHACL shape constrains the duration for the window of submission of the annual local content plan to 49 days.
+:CheckDurationOfSubmissionWindowLCP rdf:type sh:NodeShape; sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "Interval '{$this}' is NOT valid: the window of submission for the annual local content plan is more than 49 days" ;
+sh:select """SELECT $this ?sd ?ed
+WHERE
+{
+  $this rdf:type :SubmissionWindowLCP.
+  $this time:generalYear ?gy.
+  $this ti:hasIntervalStartDate ?sd.
+  $this ti:hasIntervalEndDate ?ed.
+  BIND(?ed - ?sd AS ?duration)
+  FILTER(?duration > "P49D"^^xsd:duration)
+}"""
+];
+sh:targetClass :SubmissionWindowLCP.
+
+#this checks whether the submission deadlines have only one year associated to them.
+:CheckWhetherGeneralYearHasOnlyOneYear rdf:type sh:NodeShape;
+	sh:property[
+		sh:path time:generalYear;
+		sh:datatype xsd:gYear;
+		sh:minCount 1;
+		sh:maxCount 1;
+		sh:message "Invalid: it must have exactly one year associated to it"];
+sh:targetClass :SubmissionDeadlineWindow.
+
+#this SHACL shape constrain all starting dates of the ti:TimeInterval to come before the end date of the ti:TimeInterval.
+:CheckDatesTIInterval rdf:type sh:NodeShape; sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "Interval '{$this}' is NOT valid: the starting date {?sd} comes after the end date {?ed}" ;
+sh:select """SELECT $this ?sd ?ed
+WHERE
+{
+$this ti:hasIntervalStartDate ?sd.
+$this ti:hasIntervalEndDate ?ed.
+FILTER(?sd>?ed).
+}"""
+];
+sh:targetClass ti:TimeInterval.
+
+#this shape checks that a party to a petroleum agreement must have a registration permit.
+:CheckThatAPartyToAPetroleumAgreementMustHaveARegistrationPermit rdf:type sh:NodeShape; sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "{$this} is invalid: the party to the petroleum agreement does not have a registration permit" ;
+sh:select """SELECT $this ?pap ?rpc
+WHERE
+{
+$this :has-petroleum-agreement-contractor-party  ?pap.
+$this :issued-to ?pap.
+NOT EXISTS{?rpc :issued-to ?pap}.
+}"""
+];
+sh:targetObbjectsOf :issued-to.
+
+
+

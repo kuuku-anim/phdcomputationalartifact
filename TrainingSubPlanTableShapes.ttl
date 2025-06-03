@@ -1,0 +1,196 @@
+@prefix :  <https://w3id.org/ontology/uslcp#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xml:  <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+:PrefixesEmbeddedSHsparql sh:declare 
+	[sh:prefix"rdf";sh:namespace"http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI],
+	[sh:prefix"rdfs";sh:namespace"http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI],
+	[sh:prefix"xsd";sh:namespace"http://www.w3.org/2001/XMLSchema#"^^xsd:anyURI],
+	[sh:prefix"";sh:namespace"https://w3id.org/ontology/uslcp#"^^xsd:anyURI].
+	
+#The next shape checks the values in all fields of AllStaffTrainingPlanRow
+:CheckRowFields rdf:type sh:NodeShape;
+sh:targetClass :AllStaffTrainingPlanRow ;
+
+
+#Name
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-name-trained-employee;
+sh:message "has-name-trained-employee: Name must not be empty"
+];
+sh:sparql [
+    sh:prefixes :PrefixesEmbeddedSHsparql;
+    sh:select """
+    SELECT $this
+    WHERE {
+        $this :has-name-trained-employee ?en. FILTER(STRLEN(?en)>0)		
+		NOT EXISTS{?der rdf:type :DirectEmploymentRow. ?der :has-name-direct-employee ?ende. FILTER(str(?ende)=str(?en))}
+    }""";
+    sh:message "has-name-trained-employee: The employee's name does not match any employee in Employment sub-plan ⇒ Direct employees.";
+];
+
+#position
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-position-trained-employee;
+sh:message "has-position-trained-employee: position must not be empty"
+];
+sh:sparql [
+    sh:prefixes :PrefixesEmbeddedSHsparql;
+    sh:select """
+    SELECT $this ?en ?ep
+    WHERE {
+        $this :has-name-trained-employee ?en. FILTER(STRLEN(?en)>0)		
+		$this :has-position-trained-employee ?ep. FILTER(STRLEN(?ep)>0)
+		NOT EXISTS{
+			?der rdf:type :DirectEmploymentRow. 
+			?der :has-name-direct-employee ?ende. FILTER(str(?ende)=str(?en))
+			?der :has-position-direct-employee ?epde. FILTER(str(?epde)=str(?ep))
+		}
+    }""";
+    sh:message "has-position-trained-employee: The table in the Employment sub-plan ⇒ Direct Employees does not include any employee with this name and position.";
+];
+
+#type of training.
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-type-of-training;
+sh:message "has-type-of-training: type of training must not be empty"
+];
+
+#details of training.
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-details-of-training;
+sh:message "has-details-of-training : details of training must not be empty"
+];
+
+#training outcomes
+sh:property[
+sh:pattern "^(?!\\s*$).+" ;
+sh:path :has-training-outcomes;
+sh:message "has-training-outcomes: training outcomes must not be empty"
+];
+
+#training cost in USD
+sh:property[
+sh:pattern "^(?!\\s*$).+" ;
+sh:path :has-training-cost-in-USD;
+sh:message "has-training-cost-in-USD: training cost must not be empty"
+];
+
+#training start date
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:select """SELECT $this ?sdp
+WHERE
+{
+$this :has-training-start-date ?sdp.
+FILTER(STRLEN(STR(?sdp))>0)#this checks that ?sdp is not empty.
+FILTER(!(REGEX(STR(?sdp), "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$")))
+}""";
+sh:message "has-training-start-date: training start date must not be empty"
+];
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:select """SELECT $this ?formattedDate
+WHERE
+{
+$this :has-training-start-date ?sdp.
+FILTER(datatype(?sdp)=xsd:dateTime)
+BIND(NOW() AS ?dateTime)
+BIND(STRDT(SUBSTR(STR(?sdp), 1, 10), xsd:date) AS ?date)
+BIND(STR(?date) AS ?dateStr)
+BIND(SUBSTR(?dateStr, 6, 2) AS ?month)
+BIND(SUBSTR(?dateStr, 9, 2) AS ?day)
+BIND(SUBSTR(?dateStr, 1, 4) AS ?year)
+BIND(CONCAT(?month, "/", ?day, "/", ?year) AS ?formattedDate)
+FILTER(?dateTime<?sdp).
+}""";
+sh:message "has-training-start-date: The specified date ({?formattedDate}) is in the future. Please enter a date that is today or earlier in the format mm/dd/yyyy";
+];
+sh:sparql[
+  sh:prefixes :PrefixesEmbeddedSHsparql;
+  sh:select """
+    SELECT $this ?formattedDate
+    WHERE {
+      $this :has-training-start-date ?esd.
+      FILTER(datatype(?esd) = xsd:dateTime)
+      BIND(STRDT("1960-01-01T00:00:00Z", xsd:dateTime) AS ?minDate)
+      BIND(STRDT(SUBSTR(STR(?esd), 1, 10), xsd:date) AS ?date)
+      BIND(STR(?date) AS ?dateStr)
+      BIND(SUBSTR(?dateStr, 6, 2) AS ?month)
+      BIND(SUBSTR(?dateStr, 9, 2) AS ?day)
+      BIND(SUBSTR(?dateStr, 1, 4) AS ?year)
+      BIND(CONCAT(?month, "/", ?day, "/", ?year) AS ?formattedDate)
+      FILTER(?esd<?minDate)
+    }
+  """;
+  sh:message "has-training-start-date: The specified date ({?formattedDate}) is before 01/01/1960. Please enter a date on or after 01/01/1960 in the format mm/dd/yyyy";
+];
+
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:select """SELECT $this ?esd?psd
+WHERE
+{
+$this :has-training-start-date ?esd.
+$this :has-training-end-date ?psd.
+FILTER(STRLEN(STR(?esd))>0)#this checks that ?esd is not empty.
+FILTER((REGEX(STR(?esd), "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$")))#this check it is in the right format.
+FILTER(STRLEN(STR(?psd))>0)#this checks that ?psd is not empty.
+FILTER((REGEX(STR(?psd), "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$")))#this check it is in the right format.
+FILTER(?psd<?esd).
+}""";
+sh:message "has-training-start-date: The training start date must precede the training end date.";
+];
+
+#training end date
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:select """SELECT $this ?sdp
+WHERE
+{
+$this :has-training-end-date ?sdp.
+FILTER(STRLEN(STR(?sdp))>0)#this checks that ?sdp is not empty.
+FILTER(!(REGEX(STR(?sdp), "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$")))
+}""";
+sh:message "has-training-end-date: training end date must not be empty"
+];
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:select """SELECT $this ?formattedDate
+WHERE
+{
+$this :has-training-end-date ?sdp.
+FILTER(datatype(?sdp)=xsd:dateTime)
+BIND(NOW() AS ?dateTime)
+BIND(STRDT(SUBSTR(STR(?sdp), 1, 10), xsd:date) AS ?date)
+BIND(STR(?date) AS ?dateStr)
+BIND(SUBSTR(?dateStr, 6, 2) AS ?month)
+BIND(SUBSTR(?dateStr, 9, 2) AS ?day)
+BIND(SUBSTR(?dateStr, 1, 4) AS ?year)
+BIND(CONCAT(?month, "/", ?day, "/", ?year) AS ?formattedDate)
+FILTER(?dateTime<?sdp).
+}""";
+sh:message "has-training-end-date: The specified date ({?formattedDate}) is in the future. Please enter a date that is today or earlier in the format mm/dd/yyyy";
+];
+sh:sparql[
+  sh:prefixes :PrefixesEmbeddedSHsparql;
+  sh:select """
+    SELECT $this ?formattedDate
+    WHERE {
+      $this :has-training-end-date ?esd.
+      FILTER(datatype(?esd) = xsd:dateTime)
+      BIND(STRDT("1960-01-01T00:00:00Z", xsd:dateTime) AS ?minDate)
+      BIND(STRDT(SUBSTR(STR(?esd), 1, 10), xsd:date) AS ?date)
+      BIND(STR(?date) AS ?dateStr)
+      BIND(SUBSTR(?dateStr, 6, 2) AS ?month)
+      BIND(SUBSTR(?dateStr, 9, 2) AS ?day)
+      BIND(SUBSTR(?dateStr, 1, 4) AS ?year)
+      BIND(CONCAT(?month, "/", ?day, "/", ?year) AS ?formattedDate)
+      FILTER(?esd<?minDate)
+    }
+  """;
+  sh:message "has-training-end-date: The specified date ({?formattedDate}) is before 01/01/1960. Please enter a date on or after 01/01/1960 in the format mm/dd/yyyy";
+].
+

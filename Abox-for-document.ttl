@@ -1,0 +1,112 @@
+@prefix : <https://w3id.org/ontology/uslcp#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix xml: <http://www.w3.org/XML/1998/namespace>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix lkif-legal-action: <http://www.estrellaproject.org/lkif-core/legal-action.owl#>.
+@prefix lkif-mereology: <http://www.estrellaproject.org/lkif-core/mereology.owl#>.
+@prefix lkif-role: <http://www.estrellaproject.org/lkif-core/role.owl#>.
+@prefix wd: <http://www.wikidata.org/entity/>.
+@prefix wdt: <http://www.wikidata.org/prop/direct/>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix tvc: <http://www.essepuntato.it/2012/04/tvc/#>.
+@prefix ti: <http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#>.
+@prefix time: <http://www.w3.org/2006/time#>.
+@base <https://w3id.org/ontology/uslcpo#> .
+
+<https://w3id.org/ontology/uslcpo#> rdf:type owl:Ontology .
+
+###########################################################################################################
+#
+
+
+#abox for petroleum reconnaissance licence.
+:pRl rdf:type  :PetroleumReconnaissanceLicence;
+:has-petroleum-reconnaissance-licence-start-date "2019-09-10T00:00:00"^^xsd:dateTime;
+:has-petroleum-reconnaissance-licence-end-date "2020-03-09T00:00:00"^^xsd:dateTime;
+:granted-to :CompanyA;
+:grant-in-consultation-with wd:Q85793009;
+:has-defined-area :WestCapeThreePointsBlock2.
+
+:Minister1 :grant :pRl.
+
+#abox for licence to install and operate facilities for storage, transportation and treatment of petroleum.
+:liof rdf:type  :LicenseForTheInstallationAndOperationOfStorageFacility;
+:has-petroleum-license-for-transportation-treatment-storage-start-date "2016-10-07T00:00:00"^^xsd:dateTime;
+:has-petroleum-license-for-transportation-treatment-storage-end-date "2018-10-06T00:00:00"^^xsd:dateTime;
+:granted-to :CompanyB.
+
+:Minister2 :grant :liof .
+
+
+#Abox for existing petroleum agreements.
+
+#these are petroleum agreements which are already in force and are available on the petroleum commission's petroleum register at: https://www.ghanapetroleumregister.com/contractareas
+
+:pa1 rdf:type :PetroleumAgreement;
+:has-petroleum-agreement-contractor-party :CompanyC, :CompanyD, :CompanyE;
+:has-petroleum-agreement-state-party wd:Q117;
+:has-contract-area :southDeepwaterTano;
+:has-petroleum-agreement-start-date "2014-01-24T00:00:00Z"^^xsd:dateTime;
+:has-petroleum-agreement-end-date "2039-01-24T00:00:00Z"^^xsd:dateTime;
+:ratified-by :FifthParliamentOfGhana.
+
+#abox for the various parliments of Ghana.
+:FifthParliamentOfGhana rdf:type wd:Q1807513.
+
+#abox for petroleum subcontract.
+:psc rdf:type :PetroleumSubcontract;
+:has-subcontract-awarding-party :CompanyA;
+:has-subcontract-awardee-party :CompanyF.
+
+#registration permits.
+:PC_DPA_0117_05-99R rdf:type :RegistrationPermit;
+:issued-by wd:Q85793009;
+:issued-to :CompanyF;
+:has-permit-start-date "2022-04-03T00:00:00Z"^^xsd:dateTime;
+:has-permit-end-date "2023-04-02T00:00:00Z"^^xsd:dateTime;
+:has-registration-permit-number " PC_DPA_0117_05-99R"^^xsd:string.
+
+:PC_CPE_08889116_010-98R rdf:type :RegistrationPermit;
+:issued-by wd:Q85793009;
+:issued-to :CompanyB;
+:has-permit-start-date "2022-05-10T00:00:00Z"^^xsd:dateTime;
+:has-permit-end-date "2023-05-09T00:00:00Z"^^xsd:dateTime;
+:has-registration-permit-number "PC_CPE_08889116_010-98R"^^xsd:string.
+
+:PC_CPX_012340107_015-84R rdf:type :RegistrationPermit;
+:issued-by wd:Q85793009;
+:issued-to :CompanyD;
+:has-permit-start-date "2022-06-03T00:00:00Z"^^xsd:dateTime;
+:has-permit-end-date "2023-06-02T00:00:00Z"^^xsd:dateTime;
+:has-registration-permit-number "PC_CPX_012340107_015-84R"^^xsd:string.
+
+
+
+
+:pC_CPA_0000103_04-22R rdf:type :RegistrationPermit;
+:issued-by wd:Q85793009;
+:issued-to :CompanyL;
+:has-permit-start-date "2022-06-03T00:00:00Z"^^xsd:dateTime;
+:has-permit-end-date "2023-06-02T00:00:00Z"^^xsd:dateTime;
+:has-registration-permit-number "pC_CPA_0000103_04-22R"^^xsd:string.
+
+#submission window for 2024.
+:ALCPSubmissionWindow24 rdf:type :SubmissionWindowLCP;
+time:generalYear "2024"^^xsd:gYear;
+ti:hasIntervalStartDate "2024-01-01T00:00:00Z"^^xsd:dateTime;
+ti:hasIntervalEndDate "2024-02-29T00:00:00Z"^^xsd:dateTime.
+
+:liof rdf:type  :LicenseForTheInstallationAndOperationOfStorageFacility;
+:has-petroleum-license-for-transportation-treatment-storage-start-date "2016-10-07T00:00:00"^^xsd:dateTime;
+:has-petroleum-license-for-transportation-treatment-storage-end-date "2018-10-06T00:00:00"^^xsd:dateTime;
+:granted-to :CompanyL.
+
+:Minister2 :grant :liof .
+
+
+:Minister2 rdf:type wd:Q3796928;
+:has-public-employee-name "Minister 2"^^xsd:string;
+:play-public-body-employment-role :ministerOfEnergy.
+

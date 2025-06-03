@@ -1,0 +1,246 @@
+@prefix : <https://w3id.org/ontology/uslcp#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix xml: <http://www.w3.org/XML/1998/namespace>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix lkif-legal-action: <http://www.estrellaproject.org/lkif-core/legal-action.owl#>.
+@prefix lkif-mereology: <http://www.estrellaproject.org/lkif-core/mereology.owl#>.
+@prefix lkif-role: <http://www.estrellaproject.org/lkif-core/role.owl#>.
+@prefix wd: <http://www.wikidata.org/entity/>.
+@prefix wdt: <http://www.wikidata.org/prop/direct/>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix tvc: <http://www.essepuntato.it/2012/04/tvc/#>.
+@prefix ti: <http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#>.
+@prefix time: <http://www.w3.org/2006/time#>.
+
+@base <https://w3id.org/ontology/uslcpo#> .
+
+<https://w3id.org/ontology/uslcpo#> rdf:type owl:Ontology .
+
+#defines all prefixes used in at least one sh:sparql below.
+:PrefixesEmbeddedSHsparql sh:declare 
+	[sh:prefix"";sh:namespace"https://w3id.org/ontology/uslcp#"^^xsd:anyURI],
+	[sh:prefix"rdf";sh:namespace"http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI],
+	[sh:prefix"rdfs";sh:namespace"http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI],
+	[sh:prefix"owl";sh:namespace"http://www.w3.org/2002/07/owl#"^^xsd:anyURI],
+	[sh:prefix"xsd";sh:namespace"http://www.w3.org/2001/XMLSchema#"^^xsd:anyURI],
+	[sh:prefix"xml";sh:namespace"http://www.w3.org/XML/1998/namespace"^^xsd:anyURI],
+	[sh:prefix"lkif-legal-action";sh:namespace"http://www.estrellaproject.org/lkif-core/legal-action.owl#"^^xsd:anyURI],
+	[sh:prefix"lkif-mereology";sh:namespace"http://www.estrellaproject.org/lkif-core/mereology.owl#"^^xsd:anyURI],
+	[sh:prefix"lkif-role";sh:namespace"http://www.estrellaproject.org/lkif-core/role.owl#"^^xsd:anyURI],
+	[sh:prefix"wd";sh:namespace"http://www.wikidata.org/entity/"^^xsd:anyURI],
+	[sh:prefix"wdt";sh:namespace"http://www.wikidata.org/prop/direct/"^^xsd:anyURI],
+	[sh:prefix"tvc";sh:namespace"http://www.essepuntato.it/2012/04/tvc/#"^^xsd:anyURI],
+	[sh:prefix"ti";sh:namespace"http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#"^^xsd:anyURI],
+	[sh:prefix"time";sh:namespace"http://www.w3.org/2006/time#"^^xsd:anyURI].
+
+###########################################################################################################
+#
+
+#this SHACL shape check that all ranges of ti:hasIntervalStartDate are xsd:dateTime datatypes.
+:CheckTiHasIntervalStartDateIsXSDdateTime rdf:type sh:NodeShape;
+	sh:property[
+		sh:datatype xsd:dateTime;
+		sh:message "Invalid datatype: it must be xsd:dateTime"];
+sh:targetObjectsOf ti:hasIntervalStartDate.
+
+#this SHACL shape check that all ranges of ti:hasIntervalEndDate are xsd:dateTime datatypes.
+:CheckTiHasIntervalEndDateIsXSDdateTime rdf:type sh:NodeShape;
+	sh:property[
+		sh:datatype xsd:dateTime;
+		sh:message "Invalid datatype: it must be xsd:dateTime"];
+sh:targetObjectsOf ti:hasIntervalEndDate.
+
+
+
+
+
+#this shape constrains a single registered name to an oil company and service provider.
+:CheckWhetherHasRegisteredNameHasOnlyOneName rdf:type sh:NodeShape;
+	sh:property[
+		sh:path :has-registered-company-name ;
+		sh:datatype  xsd:string;
+		sh:minCount 1;
+		sh:maxCount 1;
+		sh:message "Invalid: it must have exactly one registered name  associated to it"];
+sh:targetSubjectsOf :has-registered-company-name.
+
+
+#this shape constrains a single tax identification number to an oil company and service provider.
+:CheckWhetherHasTINHasOnlyOneTIN rdf:type sh:NodeShape;
+	sh:property[
+		sh:path :has-tax-identification-number ;
+		sh:datatype  xsd:string;
+		sh:minCount 1;
+		sh:maxCount 1;
+		sh:message "Invalid: it must have exactly one tax identification number associated to it"];
+sh:targetSubjectsOf :has-tax-identification-number .
+
+#this shape constrains a single tax identification number to an oil company and service provider.
+:CheckWhetherHasCRNHasOnlyOneCRN rdf:type sh:NodeShape;
+	sh:property[
+		sh:path :has-registered-company-number   ;
+		sh:datatype  xsd:string;
+		sh:minCount 1;
+		sh:maxCount 1;
+		sh:message "Invalid: it must have exactly one tax identification number associated to it"];
+sh:targetSubjectsOf :has-registered-company-number   .
+
+
+
+#this shape constrains a single date of incorporation  to an oil company and service provider.
+:CheckWhetherHasDateOfIncorporationHasOnlyOneDate rdf:type sh:NodeShape;
+	sh:property[
+		sh:path :has-date-of-incorporation;
+		sh:datatype  xsd:date;
+		sh:minCount 1;
+		sh:maxCount 1;
+		sh:message "Invalid: it must have exactly one date of incorporation    associated to it"];
+sh:targetSubjectsOf :has-date-of-incorporation.
+
+#this shape constrains a single date of business commencement   to an oil company and service provider.
+:CheckWhetherHasDateOfBusinessCommencementHasOnlyOneDate rdf:type sh:NodeShape;
+	sh:property[
+		sh:path :has-date-of-business-commencement;
+		sh:datatype  xsd:date;
+		sh:minCount 1;
+		sh:maxCount 1;
+		sh:message "Invalid: it must have exactly one date of business commencement     associated to it"];
+sh:targetSubjectsOf :has-date-of-business-commencement.
+
+#This checks that the date for the commencement of business does not precede the date of incorporation.
+:CheckBusinessCommencementDateDoesNotPrecedeIncorporationDate rdf:type sh:NodeShape; sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "{$this} is invalid: the date of incorporation must precede the date of business commencement." ;
+sh:select """SELECT $this ?doi ?dobc
+WHERE
+{
+$this :has-date-of-incorporation ?doi.
+$this :has-date-of-business-commencement ?dobc.
+FILTER(?dobc<?doi).
+}"""
+];
+sh:targetObjectsOf :has-date-of-business-commencement.
+
+
+#this SHACL shape checks that the object for the property incorporated in is only Ghana according to section 70 of act 919, which state to the effect that a contractor, subcontractor, licensee and allied entity can inter alia operate in Ghana's upstream petroleum industry if it is incorporated in Ghana.
+:CheckObjectOfIncorporatedInAsGhana rdf:type sh:NodeShape;
+sh:property[
+sh:hasValue wd:Q117;
+sh:message "Invalid object: it must be wd:Q117"];
+sh:targetObjectsOf :incorporated-in.
+
+#this SHACL shape checks that the subjects for the property incorporated in are companies even though the subclasses of service provider is either a company or a person.
+:CheckSubjectOfIncorporatedInAsCompany rdf:type sh:NodeShape;
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "Invalid '{$this}': it must be either a ServiceProvider or an OilCompany." ;
+sh:select """SELECT $this
+WHERE
+{
+NOT EXISTS{{$this rdf:type/rdfs:subClassOf* :ServiceProvider.}UNION{$this rdf:type/rdfs:subClassOf* :OilCompany.}}
+}"""
+];
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "Invalid '{$this}': it must be a lkif-legal-action:Company." ;
+sh:select """SELECT $this
+WHERE
+{
+NOT EXISTS{$this rdf:type/rdfs:subClassOf* lkif-legal-action:Company}.
+}"""
+];
+sh:targetSubjectsOf :incorporated-in.
+
+#this SHACL shape checks that the subjects for the property :has-date-of-incorporation are companies even though the subclasses of service provider is either a company or a person.
+:CheckSubjectOfHasDateOfIncorporation rdf:type sh:NodeShape;
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "Invalid '{$this}': it must be either a ServiceProvider or an OilCompany." ;
+sh:select """SELECT $this
+WHERE
+{
+NOT EXISTS{{$this rdf:type/rdfs:subClassOf* :ServiceProvider.}UNION{$this rdf:type/rdfs:subClassOf* :OilCompany.}}
+}"""
+];
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "Invalid '{$this}': it must be a lkif-legal-action:Company." ;
+sh:select """SELECT $this
+WHERE
+{
+NOT EXISTS{$this rdf:type/rdfs:subClassOf* lkif-legal-action:Company}.
+}"""
+];
+sh:targetSubjectsOf :has-date-of-incorporation .
+
+#this SHACL shape checks that the subjects for the property :has-office-address are companies even though the subclasses of service provider is either a company or a person.
+:CheckSubjectOfHasOfficeAdress rdf:type sh:NodeShape;
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "Invalid '{$this}': it must be either a ServiceProvider or an OilCompany." ;
+sh:select """SELECT $this
+WHERE
+{
+NOT EXISTS{{$this rdf:type/rdfs:subClassOf* :ServiceProvider.}UNION{$this rdf:type/rdfs:subClassOf* :OilCompany.}}
+}"""
+];
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "Invalid '{$this}': it must be a lkif-legal-action:Company." ;
+sh:select """SELECT $this
+WHERE
+{
+NOT EXISTS{$this rdf:type/rdfs:subClassOf* lkif-legal-action:Company}.
+}"""
+];
+sh:targetSubjectsOf :has-office-address .
+
+
+
+
+#this SHACL shape checks that the subjects for the property :plays-upstream-company-role are companies even though the subclasses of service provider is either a company or a person.
+:CheckSubjectOfPlayUpstreamCompanyRoleAsCompany rdf:type sh:NodeShape;
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "Invalid '{$this}': it must be either a ServiceProvider or an OilCompany." ;
+sh:select """SELECT $this
+WHERE
+{
+NOT EXISTS{{$this rdf:type/rdfs:subClassOf* :ServiceProvider.}UNION{$this rdf:type/rdfs:subClassOf* :OilCompany.}}
+}"""
+];
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "Invalid '{$this}': it must be a lkif-legal-action:Company." ;
+sh:select """SELECT $this
+WHERE
+{
+NOT EXISTS{$this rdf:type/rdfs:subClassOf* lkif-legal-action:Company}.
+}"""
+];
+sh:targetSubjectsOf :plays-upstream-company-role.
+
+#this shape constrains the employment role period within the employment period.
+:ERPWithinEP rdf:type sh:NodeShape; sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "{$this} is invalid: the employment role period must be within the employment period" ;
+sh:select """SELECT $this ?ert ?erts ?toes 
+WHERE
+{
+$this :at-employment-role-time ?ert.
+$this :within-employment-context ?c.
+?ert ti:hasIntervalStartDate ?erts.
+?c :at-time-of-employment ?toe.
+?toe ti:hasIntervalStartDate ?toes.
+FILTER(?erts<?toes).
+}"""
+];
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:message "{$this} is invalid: the employment role period must be within the employment period" ;
+sh:select """SELECT $this ?ert ?erte ?toee
+WHERE
+{
+$this :at-employment-role-time ?ert.
+$this :within-employment-context ?c.
+?c :at-time-of-employment ?toe.
+?ert ti:hasIntervalEndDate ?erte.
+?toe ti:hasIntervalEndDate ?toee.
+FILTER(?erte>?toee).
+}"""
+];
+sh:targetObjectsOf :has-employment-role.
+
+
+

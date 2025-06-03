@@ -1,0 +1,326 @@
+
+@prefix :  <https://w3id.org/ontology/uslcp#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xml:  <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+:PrefixesEmbeddedSHsparql sh:declare 
+	[sh:prefix"rdf";sh:namespace"http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI],
+	[sh:prefix"rdfs";sh:namespace"http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI],
+	[sh:prefix"xsd";sh:namespace"http://www.w3.org/2001/XMLSchema#"^^xsd:anyURI],
+	[sh:prefix"";sh:namespace"https://w3id.org/ontology/uslcp#"^^xsd:anyURI].
+	
+#The next shapes check the values of all properties denoting company's details.
+:CheckRegisteredCompanyName rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-registered-company-name ;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-registered-company-name ;
+sh:message "has-registered-company-name: Registered Company Name must not be empty"
+].
+
+:CheckCompanyTIN rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-tax-identification-number;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-tax-identification-number ;
+sh:message "has-tax-identification-number: Company TIN must not be empty"
+].
+
+:CheckCompanyRegistrationNumber rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-company-registration-number ;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-company-registration-number ;
+sh:message "has-company-registration-number: Company Registration Number must not be empty"
+].
+
+:CheckPetroleumCommissionRegistrationPermitNumber rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-petroleum-commission-registration-permit-number;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-petroleum-commission-registration-permit-number ;
+sh:message "has-petroleum-commission-registration-permit-number: Petroleum commission registration permit number must not be empty"
+].
+
+:CheckServicesProvided rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-services-provided;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-services-provided;
+sh:message "has-services-provided: Services provided must not be empty"
+].
+
+:CheckNamesOfShareholdersWithPercentageOwnership rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-names-of-shareholders-with-percentage-ownership;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-names-of-shareholders-with-percentage-ownership;
+sh:message "has-names-of-shareholders-with-percentage-ownership: Shareholder names and ownership percentages must not be empty"
+].
+
+:CheckPostalAddress rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-postal-address;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-postal-address;
+sh:message "has-postal-address: Postal address must not be empty"
+].
+
+:CheckTelephoneNumber rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-telephone-number;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-telephone-number;
+sh:message "has-telephone-number: Telephone number must not be empty"
+].
+
+:CheckFaxNumber rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-fax-number;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-fax-number;
+sh:message "has-fax-number: Fax number must not be empty"
+].
+
+#Website can be empty! There is written "Website address (if any)".
+#:CheckWebsiteAddress rdf:type sh:NodeShape;
+#sh:targetSubjectsOf :has-website-address;
+#sh:property[
+#sh:pattern "^(?!\\s*$).+";
+#sh:path :has-website-address;
+#sh:message "has-website-address: Website address must not be empty"
+#].
+
+:CheckHouseOrPlotNumber rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-house-or-plot-number;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-house-or-plot-number;
+sh:message "has-house-or-plot-number: House or plot number must not be empty"
+].
+
+:CheckStreetName rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-street-name;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-street-name;
+sh:message "has-street-name: Street name must not be empty"
+].
+
+:CheckTownOrCity rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-town-or-city;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-town-or-city;
+sh:message "has-town-or-city: Town or city must not be empty"
+].
+
+:CheckRegion rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-region;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-region;
+sh:message "has-region: Region must not be empty"
+].
+
+:CheckNameOfHeadOfEntity rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-name-of-head-of-entity;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-name-of-head-of-entity;
+sh:message "has-name-of-head-of-entity: Head of entity name must not be empty"
+].
+
+:CheckPositionOfHeadOfEntity rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-position-of-head-of-entity;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-position-of-head-of-entity;
+sh:message "has-position-of-head-of-entity: Head of entity position must not be empty"
+].
+
+:CheckTelephoneNumberOfHeadOfEntity rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-telephone-number-of-head-of-entity;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-telephone-number-of-head-of-entity;
+sh:message "has-telephone-number-of-head-of-entity: Head of entity telephone number must not be empty"
+].
+
+:CheckFaxNumberOfHeadOfEntity rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-fax-number-of-head-of-entity;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-fax-number-of-head-of-entity;
+sh:message "has-fax-number-of-head-of-entity: Head of entity fax number must not be empty"
+].
+
+#it can be empty, there is written "E-mail address (if any)"
+#:CheckEmailAddressOfHeadOfEntity rdf:type sh:NodeShape;
+#sh:targetSubjectsOf :has-email-address-of-head-of-entity;
+#sh:property[
+#sh:pattern "^(?!\\s*$).+";
+#sh:path :has-email-address-of-head-of-entity;
+#sh:message "has-email-address-of-head-of-entity: Head of entity email address must not be empty"
+#].
+
+:CheckNameOfContactPerson rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-name-of-contact-person;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-name-of-contact-person;
+sh:message "has-name-of-contact-person: Contact person name must not be empty"
+].
+
+:CheckpositionOfContactPerson rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-position-of-contact-person;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-position-of-contact-person;
+sh:message "has-position-of-contact-person: Contact person position must not be empty"
+].
+
+:CheckBusinessAddressOfContactPerson rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-business-address-of-contact-person;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-business-address-of-contact-person;
+sh:message "has-business-address-of-contact-person: Contact person business address must not be empty"
+].
+
+:CheckTelephoneNumberOfContactPerson rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-telephone-number-of-contact-person;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-telephone-number-of-contact-person;
+sh:message "has-telephone-number-of-contact-person: Contact person telephone number must not be empty"
+].
+
+:CheckFaxNumberOfContactPerson rdf:type sh:NodeShape;
+sh:targetObjectsOf :has-fax-number-of-contact-person;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-fax-number-of-contact-person;
+sh:message "has-fax-number-of-contact-person: Contact person fax number must not be empty"
+].
+
+#it can be empty, there is written "E-mail address (if any)"
+#:CheckEmailAddressOfContactPerson rdf:type sh:NodeShape;
+#sh:targetSubjectsOf :has-email-address-of-contact-person;
+#sh:property[
+#sh:pattern "^(?!\\s*$).+";
+#sh:path :has-email-address-of-contact-person;
+#sh:message "has-email-address-of-contact-person: Contact person email address must not be empty"
+#].
+
+
+:CheckDateOfIncorporation rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-date-of-incorporation;
+sh:property[
+  sh:pattern "^(?!\\s*$).+";
+  sh:path :has-date-of-incorporation;
+  sh:message "has-date-of-incorporation: Incorporation date must not be empty"
+];
+sh:sparql[
+  sh:prefixes :PrefixesEmbeddedSHsparql;
+  sh:select """
+    SELECT $this ?formattedDate
+    WHERE {
+	  $this :has-date-of-incorporation ?di
+	  FILTER(datatype(?di) = xsd:dateTime)
+      BIND(NOW() AS ?dateTime)
+	  BIND(STRDT(SUBSTR(STR(?di), 1, 10), xsd:date) AS ?date)
+	  BIND(STR(?date) AS ?dateStr)
+	  BIND(SUBSTR(?dateStr, 6, 2) AS ?month)
+	  BIND(SUBSTR(?dateStr, 9, 2) AS ?day)
+	  BIND(SUBSTR(?dateStr, 1, 4) AS ?year)
+	  BIND(CONCAT(?day, "/", ?month, "/", ?year) AS ?formattedDate)
+	  FILTER(?dateTime<?di).
+    }
+  """;
+  sh:message "has-date-of-incorporation: The specified date ({?formattedDate}) is in the future. Please enter a date that is today or earlier in the format dd/mm/yyyy"
+];
+sh:sparql[
+  sh:prefixes :PrefixesEmbeddedSHsparql;
+  sh:select """
+    SELECT $this ?formattedDate
+    WHERE {
+	  $this :has-date-of-incorporation ?di
+      FILTER(datatype(?di) = xsd:dateTime)
+      BIND(STRDT("1960-01-01T00:00:00Z", xsd:dateTime) AS ?minDate)
+      BIND(STRDT(SUBSTR(STR(?di), 1, 10), xsd:date) AS ?date)
+      BIND(STR(?date) AS ?dateStr)
+      BIND(SUBSTR(?dateStr, 6, 2) AS ?month)
+      BIND(SUBSTR(?dateStr, 9, 2) AS ?day)
+      BIND(SUBSTR(?dateStr, 1, 4) AS ?year)
+      BIND(CONCAT(?day, "/", ?month, "/", ?year) AS ?formattedDate)
+      FILTER(?di < ?minDate)
+    }
+  """;
+  sh:message "has-date-of-incorporation: The specified date ({?formattedDate}) is before 01/01/1960. Please enter a date on or after 01/01/1960 in the format dd/mm/yyyy"
+].
+
+:CheckDateOfBusinessCommencement rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-date-of-commencement-of-business;
+sh:property[
+  sh:pattern "^(?!\\s*$).+";
+  sh:path :has-date-of-commencement-of-business;
+  sh:message "has-date-of-commencement-of-business: Business commencement date must not be empty"
+];
+sh:sparql[
+  sh:prefixes :PrefixesEmbeddedSHsparql;
+  sh:select """
+    SELECT $this ?formattedDate
+    WHERE {
+	  $this :has-date-of-commencement-of-business ?dcb
+      FILTER(datatype(?dcb) = xsd:dateTime)
+      BIND(NOW() AS ?dateTime)
+      BIND(STRDT(SUBSTR(STR(?dcb), 1, 10), xsd:date) AS ?date)
+      BIND(STR(?date) AS ?dateStr)
+      BIND(SUBSTR(?dateStr, 6, 2) AS ?month)
+      BIND(SUBSTR(?dateStr, 9, 2) AS ?day)
+      BIND(SUBSTR(?dateStr, 1, 4) AS ?year)
+      BIND(CONCAT(?day, "/", ?month, "/", ?year) AS ?formattedDate)
+      FILTER(?dateTime < ?dcb)
+    }
+  """;
+  sh:message "has-date-of-commencement-of-business: The specified date ({?formattedDate}) is in the future. Please enter a date that is today or earlier in the format dd/mm/yyyy"
+];
+sh:sparql[
+  sh:prefixes :PrefixesEmbeddedSHsparql;
+  sh:select """
+    SELECT $this ?formattedDate
+    WHERE {
+	  $this :has-date-of-commencement-of-business ?dcb
+      FILTER(datatype(?dcb) = xsd:dateTime)
+      BIND(STRDT("1960-01-01T00:00:00Z", xsd:dateTime) AS ?minDate)
+      BIND(STRDT(SUBSTR(STR(?dcb), 1, 10), xsd:date) AS ?date)
+      BIND(STR(?date) AS ?dateStr)
+      BIND(SUBSTR(?dateStr, 6, 2) AS ?month)
+      BIND(SUBSTR(?dateStr, 9, 2) AS ?day)
+      BIND(SUBSTR(?dateStr, 1, 4) AS ?year)
+      BIND(CONCAT(?day, "/", ?month, "/", ?year) AS ?formattedDate)
+      FILTER(?dcb < ?minDate)
+    }
+  """;
+  sh:message "has-date-of-commencement-of-business: The specified date ({?formattedDate}) is before 01/01/1960. Please enter a date on or after 01/01/1960 in the format dd/mm/yyyy"
+].
+
+
+:CheckBusinessCommencentDateNotBeforeIncorporationDate a sh:NodeShape;
+sh:targetSubjectsOf :has-date-of-commencement-of-business;
+sh:sparql [
+sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:select """
+SELECT $this ?dobc ?doi
+WHERE {
+$this :has-date-of-commencement-of-business ?dobc.
+$this :has-date-of-incorporation ?doi.
+FILTER(?dobc < ?doi)
+}
+""";
+sh:message "has-date-of-commencement-of-business: The business commencement date must not be earlier than the incorporation date"
+].

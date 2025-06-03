@@ -1,0 +1,91 @@
+@prefix :  <https://w3id.org/ontology/uslcp#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xml:  <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+:PrefixesEmbeddedSHsparql sh:declare 
+	[sh:prefix"rdf";sh:namespace"http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI],
+	[sh:prefix"rdfs";sh:namespace"http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI],
+	[sh:prefix"xsd";sh:namespace"http://www.w3.org/2001/XMLSchema#"^^xsd:anyURI],
+	[sh:prefix"";sh:namespace"https://w3id.org/ontology/uslcp#"^^xsd:anyURI].
+	
+#The next shape checks the values in all fields of ThirdPartyStaffRow
+:CheckRowFields rdf:type sh:NodeShape;
+sh:targetClass :ThirdPartyStaffRow;
+
+
+#Name
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-name-third-party-staff ;
+sh:message "has-name-third-party-staff : Name must not be empty"
+];
+
+
+#Gender
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-gender-third-party-staff ;
+sh:message "has-gender-third-party-staff : Gender must not be empty"
+];
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:select """SELECT $this ?g
+WHERE
+{
+$this :has-gender-third-party-staff  ?g.
+FILTER((?g!="M")&&(?g!="F")&&(?g!="")).
+}""";
+sh:message "has-gender-third-party-staff : The value stored in the database for this cell ('{?g}') is invalid. Please select either 'M' or 'F' from the list.";
+];
+
+
+#Nationality
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-nationality-third-party-staff ;
+sh:message "has-nationality-third-party-staff : Nationality must not be empty"
+];
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:select """SELECT $this ?n
+WHERE
+{
+$this :has-nationality-third-party-staff  ?n.
+FILTER((?n!="Ghanaian")&&(?n!="Expatriate")&&(?n!="")).
+}""";
+sh:message "has-nationality-third-party-staff : The value stored in the database for this cell ('{?n}') is invalid. Please select either 'Ghanaian' or 'Expatriate' from the list.";
+];
+
+#Position
+sh:property[
+sh:pattern "^(?!\\s*$).+" ;
+sh:path :has-position-third-party-staff ;
+sh:message "has-position-third-party-staff : Position must not be empty"
+];
+
+
+#Agency or Company
+sh:property[
+sh:pattern "^(?!\\s*$).+" ;
+sh:path :has-agency-or-company ;
+sh:message "has-agency-or-company : Agency or Company must not be empty"
+];
+
+
+#Job description (responsibilities)
+sh:property[
+sh:pattern "^(?!\\s*$).+" ;
+sh:path :has-job-description-responsibilities-third-party-staff ;
+sh:message "has-job-description-responsibilities-third-party-staff : Job description (responsibilities) must not be empty"
+];
+
+
+#Required Expertise/skills
+sh:property[
+sh:pattern "^(?!\\s*$).+" ;
+sh:path :has-required-expertise-or-skills-third-party-staff ;
+sh:message "has-required-expertise-or-skills-third-party-staff : Required Expertise/skills must not be empty"
+]
+
+.

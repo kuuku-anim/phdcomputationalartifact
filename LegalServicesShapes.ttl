@@ -1,0 +1,114 @@
+@prefix :  <https://w3id.org/ontology/uslcpwa#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xml:  <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+:PrefixesEmbeddedSHsparql sh:declare 
+	[sh:prefix"rdf";sh:namespace"http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI],
+	[sh:prefix"rdfs";sh:namespace"http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI],
+	[sh:prefix"xsd";sh:namespace"http://www.w3.org/2001/XMLSchema#"^^xsd:anyURI],
+	[sh:prefix"";sh:namespace"https://w3id.org/ontology/uslcpwa#"^^xsd:anyURI].
+	
+
+#The next shape checks the values in all fields of LegalServicesSubPlan
+:CheckLegalPractitionerOrFirmName rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-name-of-legal-practitioner-or-firm ;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-name-of-legal-practitioner-or-firm;
+sh:message "has-name-of-legal-practitioner-or-firm: name of legal practitioner or firm must not be empty"
+].
+
+:CheckLegalPractitionerOrFirmDateOfEngagement rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-legal-practitioner-or-firm-date-of-engagement;
+sh:property[
+  sh:pattern "^(?!\\s*$).+";
+  sh:path :has-legal-practitioner-or-firm-date-of-engagement;
+  sh:message "has-legal-practitioner-or-firm-date-of-engagement: Incorporation date must not be empty"
+];
+sh:sparql[
+  sh:prefixes :PrefixesEmbeddedSHsparql;
+  sh:select """
+    SELECT $this ?formattedDate
+    WHERE {
+	  $this :has-legal-practitioner-or-firm-date-of-engagement ?di
+	  FILTER(datatype(?di) = xsd:dateTime)
+      BIND(NOW() AS ?dateTime)
+	  BIND(STRDT(SUBSTR(STR(?di), 1, 10), xsd:date) AS ?date)
+	  BIND(STR(?date) AS ?dateStr)
+	  BIND(SUBSTR(?dateStr, 6, 2) AS ?month)
+	  BIND(SUBSTR(?dateStr, 9, 2) AS ?day)
+	  BIND(SUBSTR(?dateStr, 1, 4) AS ?year)
+	  BIND(CONCAT(?day, "/", ?month, "/", ?year) AS ?formattedDate)
+	  FILTER(?dateTime<?di).
+    }
+  """;
+  sh:message "has-legal-practitioner-or-firm-date-of-engagement: The specified date ({?formattedDate}) is in the future. Please enter a date that is today or earlier in the format dd/mm/yyyy"
+];
+sh:sparql[
+  sh:prefixes :PrefixesEmbeddedSHsparql;
+  sh:select """
+    SELECT $this ?formattedDate
+    WHERE {
+	  $this :has-legal-practitioner-or-firm-date-of-engagement ?di
+      FILTER(datatype(?di) = xsd:dateTime)
+      BIND(STRDT("1960-01-01T00:00:00Z", xsd:dateTime) AS ?minDate)
+      BIND(STRDT(SUBSTR(STR(?di), 1, 10), xsd:date) AS ?date)
+      BIND(STR(?date) AS ?dateStr)
+      BIND(SUBSTR(?dateStr, 6, 2) AS ?month)
+      BIND(SUBSTR(?dateStr, 9, 2) AS ?day)
+      BIND(SUBSTR(?dateStr, 1, 4) AS ?year)
+      BIND(CONCAT(?day, "/", ?month, "/", ?year) AS ?formattedDate)
+      FILTER(?di < ?minDate)
+    }
+  """;
+  sh:message "has-legal-practitioner-or-firm-date-of-engagement: The specified date ({?formattedDate}) is before 01/01/1960. Please enter a date on or after 01/01/1960 in the format dd/mm/yyyy"
+].
+
+
+:CheckOfficeLegalPractitionerOrFirmLocation rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-legal-practitioner-or-firm-location ;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-legal-practitioner-or-firm-location;
+sh:message "has-legal-practitioner-or-firm-location: location of legal practitioner or firm must not be empty"
+].
+
+:CheckLegalServicesObtainedInPast6Months rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-legal-services-obtained-past-6-months ;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-legal-services-obtained-past-6-months;
+sh:message "has-legal-services-obtained-past-6-months: legal services obtained in the past six months must not be empty"
+].
+
+:CheckLegalServicesObtainedInNext6Months rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-legal-services-projection-for-next-6-months ;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-legal-services-projection-for-next-6-months;
+sh:message "has-legal-services-projection-for-next-6-months: legal services obtained in the next six months must not be empty"
+].
+
+:CheckLegalExpenditurePast6MonthsUSD rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-legal-expenditure-past-6-months-USD ;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-legal-expenditure-past-6-months-USD;
+  sh:datatype xsd:decimal;
+  sh:minInclusive 1;
+sh:message "has-legal-expenditure-past-6-months-USD: legal expenditure (USD) in the past six months must not be empty and must be higher than zero"
+].
+
+:CheckLegalExpenditureNext6MonthsUSD rdf:type sh:NodeShape;
+sh:targetSubjectsOf :has-legal-expenditure-projection-for-next-6-months-USD ;
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-legal-expenditure-projection-for-next-6-months-USD;
+  sh:datatype xsd:decimal;
+  sh:minInclusive 1;
+sh:message "has-legal-expenditure-projection-for-next-6-months-USD: legal expenditure (USD) in the past six months must not be empty and must be higher than zero"
+].
+

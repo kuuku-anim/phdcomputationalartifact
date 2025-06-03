@@ -1,0 +1,301 @@
+@prefix : <https://w3id.org/ontology/uslcp#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix xml: <http://www.w3.org/XML/1998/namespace>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix lkif-legal-action: <http://www.estrellaproject.org/lkif-core/legal-action.owl#>.
+@prefix lkif-mereology: <http://www.estrellaproject.org/lkif-core/mereology.owl#>.
+@prefix lkif-role: <http://www.estrellaproject.org/lkif-core/role.owl#>.
+@prefix wd: <http://www.wikidata.org/entity/>.
+@prefix wdt: <http://www.wikidata.org/prop/direct/>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix tvc: <http://www.essepuntato.it/2012/04/tvc/#>.
+@prefix ti: <http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#>.
+@prefix time: <http://www.w3.org/2006/time#>.
+@prefix xmldsig: <http://www.w3.org/2000/09/xmldsig#>.
+@base <https://w3id.org/ontology/uslcpo#> .
+
+<https://w3id.org/ontology/uslcpo#> rdf:type owl:Ontology .
+
+###########################################################################################################
+
+#defines all prefixes used in at least one SHACL SPARQLRule rule.
+:PrefixesEmbeddedSPARQLRules sh:declare 
+	[sh:prefix"rdf";sh:namespace"http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI],
+	[sh:prefix"rdfs";sh:namespace"http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI],
+	[sh:prefix"owl";sh:namespace"http://www.w3.org/2002/07/owl#"^^xsd:anyURI],
+	[sh:prefix"xsd";sh:namespace"http://www.w3.org/2001/XMLSchema#"^^xsd:anyURI],
+	[sh:prefix"xml";sh:namespace"http://www.w3.org/XML/1998/namespace"^^xsd:anyURI],
+	[sh:prefix"lkif";sh:namespace"http://www.estrellaproject.org/lkif-core/lkif-top.owl#"^^xsd:anyURI],
+	[sh:prefix"wd";sh:namespace"http://www.wikidata.org/entity/"^^xsd:anyURI],
+	[sh:prefix"wdt";sh:namespace"http://www.wikidata.org/prop/direct/"^^xsd:anyURI],
+	[sh:prefix"tvc";sh:namespace"http://www.essepuntato.it/2012/04/tvc/#"^^xsd:anyURI],
+	[sh:prefix"ti";sh:namespace"http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#"^^xsd:anyURI],
+	[sh:prefix"time";sh:namespace"http://www.w3.org/2006/time#"^^xsd:anyURI],
+	[sh:prefix"";sh:namespace"https://w3id.org/ontology/uslcp#"^^xsd:anyURI].
+
+
+#Rules for mapping the values from the Web interface to their place in the ontology.
+
+#this rule maps the company's details entered into the lcp web application to the company details in the entities and roles module.
+[rdf:type sh:NodeShape;
+sh:rule[rdf:type sh:SPARQLRule; sh:order 0; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?c :has-registered-company-name ?rcn;
+:has-registered-company-number   ?rcno;
+:has-tax-identification-number ?tin;
+:has-date-of-incorporation ?doi;
+:has-date-of-business-commencement ?dbc;
+:has-service-provided [rdf:type :ServicesProvided;
+:service-provided-name ?spn
+]
+}
+WHERE
+{
+:ContactDetails :has-registered-company-name ?rcn;
+:has-company-registration-number ?rcno;
+:has-petroleum-commission-registration-permit-number ?prn;
+:has-tax-identification-number ?tin;
+:has-date-of-incorporation ?doi;
+:has-date-of-commencement-of-business ?dbc;
+:has-services-provided ?spn.
+?pp rdf:type :RegistrationPermit.
+?pp :has-registration-permit-number ?prn.
+?pp :issued-to ?c.
+}
+"""];
+sh:targetNode :ContactDetails
+].
+
+#This rule map the content of the slots direct employee slots to the direct employees employed by a company within their employment period.
+[rdf:type sh:NodeShape;
+sh:rule[rdf:type sh:SPARQLRule; sh:order 0; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?c :has-directly-employed [rdf:type :Employee;
+:has-employee-name ?name;
+:has-employee-nationality ?nationality;
+:has-employment [rdf:type :EmploymentPeriod;
+:with-company ?c;
+:at-time-of-employment [rdf:type ti:TimeInterval;
+ti:hasIntervalStartDate ?sde]
+]
+]
+}
+WHERE
+{
+:ContactDetails :has-petroleum-commission-registration-permit-number ?prn.
+$this :has-index-direct-employee ?ide;
+:has-name-direct-employee      ?name;
+:has-nationality-direct-employee  ?nationality;
+:has-employment-start-date-direct-employee  ?sde.
+?pp rdf:type :RegistrationPermit.
+?pp :has-registration-permit-number ?prn.
+?pp :issued-to ?c.
+}
+"""
+];
+
+#this rule set the context of employment role period within employment period.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 1; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+    CONSTRUCT 
+{
+?e :has-employment-role [rdf:type :EmploymentRolePeriod;
+:with-role [rdf:type ?positionER;
+:has-role-description ?er];
+:within-employment-context ?emp;
+:at-employment-role-time [rdf:type ti:TimeInterval; 
+ti:hasIntervalStartDate ?sdp]
+].
+}
+WHERE
+{
+?c :has-directly-employed ?e.
+?e rdf:type :Employee;
+:has-employee-name ?name;
+:has-employment ?emp.
+?emp rdf:type :EmploymentPeriod.
+$this :has-index-direct-employee     ?ide;
+:has-name-direct-employee      ?name;
+:has-position-direct-employee  ?er;
+:has-position-start-date-direct-employee  ?sdp;
+:has-category-direct-employee  ?ec.
+BIND(IF(?ec = "Management"^^xsd:string, :ManagementStaff,
+IF(?ec = "Technical Core Staff"^^xsd:string, :TechnicalCoreStaff,
+IF(?ec = "Other"^^xsd:string, :OtherStaff, :OtherStaff))) AS ?positionER)
+}
+"""];
+
+sh:targetClass :DirectEmploymentRow
+].
+
+#this rule maps the insurance service provider, insurance broker and reinsurance service provider  details including the assets insured and reinsured details entered into the lcp to the entities and roles module.
+[rdf:type sh:NodeShape;
+sh:rule[rdf:type sh:SPARQLRule; sh:order 0; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?c :employ-the-service-of [rdf:type wd:Q2073644;
+:has-insurance-name ?in;
+:has-insurance-office-location ?iol],
+[rdf:type wd:Q285759;
+:has-insurance-name ?ibn],
+[rdf:type :ReinsuranceServiceProvider;
+:has-reinsurance-name ?rspn];
+:has-asset-insured [rdf:type :InsuredAsset;
+:has-asset-insured-description ?aid;
+:has-sum-for-asset-insured ?sai;
+:has-insurance-cover-type-for-asset ?icta];
+:has-asset-reinsured [rdf:type :ReInsuredAsset;
+:has-asset-reinsured-description ?adstr;
+:has-sum-reinsured-for-asset ?asstr];
+:has-reason-or-explanation-for-not-insuring-or-reinsuring ?str
+}
+WHERE
+{
+:ContactDetails :has-petroleum-commission-registration-permit-number ?prn.
+:InsuranceAndReinsuranceServicesSubPlan :has-name-of-insurance-service-provider ?in;
+:has-office-location-of-insurance-service-provider ?iol;
+:has-asset-insured ?aid;
+:has-sum-insured ?sai;
+:has-type-of-insurance-cover ?icta;
+:has-insurance-broker ?ibn;
+:has-name-of-reinsurance-service-provider ?rspn;
+:has-asset-reinsured ?adstr;
+:has-sum-reinsured ?asstr;
+:has-reason-for-omission-and-explanation ?str.
+?pp rdf:type :RegistrationPermit.
+?pp :has-registration-permit-number ?prn.
+?pp :issued-to ?c.
+}
+"""];
+sh:targetNode :InsuranceAndReinsuranceServicesSubPlan
+].
+
+#this rule maps the financial service subplan details entered in the ALcp to the entities and roles module.
+[rdf:type sh:NodeShape;
+sh:rule[rdf:type sh:SPARQLRule; sh:order 0; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?c :employ-the-service-of [rdf:type wd:Q650241;
+:has-financial-institution-name ?fin;
+:has-financial-institution-location-or-branch ?filb;
+:has-financial-engagement-date ?fidoe];
+:procure-financial-service [rdf:type :FinancialService;
+:has-past-six-month-financial-service ?fsPastsm;
+:has-projected-six-month-financial-service ?fsPrjectedsm;
+:has-past-six-month-financial-service-expenditure ?fsePastsm;
+:has-projected-six-month-financial-service-expenditure ?fseProjectedsm];
+:has-account-number ?an
+}
+WHERE
+{
+:ContactDetails :has-petroleum-commission-registration-permit-number ?prn.
+:FinancialServicesSubPlan :has-name-of-financial-institution ?fin.
+:FinancialServicesSubPlan :has-account-number ?an.
+:FinancialServicesSubPlan :has-financial-institution-branch ?filb.
+:FinancialServicesSubPlan :has-financial-institution-date-of-engagement ?fidoe.
+:FinancialServicesSubPlan :has-financial-services-to-be-obtained-past-6-months ?fsPastsm.
+:FinancialServicesSubPlan :has-financial-services-to-be-obtained-projection-of-next-6-months ?fsPrjectedsm.
+:FinancialServicesSubPlan :has-financial-expenditure-past-6-months-USD ?fsePastsm.
+:FinancialServicesSubPlan :has-financial-expenditure-projection-for-next-6-months-USD ?fseProjectedsm.
+?pp rdf:type :RegistrationPermit.
+?pp :has-registration-permit-number ?prn.
+?pp :issued-to ?c.
+}
+"""];
+sh:targetNode :FinancialServicesSubPlan
+].
+
+#this rule maps the bank details entered into the ALCP to the entities and roles module.
+[rdf:type sh:NodeShape;
+sh:rule[rdf:type sh:SPARQLRule; sh:order 0; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?c :employ-the-service-of [rdf:type wd:Q22687;
+:has-bank-name ?bn;
+:has-bank-location-or-branch ?blb;
+:has-financial-engagement-date ?bdoe];
+:has-bank-service-utilized [rdf:type :BankService;
+:has-bank-service-description ?bsd;
+:has-bank-service-expenditure  ?bse]
+}
+WHERE
+{
+:ContactDetails :has-petroleum-commission-registration-permit-number ?prn.
+:IndigenousBank :has-name-of-indigenous-bank ?bn.
+:IndigenousBank :has-indigenous-bank-date-of-engagement ?bdoe.
+:IndigenousBank :has-indigenous-bank-office-location-and-address ?blb.
+:IndigenousBank :has-bank-services-utilised ?bsd.
+:IndigenousBank :has-bank-services-expenditure-incurred ?bse.
+?pp rdf:type :RegistrationPermit.
+?pp :has-registration-permit-number ?prn.
+?pp :issued-to ?c.
+}
+"""];
+sh:targetNode :IndigenousBank
+].
+
+#this rule mapss the relevant details of the legal service sub-plan to the entities and roles module.
+[rdf:type sh:NodeShape;
+sh:rule[rdf:type sh:SPARQLRule; sh:order 0; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?c :employ-the-service-of [rdf:type :LegalPractitionerOrFirm;
+:has-name-of-legal-practitioner-or-firm ?lpfn;
+:has-legal-practitioner-or-firm-date-of-engagement ?lpfde;
+:has-location-of-legal-practitioner-or-firm ?lpfl];
+:procure-legal-service [rdf:type :LegalService;
+:has-past-six-month-legal-service ?lspassm;
+:has-projected-six-month-legal-service ?lsprosm;
+:has-past-six-month-legal-service-expenditure ?lsepassm;
+:has-projected-six-month-legal-service-expenditure ?lseprosm]
+}
+WHERE
+{
+:ContactDetails :has-petroleum-commission-registration-permit-number ?prn.
+:LegalServicesSubPlan :has-name-of-legal-practitioner-or-firm ?lpfn.
+:LegalServicesSubPlan :has-legal-practitioner-or-firm-date-of-engagement ?lpfde.
+:LegalServicesSubPlan :has-legal-practitioner-or-firm-location ?lpfl.
+:LegalServicesSubPlan :has-legal-services-to-be-obtained-past-6-months ?lspassm.
+:LegalServicesSubPlan :has-legal-services-to-be-obtained-projection-for-next-6-months ?lsprosm.
+:LegalServicesSubPlan :has-legal-expenditure-past-6-months-USD ?lsepassm.
+:LegalServicesSubPlan :has-legal-expenditure-projection-for-next-6-months-USD ?lseprosm.
+?pp rdf:type :RegistrationPermit.
+?pp :has-registration-permit-number ?prn.
+?pp :issued-to ?c.
+}
+"""];
+sh:targetNode :LegalServicesSubPlan
+].
+
+
+#this rule maps the submission date of the lcp into the entities and roles module.
+[rdf:type sh:NodeShape;
+sh:rule[rdf:type sh:SPARQLRule; sh:order 2; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?c :has-submitted :AnnualLocalContentPlan.
+:AnnualLocalContentPlan :submitted-to wd:Q85793009;
+rdf:type :ComplianceFilingDocument;
+:submitted-on ?lcpd.
+}
+WHERE
+{
+BIND(NOW() AS ?lcpd)
+:ContactDetails :has-petroleum-commission-registration-permit-number ?prn.?pp rdf:type :RegistrationPermit.
+?pp :has-registration-permit-number ?prn.
+?pp :issued-to ?c.
+}
+"""];
+sh:targetNode :AnnualLocalContentPlan 
+].

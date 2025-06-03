@@ -1,0 +1,118 @@
+@prefix : <https://w3id.org/ontology/uslcp#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix xml: <http://www.w3.org/XML/1998/namespace>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix lkif-legal-action: <http://www.estrellaproject.org/lkif-core/legal-action.owl#>.
+@prefix lkif-mereology: <http://www.estrellaproject.org/lkif-core/mereology.owl#>.
+@prefix lkif-role: <http://www.estrellaproject.org/lkif-core/role.owl#>.
+@prefix wd: <http://www.wikidata.org/entity/>.
+@prefix wdt: <http://www.wikidata.org/prop/direct/>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix tvc: <http://www.essepuntato.it/2012/04/tvc/#>.
+@prefix ti: <http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#>.
+@prefix time: <http://www.w3.org/2006/time#>.
+@prefix xmldsig: <http://www.w3.org/2000/09/xmldsig#>.
+@prefix pwo: <http://purl.org/spar/pwo/> .
+
+@base <https://w3id.org/ontology/uslcpo#> .
+
+<https://w3id.org/ontology/uslcpo#> rdf:type owl:Ontology .
+
+###########################################################################################################
+#
+
+#this ontology discribes the areas within the territory of Ghana, where petroleum activities are conducted.
+
+
+
+:Area rdf:type owl:Class;
+rdfs:comment "this classifies areas of possible or actual accumulation of petroleum within the jurisdiction of Ghana".
+
+:Block rdf:type owl:Class;
+rdfs:subClassOf :Area;
+rdfs:comment "this classifies the division of areas into numbered areas as shown on the reference map of Ghana. The block must be an area that is approximately six hundred and eighty-five square kilometres as depicted on the reference map prepared by the Minister ".
+
+:hasBlockArea rdf:type owl:DatatypeProperty;
+rdfs:domain :Block;
+rdfs:range xsd:squareKilometers;
+rdfs:comment "this signifies the area of the block".
+
+:OpenArea rdf:type owl:Class;
+rdfs:subClassOf :Area;
+rdfs:comment "this classifies the areas which have been opened by the minister of energy for petroleum activities".
+
+:area-opened-by rdf:type owl:ObjectProperty;
+rdfs:domain :Area;
+rdfs:range wd:Q3796928;
+rdfs:comment "this property signifies that an open area must be opened by a public body employee.".
+
+#open area.
+:WestCapeThreePointsBlock2 rdf:type :Area;
+:area-opened-by :JohnPeterAmewu.
+
+
+:ContractArea rdf:type owl:Class;
+rdfs:subClassOf :OpenArea ;
+rdfs:comment "this classifies opened areas which are covered by petroleum agreements and these contract areas may cover one or more blocks or parts of one or more blocks".
+
+:SubcontractArea rdf:type owl:Class;
+rdfs:subClassOf :ContractArea;
+rdfs:comment "this class embodies all the areas which make up a contract area".
+
+
+:has-contract-area-size rdf:type owl:DatatypeProperty;
+rdfs:domain :ContractArea ;
+rdfs:range xsd:squareKilometers;
+rdfs:comment "this signifies the size of the contract area".
+
+:has-sub-contract-area rdf:type owl:ObjectProperty;
+rdfs:domain :ContractArea;
+rdfs:range :SubcontractArea;
+rdfs:comment " this signifies other contract areas which come together to form the main contract area".
+
+
+#write a shacl rule which state that an area will only be validly opened if the public body employee opening it plays the role of the minister of energy.
+
+
+
+:ClosedArea rdf:type owl:Class;
+rdfs:subClassOf :Area;
+owl:disjointWith :OpenArea;
+rdfs:comment "this classifies the open areas which have been closed by the minister of energy for petroleum activities this areas must not be covered by  a license or a petroleum agreement at the time of closure".
+
+:area-closed-by rdf:type owl:ObjectProperty;
+rdfs:domain :OpenArea ;
+rdfs:range wd:Q3796928;
+rdfs:comment "this property signifies that a closed area must be closed by a public body employee.".
+
+:has-closed-area-date rdf:type owl:DatatypeProperty;
+rdfs:domain :ClosedArea;
+rdfs:range xsd:dateTime;
+rdfs:comment "this signifies the date on which the opened area was closed".
+
+
+
+#write a shacl rule which state that an area will only be validly closed if the public body employee closing it plays the role of the minister of energy and the said open area which is being closed is not covered by any license or petroleum agreement.
+
+
+
+:RedefineOpenArea rdf:type owl:Class;
+rdfs:subClassOf :OpenArea;
+rdfs:comment "this classifies the open areas which have their boundaries been redefinde by the minister of energy for petroleum activities this areas must not be covered by a license or a petroleum agreement at the time of redefinition".
+
+:area-redefined-by rdf:type owl:ObjectProperty;
+rdfs:domain :OpenArea ;
+rdfs:range wd:Q3796928;
+rdfs:comment "this property signifies that a redefined open area must be redefined by a public body employee.".
+
+:has-redefinde-opened-area-date rdf:type owl:DatatypeProperty;
+rdfs:domain :RedefineOpenArea;
+rdfs:range xsd:dateTime;
+rdfs:comment "this signifies the date on which the opened area was redefinde".
+
+#write a shacl rule which state that an area will only be validly redefined if the public body employee redefining it plays the role of the minister of energy and the said open area which is being redefined is not covered by any license or petroleum agreement.
+
+
+

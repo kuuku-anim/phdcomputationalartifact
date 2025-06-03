@@ -1,0 +1,179 @@
+@prefix : <https://w3id.org/ontology/uslcp#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix xml: <http://www.w3.org/XML/1998/namespace>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix lkif-legal-action: <http://www.estrellaproject.org/lkif-core/legal-action.owl#>.
+@prefix lkif-mereology: <http://www.estrellaproject.org/lkif-core/mereology.owl#>.
+@prefix lkif-role: <http://www.estrellaproject.org/lkif-core/role.owl#>.
+@prefix wd: <http://www.wikidata.org/entity/>.
+@prefix wdt: <http://www.wikidata.org/prop/direct/>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix tvc: <http://www.essepuntato.it/2012/04/tvc/#>.
+@prefix ti: <http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#>.
+@prefix time: <http://www.w3.org/2006/time#>.
+@base <https://w3id.org/ontology/uslcpo#> .
+
+<https://w3id.org/ontology/uslcpo#> rdf:type owl:Ontology .
+
+###########################################################################################################
+#
+
+#Abox for oil companies and service providers.
+:CompanyA rdf:type :OilCompany;
+:has-registered-company-name "Company a"^^xsd:string.
+
+:CompanyB rdf:type :OilCompany;
+:has-registered-company-name "Company B"^^xsd:string.
+
+:CompanyF rdf:type :OilCompany;
+:has-registered-company-name "Company F"^^xsd:string.
+
+:CompanyC rdf:type :NationalOilCompany;
+:has-registered-company-name "Company C"^^xsd:string.
+
+:CompanyD rdf:type :OilCompany;
+:has-registered-company-name "Company D"^^xsd:string.
+
+:CompanyE rdf:type :OilCompany;
+:has-registered-company-name "Company E"^^xsd:string.
+
+#Abox for insurance brokers.
+:InsuranceBroker1 rdf:type :IndigenousInsuranceBroker;
+:has-insurance-name "insurance Broker 1"^^xsd:string;
+:has-insurance-office-location "Lov: Afram Road Asylum Down-Accra Hpp. Congo Embassy"^^xsd:string.
+
+:InsuranceBroker2 rdf:type :IndigenousInsuranceBroker;
+:has-insurance-name "insurance broker 2"^^xsd:string;
+:has-insurance-office-location "No 3663 Rolyat Casle Road Kokokmlemle, Accra GE-06913-21374"^^xsd:string.
+
+:InsuranceBroker3 rdf:type :IndigenousInsuranceBroker;
+:has-insurance-name "insurance broker 3"^^xsd:string;
+:has-insurance-office-location "Low: Hqe. No. 564 Nii Odaia Ayiku Avenue, Nungua-Accra"^^xsd:string.
+
+:InsuranceBroker4 rdf:type :IndigenousInsuranceBroker;
+:has-insurance-name "insurance broker 4"^^xsd:string;
+:has-insurance-office-location "99th Floor, Unit F, 28 Kweku Boi Street, Adenta"^^xsd:string.
+
+:InsuranceBroker5 rdf:type :IndigenousInsuranceBroker;
+:has-insurance-name "insurance broker 5"^^xsd:string;
+:has-insurance-office-location "901 Kwame Nkrumah Avenue"^^xsd:string.
+
+#abox for the insurance service provider.
+:InsuranceServiceProvider1 rdf:type :IndigenousBrokerageFirm;
+:has-insurance-name "insurance service provider 1"^^xsd:string;
+:has-insurance-office-location "Give House, No. 89 Burnes Road Farmer Avenue, Adabraka Accra"^^xsd:string.
+
+:InsuranceServiceProvider2 rdf:type :IndigenousBrokerageFirm;
+:has-insurance-name "insurance service provider 2"^^xsd:string;
+:has-insurance-office-location "44th Floor, K385/2934, 89th Crescent, Asylum Down, Accra"^^xsd:string.
+
+:InsuranceServiceProvider3 rdf:type :IndigenousBrokerageFirm;
+:has-insurance-name "insurance service provider 3"^^xsd:string;
+:has-insurance-office-location "Ypp. American House, West  Legon"^^xsd:string.
+
+:InsuranceServiceProvider4 rdf:type :IndigenousBrokerageFirm;
+:has-insurance-name "insurance service provider 4"^^xsd:string;
+:has-insurance-office-location "PPM 12987 K.I.R-Accra, Ghana"^^xsd:string.
+
+:InsuranceServiceProvider5 rdf:type :IndigenousBrokerageFirm;
+:has-insurance-name "insurance service provider 5"^^xsd:string;
+:has-insurance-office-location "Advantage Place, President Road, Ridge North - Accra"^^xsd:string.
+
+#Abox for ghanaian law firms and lawyers.
+:LawFirm1 rdf:type :IndigenousLawFirm;
+:has-name-of-legal-practitioner-or-firm "law firm 1"^^xsd:string. 
+
+:LawFirm2 rdf:type :IndigenousLawFirm;
+:has-name-of-legal-practitioner-or-firm "law firm 2"^^xsd:string. 
+
+:LawFirm3 rdf:type :IndigenousLawFirm;
+:has-name-of-legal-practitioner-or-firm "law firm 3"^^xsd:string. 
+
+:LawFirm4 rdf:type :IndigenousLawFirm;
+:has-name-of-legal-practitioner-or-firm "law firm 4"^^xsd:string. 
+
+:LawFirm5 rdf:type :IndigenousLawFirm;
+:has-name-of-legal-practitioner-or-firm "law firm 5"^^xsd:string. 
+
+:Lawyer1 rdf:type :GhanaianLegalPractitioner;
+:has-name-of-legal-practitioner-or-firm "lawyer 1"^^xsd:string.
+
+:Lawyer2 rdf:type :GhanaianLegalPractitioner;
+:has-name-of-legal-practitioner-or-firm "lawyer 2"^^xsd:string.
+
+:Lawyer3 rdf:type :GhanaianLegalPractitioner;
+:has-name-of-legal-practitioner-or-firm "lawyer 3"^^xsd:string.
+
+:Lawyer4 rdf:type :GhanaianLegalPractitioner;
+:has-name-of-legal-practitioner-or-firm "lawyer 4"^^xsd:string.
+
+:Lawyer5 rdf:type :GhanaianLegalPractitioner;
+:has-name-of-legal-practitioner-or-firm "lawyer 5"^^xsd:string.
+
+#Abox for financial institutions.
+:FinancialInstitution1 rdf:type :GhanaianFinancialInstitution;
+:has-financial-institution-name "financial institution 1"^^xsd:string;
+:has-financial-institution-location-or-branch "Batti House, No. 1117/1, No. 34 54th Lane, Ringway Estates, Osu-Accra, Accra"^^xsd:string.
+
+:FinancialInstitution2 rdf:type :GhanaianFinancialInstitution;
+:has-financial-institution-name "financial institution 2"^^xsd:string;
+:has-financial-institution-location-or-branch "Hse No. W98/335 Ayikuma Avenue, Kwame Nkrumah Avenue, Adabraka, P.O. Box 123443, Accra"^^xsd:string.
+
+:FinancialInstitution3 rdf:type :GhanaianFinancialInstitution;
+:has-financial-institution-name "financial institution 3"^^xsd:string;
+:has-financial-institution-location-or-branch "Building No. 27/313, Nsawam Rd, Tesano-Accra. PMB AN 3778, Accra-North Ghana Post System (GPS) Digital Address: GA 1819-89603"^^xsd:string.
+
+:FinancialInstitution4 rdf:type :GhanaianFinancialInstitution;
+:has-financial-institution-name "financial institution 4"^^xsd:string;
+:has-financial-institution-location-or-branch "Delmina Place, 148th Orphan Cresent, Labone, P. O. Box OP 88914, Osu-Accra"^^xsd:string.
+
+:FinancialInstitution5 rdf:type :GhanaianFinancialInstitution;
+:has-financial-institution-name "financial institution 5"^^xsd:string;
+:has-financial-institution-location-or-branch "Digitronix Plaza, Mohogani Street, Off Royalt Castle Road, P.O Box OZ. 97813, Osu, Accra"^^xsd:string.
+
+#abox for indigenous ghanaian banks.
+:Bank1 rdf:type :IndigenousGhanaianBank;
+:has-bank-name "Bank 1"^^xsd:string;
+:has-bank-location-or-branch "bank 1 House J.E. Atta-Mills High Street Accra P.O. Box GP0049, Accra"^^xsd:string.
+
+:Bank2 rdf:type :IndigenousGhanaianBank;
+:has-bank-name "Bank 2"^^xsd:string;
+:has-bank-location-or-branch "Starlets’ 999 Road, Opposite Legon Sports  Stadium, Osu P. O. Box GP 8893, Accra, Ghana"^^xsd:string.
+
+:Bank3 rdf:type :IndigenousGhanaianBank;
+:has-bank-name "Bank 3"^^xsd:string;
+:has-bank-location-or-branch "Accra Financial Centre, 3rd Ambassadorial Development Area, Ridge-Accra, P.O. Box 77891, Accra-Ghana"^^xsd:string.
+
+:Bank4 rdf:type :IndigenousGhanaianBank;
+:has-bank-name "Bank 4"^^xsd:string;
+:has-bank-location-or-branch "Head Office,1st Floor, Block Y&Z,The Octagon,  Independence Avenue P.O. Box X23441 Cantonments, Accra-Ghana"^^xsd:string.
+
+:Bank5 rdf:type :IndigenousGhanaianBank;
+:has-bank-name "Bank 5"^^xsd:string;
+:has-bank-location-or-branch "Head Office 49 Independence Ave P.O. Box 908596 Accra-Ghana"^^xsd:string.
+
+
+#Abox for reinsurance service providers.
+:ReinsuranceServiceProvider1 rdf:type :IndigenousReinsuranceProvider;
+:has-reinsurance-name "reinsurance service provider 1"^^xsd:string.
+
+:ReinsuranceServiceProvider2 rdf:type :IndigenousReinsuranceProvider;
+:has-reinsurance-name "reinsurance service provider 2"^^xsd:string.
+
+:ReinsuranceServiceProvider3 rdf:type :IndigenousReinsuranceProvider;
+:has-reinsurance-name "reinsurance serviceprovider 3"^^xsd:string.
+
+:ReinsuranceServiceProvider4 rdf:type :IndigenousReinsuranceProvider;
+:has-reinsurance-name "reinsurance service provider 4"^^xsd:string.
+
+:ReinsuranceServiceProvider5 rdf:type :IndigenousReinsuranceProvider;
+:has-reinsurance-name " Reinsurance Service Provider 5"^^xsd:string.
+
+:Minister1 rdf:type wd:Q3796928;
+:has-public-employee-name "Minister 1"^^xsd:string;
+:play-public-body-employment-role :ministerOfEnergy.
+:Minister2 rdf:type wd:Q3796928;
+:has-public-employee-name "Minister 2"^^xsd:string;
+:play-public-body-employment-role :ministerOfEnergy.

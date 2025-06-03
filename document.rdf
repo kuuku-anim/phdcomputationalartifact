@@ -1,0 +1,464 @@
+@prefix : <https://w3id.org/ontology/uslcp#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix xml: <http://www.w3.org/XML/1998/namespace>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix lkif-legal-action: <http://www.estrellaproject.org/lkif-core/legal-action.owl#>.
+@prefix lkif-mereology: <http://www.estrellaproject.org/lkif-core/mereology.owl#>.
+@prefix lkif-role: <http://www.estrellaproject.org/lkif-core/role.owl#>.
+@prefix wd: <http://www.wikidata.org/entity/>.
+@prefix wdt: <http://www.wikidata.org/prop/direct/>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix tvc: <http://www.essepuntato.it/2012/04/tvc/#>.
+@prefix ti: <http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#>.
+@prefix time: <http://www.w3.org/2006/time#>.
+@prefix xmldsig: <http://www.w3.org/2000/09/xmldsig#>.
+@base <https://w3id.org/ontology/uslcpo#> .
+
+<https://w3id.org/ontology/uslcpo#> rdf:type owl:Ontology .
+
+###########################################################################################################
+#
+
+#disjoint relationship between the super classes.
+lkif-legal-action:Public_Body owl:disjointWith lkif-legal-action:Company, :Department, :Committee, lkif-legal-action:Natural_Person, wd:Q231002, lkif-role:Role, :LegalDocument.
+lkif-legal-action:Company owl:disjointWith :Department, :Committee, lkif-legal-action:Natural_Person, wd:Q231002, lkif-role:Role, :LegalDocument.
+:Department owl:disjointWith :Committee, lkif-legal-action:Natural_Person, wd:Q231002, lkif-role:Role, :LegalDocument.
+:Committee owl:disjointWith lkif-legal-action:Natural_Person, wd:Q231002, lkif-role:Role, :LegalDocument.
+lkif-legal-action:Natural_Person owl:disjointWith wd:Q231002, lkif-role:Role, :LegalDocument.
+wd:Q231002 owl:disjointWith lkif-role:Role, :LegalDocument.
+:LegalDocument owl:disjointWith lkif-legal-action:Public_Body, lkif-legal-action:Company, :Department, :Committee, lkif-legal-action:Natural_Person, wd:Q231002, lkif-role:Role.
+
+#this module lists all the documents relevant to the area of local content and participation.
+
+:LegalDocument rdf:type owl:Class;
+rdfs:comment "This is the superclass for all documents pertaining to the the domain including licenses, compliance filing documents, etc".
+
+#licenses (subclass of :LegalDocument)
+
+wd:Q79719 rdf:type owl:Class;
+	rdfs:subClassOf :LegalDocument;
+	rdfs:comment "Q79719 stands for license.".
+
+:petroleumLicense rdf:type owl:Class;
+	rdfs:subClassOf wd:Q79719;
+	rdfs:comment "this is the class of all licenses issued in the upstream petroleum industry".
+
+:ValidPetroleumLicense rdf:type owl:Class;
+	rdfs:subClassOf :petroleumLicense;
+	rdfs:comment " this is the class of all valid licenses issued in the upstream petroleum industry".
+
+:has-licence-start-date rdfs:subPropertyOf   ti:hasIntervalStartDate;
+rdfs:domain wd:Q79719;
+rdfs:comment "this property signifies the start date of a  licence".
+
+:has-licence-end-date rdfs:subPropertyOf   ti:hasIntervalEndDate;
+rdfs:domain wd:Q79719;
+rdfs:comment "this property signifies the end date of a  licence".
+
+:has-extended-licence-start-date rdfs:subPropertyOf   ti:hasIntervalStartDate;
+rdfs:domain wd:Q79719;
+rdfs:comment "this property signifies the extended start date of a  licence".
+
+:has-extended-licence-end-date rdfs:subPropertyOf   ti:hasIntervalEndDate;
+rdfs:domain wd:Q79719;
+rdfs:comment "this property signifies the extended end date of a  licence".
+
+
+
+:PetroleumReconnaissanceLicence rdf:type owl:Class;
+	rdfs:subClassOf :petroleumLicense;
+	rdfs:comment "the petroleum reconnaissance licence classifies the individual licenses which grant companies the right to collect, process and interprete or evaluate data concerning petroleum within a giving area".
+
+:ExtendedPetroleumReconnaissanceLicence rdf:type owl:Class;
+	rdfs:subClassOf :PetroleumReconnaissanceLicence;
+	rdfs:comment "this classifies all petroleum reconnaissance licences which have been extended for an additional two years by the minister of energy".
+
+:has-petroleum-reconnaissance-licence-start-date rdfs:subPropertyOf   :has-licence-start-date;
+rdfs:domain :PetroleumReconnaissanceLicence;
+rdfs:comment "this property signifies the start date of the petroleum reconnaissance licence".
+
+:has-petroleum-reconnaissance-licence-end-date rdfs:subPropertyOf   :has-licence-end-date;
+rdfs:domain :PetroleumReconnaissanceLicence;
+rdfs:comment "this property signifies the end date of the petroleum reconnaissance licence".
+
+:has-extended-petroleum-reconnaissance-licence-start-date rdfs:subPropertyOf   :has-extended-licence-start-date;
+rdfs:domain :ExtendedPetroleumReconnaissanceLicence;
+rdfs:comment "this property signifies the start date of the extended petroleum reconnaissance licence".
+
+:has-extended-petroleum-reconnaissance-licence-end-date rdfs:subPropertyOf   :has-extended-licence-end-date;
+rdfs:domain :ExtendedPetroleumReconnaissanceLicence;
+rdfs:comment "this property signifies the end date of the extended petroleum reconnaissance licence".
+
+
+:LicenceToInstallAndOperateFacilitiesForTransportationTreatmentAndStorageOfPetroleum rdf:type owl:Class;
+	rdfs:subClassOf :petroleumLicense;
+	rdfs:comment "the class of licenses issued to install and operate facilities for transportation, treatment and storage of petroleum.".
+
+:ExtendedLicenceToInstallAndOperateFacilitiesForTransportationTreatmentAndStorageOfPetroleum rdf:type owl:Class;
+	rdfs:subClassOf :LicenceToInstallAndOperateFacilitiesForTransportationTreatmentAndStorageOfPetroleum;
+	rdfs:comment "the class of licenses extended  to install and operate facilities for transportation, treatment and storage of petroleum.".
+
+:LicenseForTheInstallationAndOperationOfTransportationFacility rdf:type owl:Class;
+	rdfs:subClassOf :LicenceToInstallAndOperateFacilitiesForTransportationTreatmentAndStorageOfPetroleum;
+	rdfs:comment "the class of licenses issued for the installation and operation of facilities used for the transportation of petroleum".
+
+:LicenseForTheInstallationAndOperationOfTreatmentFacility rdf:type owl:Class;
+	rdfs:subClassOf :LicenceToInstallAndOperateFacilitiesForTransportationTreatmentAndStorageOfPetroleum;
+	rdfs:comment "the class of licenses issued for the installation and operation of facilities used for the treatment of petroleum".
+
+:LicenseForTheInstallationAndOperationOfStorageFacility rdf:type owl:Class;
+	rdfs:subClassOf :LicenceToInstallAndOperateFacilitiesForTransportationTreatmentAndStorageOfPetroleum;
+	rdfs:comment "the class of licenses issued for the installation and operation of facilities used for the storage of petroleum".
+
+
+#Licences can be "granted". There is a property "grant" that connects the granter to the licence and another property "granted-to" that connects the license to its holder.
+
+:grant rdf:type owl:ObjectProperty;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (wd:Q3796928 lkif-legal-action:Public_Body)];
+rdfs:range :petroleumLicense;
+rdfs:comment "this property specifies that either a public body or an employee of a public body such as a minister of state is authorised to issue licenses".
+
+:granted-to rdf:type owl:ObjectProperty;
+rdfs:domain :petroleumLicense;
+rdfs:range [rdf:type owl:Class; owl:unionOf (:ServiceProvider :OilCompany)];
+rdfs:comment "this property specifies that a particular license has been issued to a service provider or an oil company".
+
+#write a shacl rule which states that if an oil company or a service provider has been granted a license, then that oil company or service provider plays the upstream company role of licensee.
+
+
+
+
+#:petroleum-license-for-transportation-treatment-storage-grant  rdfs:subPropertyOf :grant;
+#rdfs:domain wd:Q3796928 ;
+#rdfs:range :LicenceToInstallAndOperateFacilitiesForTransportationTreatmentAndStorageOfPetroleum;
+#rdfs:comment "this property signifies that a Licence to install and operate facilities for transportation, treatment and storage of petroleum must be granted by a public body employee".
+
+:has-petroleum-license-for-transportation-treatment-storage-start-date rdfs:subPropertyOf   :has-licence-start-date;
+rdfs:domain :LicenceToInstallAndOperateFacilitiesForTransportationTreatmentAndStorageOfPetroleum;
+rdfs:comment "this property signifies the start date of the Licences to install and operate facilities for transportation, treatment and storage of petroleum".
+
+:has-petroleum-license-for-transportation-treatment-storage-end-date rdfs:subPropertyOf   :has-licence-end-date;
+rdfs:domain :LicenceToInstallAndOperateFacilitiesForTransportationTreatmentAndStorageOfPetroleum;
+rdfs:comment "this property signifies the end date of the Licences to install and operate facilities for transportation, treatment and storage of petroleum".
+
+:has-extended-petroleum-license-for-transportation-treatment-storage-start-date rdfs:subPropertyOf   :has-extended-licence-start-date;
+rdfs:domain :ExtendedLicenceToInstallAndOperateFacilitiesForTransportationTreatmentAndStorageOfPetroleum;
+rdfs:comment "this property signifies the start date of the extended Licences to install and operate facilities for transportation, treatment and storage of petroleum".
+
+:has-extended-petroleum-license-for-transportation-treatment-storage-end-date rdfs:subPropertyOf   :has-extended-licence-end-date;
+rdfs:domain :ExtendedLicenceToInstallAndOperateFacilitiesForTransportationTreatmentAndStorageOfPetroleum;
+rdfs:comment "this property signifies the end date of the extended Licences to install and operate facilities for transportation, treatment and storage of petroleum".
+
+#:petroleum-reconnaissance-licence-grant  rdfs:subPropertyOf :grant;
+#rdfs:domain wd:Q3796928 ;
+#rdfs:range :PetroleumReconnaissanceLicence;
+#rdfs:comment "this property signifies that a petroleum reconnaissance must be granted by a public body employee".
+
+:grant-in-consultation-with rdf:type owl:ObjectProperty;
+rdfs:domain wd:Q3796928 ;
+rdfs:range :RelevantAgency;
+rdfs:comment "this property signifies that the public body employee in granting a petroleum reconnaissance licence, must consult a relevant agency".
+
+:has-defined-area rdf:type owl:ObjectProperty;
+rdfs:domain :petroleumLicense ;
+rdfs:range :OpenArea;
+rdfs:comment "this property signifies that a petroleum licence must have an open area which it covers".
+
+#write a shacl rule which state that the grant of a petroleum reconnaissance licence is said to be valid, when it is granted by a public body employee and that public body employee plays the role of minister of energy and granted the licence in consultation with the petroleum commission and the license has a defined open area and the license has a three-year duration.
+#same for an extended reconnaissance licence except that the period is two years.
+
+
+
+
+
+#Permits.
+
+:PetroleumPermit rdf:type owl:Class;
+	rdfs:subClassOf :LegalDocument;
+	rdfs:comment "  this classifies all the permits pertaining to the upstream petroleum industry".
+
+:issued-by rdf:type owl:ObjectProperty;
+rdfs:domain :PetroleumPermit;
+rdfs:range :RelevantAgency;
+rdfs:comment "this property specifies that a petroleum permit is issued by a relevant agency".
+
+:issued-to rdf:type owl:ObjectProperty;
+rdfs:domain :PetroleumPermit;
+rdfs:range [rdf:type owl:Class; owl:unionOf (:ServiceProvider :OilCompany)];
+rdfs:comment "this property specifies that a petroleum permit is issued to  an oil  company or a service provider".
+
+
+:has-permit-start-date rdfs:subPropertyOf   ti:hasIntervalStartDate;
+rdfs:domain :PetroleumPermit;
+rdfs:comment "this property signifies the start date of a  permit".
+
+:has-permit-end-date rdfs:subPropertyOf   ti:hasIntervalEndDate;
+rdfs:domain :PetroleumPermit;
+rdfs:comment "this property signifies the end date of a  permit".
+
+:DrillingPermit rdf:type owl:Class;
+	rdfs:subClassOf :ExplorationAndDevelopmentPermit;
+	rdfs:comment "  this classifies all the permits pertaining to drilling".
+
+:for-well rdf:type owl:ObjectProperty;
+rdfs:domain :DrillingPermit;
+rdfs:range :DrillingWell;
+rdfs:comment "this property specifies that a drilling permit is issued for a speicific well".
+
+
+:RegistrationPermit rdf:type owl:Class;
+	rdfs:subClassOf :PetroleumPermit;
+	rdfs:comment "  this classifies all the permits pertaining to registration".
+
+:has-registration-permit-number rdf:type owl:DatatypeProperty;
+rdfs:domain :RegistrationPermit;
+rdfs:range xsd:string;
+rdfs:comment "this property specifies that a registration permit has a particular registration permit number".
+
+
+:ExplorationAndDevelopmentPermit rdf:type owl:Class;
+	rdfs:subClassOf :PetroleumPermit;
+	rdfs:comment "  this classifies all the permits pertaining to exploration and development".
+
+:ProductionPermit rdf:type owl:Class;
+	rdfs:subClassOf :PetroleumPermit;
+	rdfs:comment "  this classifies all the permits pertaining to production".
+
+:InstallationAndOperationOfFacilityPermit rdf:type owl:Class;
+	rdfs:subClassOf :PetroleumPermit;
+	rdfs:comment "  this classifies all the permits pertaining to the installation and operation of facilities".
+
+
+
+
+
+#contract.
+
+
+wd:Q93288 rdf:type owl:Class;
+	rdfs:subClassOf :LegalDocument;
+	rdfs:comment "Q93288 stands for contract. this classifies all the contracts such as petroleum agreements, etc pertaining to the upstream petroleum industry".
+
+:has-contract-start-date rdfs:subPropertyOf   ti:hasIntervalStartDate;
+rdfs:domain wd:Q93288;
+rdfs:comment "this property signifies the start date of a contract".
+
+:has-contract-end-date rdfs:subPropertyOf   ti:hasIntervalEndDate;
+rdfs:domain wd:Q93288;
+rdfs:comment "this property signifies the end date of a contract".
+
+
+
+:PetroleumAgreement rdf:type owl:Class;
+	rdfs:subClassOf wd:Q93288;
+	rdfs:comment "the class of agreements which grant an oil company the authority to undertake E&P activities in Ghana. they also spell out the terms and conditions for carrying out the E&P activities".
+
+:ExtendedPetroleumAgreement rdf:type owl:Class;
+	rdfs:subClassOf :PetroleumAgreement;
+	rdfs:comment "the class of extended agreements which grant an oil company the authority to undertake E&P activities in Ghana. they also spell out the terms and conditions for carrying out the E&P activities".
+
+
+:PetroleumSubcontract rdf:type owl:Class;
+	rdfs:subClassOf wd:Q93288;
+	rdfs:comment "a class of contracts which are entered into to provide services or undertake certain petroleum operations for contractors".
+
+
+:PetroleumServiceAgreement rdf:type owl:Class;
+	rdfs:subClassOf :PetroleumSubcontract;
+rdfs:comment "a class of contracts which are entered into strictly for the provision of services related to petroleum activities".
+
+
+:enter-into rdf:type owl:ObjectProperty;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (:ServiceProvider :OilCompany)];
+rdfs:range wd:Q93288;
+rdfs:comment "this property specifies that an oil company or service provider is a party to a contract".
+
+:has-contract-party rdf:type owl:ObjectProperty;
+rdfs:domain wd:Q93288;
+rdfs:range [rdf:type owl:Class; owl:unionOf (:ServiceProvider :OilCompany wd:Q6256)];
+rdfs:comment " this property specifies the parties to a contract".
+
+:has-petroleum-agreement-contractor-party rdfs:subPropertyOf :has-contract-party;
+rdfs:domain :PetroleumAgreement ;
+rdfs:range :OilCompany;
+rdfs:comment "this property specifies that an oil company is a contractor party to a petroleum agreement".
+
+:has-petroleum-agreement-state-party rdfs:subPropertyOf :has-contract-party;
+rdfs:domain :PetroleumAgreement ;
+rdfs:range wd:Q6256;
+rdfs:comment "this property specifies that a country is a state party to a petroleum agreement ".
+
+:has-contract-area rdf:type owl:ObjectProperty;
+rdfs:domain :PetroleumAgreement ;
+rdfs:range :ContractArea;
+rdfs:comment "this property specifies that a contract area is the subject matter of a petroleum agreement".
+
+
+:has-petroleum-agreement-start-date rdfs:subPropertyOf   :has-contract-start-date;
+rdfs:domain :PetroleumAgreement;
+rdfs:comment "this property signifies the start date of the petroleum agreement".
+
+:has-petroleum-agreement-end-date rdfs:subPropertyOf   :has-contract-end-date;
+rdfs:domain :PetroleumAgreement;
+rdfs:comment "this property signifies the end date of the petroleum agreement".
+
+:has-extended-petroleum-agreement-start-date rdfs:subPropertyOf   ti:hasIntervalStartDate;
+rdfs:domain :ExtendedPetroleumAgreement;
+rdfs:comment "this property signifies the start date of the extended petroleum agreement".
+
+:has-extended-petroleum-agreement-end-date rdfs:subPropertyOf   ti:hasIntervalEndDate;
+rdfs:domain :ExtendedPetroleumAgreement;
+rdfs:comment "this property signifies the end date of the extended petroleum agreement".
+
+
+
+
+
+
+:has-subcontract-awarding-party rdfs:subPropertyOf :has-contract-party;
+rdfs:domain :PetroleumSubcontract;
+rdfs:range [rdf:type owl:Class; owl:unionOf (:ServiceProvider :OilCompany)];
+rdfs:comment "this property specifies that an oil company or a service provider is an awarding party to a subcontract. (the company awarding or granting the contract)".
+
+:has-subcontract-awardee-party rdfs:subPropertyOf :has-contract-party;
+rdfs:domain :PetroleumSubcontract;
+rdfs:range [rdf:type owl:Class; owl:unionOf (:ServiceProvider :OilCompany)];
+rdfs:comment "this property specifies that an oil company or a service provider is an awardee party to a subcontract. (the company that is been awarded or granted  the contract)".
+
+:ratified-by rdf:type owl:ObjectProperty;
+rdfs:domain :PetroleumAgreement;
+rdfs:range  wd:Q1807513;
+rdfs:comment " this property specifies that a petroleum agreement has been approved by parliament of Ghana. according to section 10 (13) of act 919 and article 268 of the 1992 constitution of Ghana, all petroleum agreements entered into by Ghana must be ratified by parliament".
+
+#write a shacl rule which state that a petroleum agreement is valid if one of the parties to the petroleum agreement is Ghana and the agreement has been ratified by Ghana.
+#write a shacl rule wich state that if an oil company enters into a valid petroleum agreement and has a registration permit, then that oil company plays the upstream company role of contractor.
+#write a shacl rule which states that if an oil company or a service provider which is registered with the petroleum commission enters into a petroleum subcontract with the written approval of the petroleum commission, then that oil company or service provider plays the upstream company role of subcontractor.
+#note that a company would be deemed to have registered with the petroleum commission if that company has a petroleum commission registration permit number  
+
+#written approvals.
+
+:WrittenApproval  rdf:type owl:Class;
+	rdfs:subClassOf :LegalDocument;
+rdfs:comment "this classifies all the written approvals by relevant agencies".
+
+:written-approval-by rdf:type owl:ObjectProperty;
+rdfs:domain :WrittenApproval;
+rdfs:range :RelevantAgency;
+rdfs:comment " this specifies the relevant agencies which issued the written approvals".
+#this is for nic approval of offshore insurance.
+
+:has-written-approval-for rdf:type owl:ObjectProperty;
+rdf:domain :WrittenApproval;
+rdfs:range [rdf:type owl:Class; owl:unionOf (:LegalDocument:PetroleumActivity :InsuredAsset)];
+rdfs:comment "this signifies what the written approval has been issued for". 
+
+#note that the classes in the union is not exaustive, as and when more classes are identified as requiring written approvals, they will be added.
+
+:PetroleumSubcontractWrittenApproval rdf:typ owl:Class;
+rdfs:subClassOf :WrittenApproval;
+rdfs:comment "this classifies all written approvals for petroleum subcontract issued by the petroleum commission".
+
+#written approval for petroleum subcontract.
+:pscwa rdf:type :PetroleumSubcontractWrittenApproval;
+:has-written-approval-for :psc;
+:written-approval-by wd:Q85793009.
+
+#compliance filing documents.
+
+:ComplianceFilingDocument  rdf:type owl:Class;
+	rdfs:subClassOf :LegalDocument;
+	rdfs:comment "this classifies all the documents which oil companies and service providers must submit to the various regulatory bodies for compliance checking".
+
+#:AnnualLocalContentPlan rdf:typ owl:Class;
+#rdfs:subClassOf :ComplianceFilingDocument;
+#rdfs:comment "this classifies local content plans".
+
+#:AnnualLocalContentPerformanceReport rdf:typ owl:Class;
+#rdfs:subClassOf :ComplianceFilingDocument;
+#rdfs:comment "this classifies local content performance reports".
+
+
+
+:has-submitted rdf:type owl:ObjectProperty;
+rdfs:domain [rdf:type owl:Class; owl:unionOf (:ServiceProvider :OilCompany)];
+rdfs:range :ComplianceFilingDocument;
+rdfs:comment "this property specifies that a compliance filing document has been submitted by either an oil company or a service provider".
+
+:submitted-on rdf:type owl:ObjectProperty;
+rdfs:domain :ComplianceFilingDocument ;
+rdfs:range xsd:dateTime;
+rdfs:comment "this property specifies the date on which a compliance filing document was submitted".
+
+
+:submitted-to rdf:type owl:ObjectProperty;
+rdfs:domain :ComplianceFilingDocument ;
+rdfs:range :RelevantAgency;
+rdfs:comment "this property specifies the regulatory bodies which the compliance filing documents are submitted to".
+
+:SubmissionDeadlineWindow rdf:type owl:Class;
+rdfs:subClassOf ti:TimeInterval;
+rdfs:comment "this is to specify the time interval or time window for submitting documents to relevant agencies".
+
+:SubmissionWindowLCP rdf:type owl:Class;
+rdfs:subClassOf :SubmissionDeadlineWindow;
+rdfs:comment "this stipulates the time window within which all annual local content plan must be submitted".
+
+#submission window for 2024.
+:ALCPSubmissionWindow rdf:type :SubmissionWindowLCP;
+time:generalYear "2024"^^xsd:gYear;
+ti:hasIntervalStartDate "2024-01-01T00:00:00Z"^^xsd:dateTime;
+ti:hasIntervalEndDate "2024-02-29T00:00:00Z"^^xsd:dateTime.
+
+
+#:SubmissionWindowLCPR rdf:type owl:Class;
+#rdfs:subClassOf :SubmissionDeadlineWindow;
+#rdfs:comment "this stipulates the time window within which all annual local content performance report must be submitted".
+
+
+#write a shacl rule which checks all the submission dates for the various compliance filing documents.
+
+
+
+
+
+
+
+
+
+:DocumentPart rdf:type owl:Class;
+rdfs:comment "this is a set of the various parts or portions included in a document".
+
+:has-document-part rdf:type owl:ObjectProperty;
+rdfs:domain :LegalDocument;
+rdfs:range :DocumentPart;
+rdfs:comment "this property links the various parts of a document to the main document".
+
+
+
+wd:Q17709279 rdf:type owl:Class;
+rdfs:subClassOf :LegalDocument;
+rdfs:comment "wd:Q17709279 stands for attachment. this classifies all documents which are attached to other documents".
+
+:is-attached-to rdf:type owl:ObjectProperty;
+rdfs:domain wd:Q17709279;
+rdfs:range :LegalDocument;
+rdfs:comment "this property signifies that an attachment is attached to another document".
+
+
+
+
+
+
+
+#:legislativeInstrument rdf:type owl:Class;
+#rdfs:subClassOf :LegalDocument;
+#rdfs:comment "This is a class of subsidiary legislation that have the force of law but is not enacted directly by Parliament. they are created by various authorities under powers granted by Parliament through Acts of Parliament.".
+
+#:LI2204 rdf:type :legislativeInstrument;
+#rdfs:comment "this is the legislative instrument which regulates the area of local content and participation in the upstream petroleum sector of Ghana".
+
+#:LI2435 rdf:type :legislativeInstrument;
+#rdfs:comment "this is the ammended version of LI 2204".
+

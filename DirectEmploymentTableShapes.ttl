@@ -1,0 +1,239 @@
+@prefix :  <https://w3id.org/ontology/uslcp#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xml:  <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+:PrefixesEmbeddedSHsparql sh:declare 
+	[sh:prefix"rdf";sh:namespace"http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI],
+	[sh:prefix"rdfs";sh:namespace"http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI],
+	[sh:prefix"xsd";sh:namespace"http://www.w3.org/2001/XMLSchema#"^^xsd:anyURI],
+	[sh:prefix"";sh:namespace"https://w3id.org/ontology/uslcp#"^^xsd:anyURI].
+	
+#The next shape checks the values in all fields of DirectEmploymentRow
+:CheckRowFields rdf:type sh:NodeShape;
+sh:targetClass :DirectEmploymentRow;
+
+
+#Name
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-name-direct-employee;
+sh:message "has-name-direct-employee: Name must not be empty"
+];
+
+
+#Gender
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-gender-direct-employee;
+sh:message "has-gender-direct-employee: Gender must not be empty"
+];
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:select """SELECT $this ?g
+WHERE
+{
+$this :has-gender-direct-employee ?g.
+FILTER((?g!="M")&&(?g!="F")&&(?g!="")).
+}""";
+sh:message "has-gender-direct-employee: The value stored in the database for this cell ('{?g}') is invalid. Please select either 'M' or 'F' from the list.";
+];
+
+
+#Nationality
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-nationality-direct-employee;
+sh:message "has-nationality-direct-employee: Nationality must not be empty"
+];
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:select """SELECT $this ?n
+WHERE
+{
+$this :has-nationality-direct-employee ?n.
+FILTER((?n!="Ghanaian")&&(?n!="Expatriate")&&(?n!="")).
+}""";
+sh:message "has-nationality-direct-employee: The value stored in the database for this cell ('{?n}') is invalid. Please select either 'Ghanaian' or 'Expatriate' from the list.";
+];
+
+
+#Department
+sh:property[
+sh:pattern "^(?!\\s*$).+" ;
+sh:path :has-department-direct-employee;
+sh:message "has-department-direct-employee: Department must not be empty"
+];
+
+
+#Employment Start Date 
+sh:property[
+sh:pattern "^(?!\\s*$).+" ;
+sh:path :has-employment-start-date-direct-employee;
+sh:message "has-employment-start-date-direct-employee: Employment start date must not be empty"
+];
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:select """SELECT $this ?sdp
+WHERE
+{
+$this :has-employment-start-date-direct-employee ?sdp.
+FILTER(STRLEN(STR(?sdp))>0)#this checks that ?sdp is not empty.
+FILTER(!(REGEX(STR(?sdp), "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$")))
+}""";
+sh:message "has-employment-start-date-direct-employee: Employment start date must not be empty"
+];
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:select """SELECT $this ?formattedDate
+WHERE
+{
+$this :has-employment-start-date-direct-employee ?sdp.
+FILTER(datatype(?sdp)=xsd:dateTime)
+BIND(NOW() AS ?dateTime)
+BIND(STRDT(SUBSTR(STR(?sdp), 1, 10), xsd:date) AS ?date)
+BIND(STR(?date) AS ?dateStr)
+BIND(SUBSTR(?dateStr, 6, 2) AS ?month)
+BIND(SUBSTR(?dateStr, 9, 2) AS ?day)
+BIND(SUBSTR(?dateStr, 1, 4) AS ?year)
+BIND(CONCAT(?month, "/", ?day, "/", ?year) AS ?formattedDate)
+FILTER(?dateTime<?sdp).
+}""";
+sh:message "has-employment-start-date-direct-employee: The specified date ({?formattedDate}) is in the future. Please enter a date that is today or earlier in the format mm/dd/yyyy";
+];
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:select """SELECT $this ?esd?psd
+WHERE
+{
+$this :has-employment-start-date-direct-employee ?esd.
+$this :has-position-start-date-direct-employee ?psd.
+FILTER(STRLEN(STR(?esd))>0)#this checks that ?esd is not empty.
+FILTER((REGEX(STR(?esd), "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$")))#this check it is in the right format.
+FILTER(STRLEN(STR(?psd))>0)#this checks that ?psd is not empty.
+FILTER((REGEX(STR(?psd), "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$")))#this check it is in the right format.
+FILTER(?psd<?esd).
+}""";
+sh:message "has-employment-start-date-direct-employee: The employment start date must precede the position start date.";
+];
+sh:sparql[
+  sh:prefixes :PrefixesEmbeddedSHsparql;
+  sh:select """
+    SELECT $this ?formattedDate
+    WHERE {
+      $this :has-employment-start-date-direct-employee ?esd.
+      FILTER(datatype(?esd) = xsd:dateTime)
+      BIND(STRDT("1960-01-01T00:00:00Z", xsd:dateTime) AS ?minDate)
+      BIND(STRDT(SUBSTR(STR(?esd), 1, 10), xsd:date) AS ?date)
+      BIND(STR(?date) AS ?dateStr)
+      BIND(SUBSTR(?dateStr, 6, 2) AS ?month)
+      BIND(SUBSTR(?dateStr, 9, 2) AS ?day)
+      BIND(SUBSTR(?dateStr, 1, 4) AS ?year)
+      BIND(CONCAT(?month, "/", ?day, "/", ?year) AS ?formattedDate)
+      FILTER(?esd<?minDate)
+    }
+  """;
+  sh:message "has-employment-start-date-direct-employee: The specified date ({?formattedDate}) is before 01/01/1960. Please enter a date on or after 01/01/1960 in the format mm/dd/yyyy";
+];
+
+
+#Position
+sh:property[
+sh:pattern "^(?!\\s*$).+" ;
+sh:path :has-position-direct-employee;
+sh:message "has-position-direct-employee: Position must not be empty"
+];
+
+
+#Position start date
+sh:property[
+sh:pattern "^(?!\\s*$).+" ;
+sh:path :has-position-start-date-direct-employee;
+sh:message "has-position-start-date-direct-employee: Position start date must not be empty"
+];
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:select """SELECT $this ?sdp
+WHERE
+{
+$this :has-position-start-date-direct-employee ?sdp.
+FILTER(STRLEN(STR(?sdp))>0)#this checks that ?sdp is not empty.
+FILTER(!(REGEX(STR(?sdp), "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$")))
+}""";
+sh:message "has-position-start-date-direct-employee: Position start date must not be empty"
+];
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:select """SELECT $this ?formattedDate
+WHERE
+{
+$this :has-position-start-date-direct-employee ?sdp.
+FILTER(datatype(?sdp)=xsd:dateTime)
+BIND(NOW() AS ?dateTime)
+BIND(STRDT(SUBSTR(STR(?sdp), 1, 10), xsd:date) AS ?date)
+BIND(STR(?date) AS ?dateStr)
+BIND(SUBSTR(?dateStr, 6, 2) AS ?month)
+BIND(SUBSTR(?dateStr, 9, 2) AS ?day)
+BIND(SUBSTR(?dateStr, 1, 4) AS ?year)
+BIND(CONCAT(?month, "/", ?day, "/", ?year) AS ?formattedDate)
+FILTER(?dateTime<?sdp).
+}""";
+sh:message "has-position-start-date-direct-employee: The specified date ({?formattedDate}) is in the future. Please enter a date that is today or earlier in the format mm/dd/yyyy";
+];
+sh:sparql[
+  sh:prefixes :PrefixesEmbeddedSHsparql;
+  sh:select """
+    SELECT $this ?formattedDate
+    WHERE {
+      $this :has-position-start-date-direct-employee ?psd.
+      FILTER(datatype(?psd) = xsd:dateTime)
+      BIND(STRDT("1960-01-01T00:00:00Z", xsd:dateTime) AS ?minDate)
+      BIND(STRDT(SUBSTR(STR(?psd), 1, 10), xsd:date) AS ?date)
+      BIND(STR(?date) AS ?dateStr)
+      BIND(SUBSTR(?dateStr, 6, 2) AS ?month)
+      BIND(SUBSTR(?dateStr, 9, 2) AS ?day)
+      BIND(SUBSTR(?dateStr, 1, 4) AS ?year)
+      BIND(CONCAT(?month, "/", ?day, "/", ?year) AS ?formattedDate)
+      FILTER(?psd < ?minDate)
+    }
+  """;
+  sh:message "has-position-start-date-direct-employee: The specified date ({?formattedDate}) is before 01/01/1960. Please enter a date on or after 01/01/1960 in the format mm/dd/yyyy";
+];
+
+
+#Category
+sh:property[
+sh:pattern "^(?!\\s*$).+";
+sh:path :has-category-direct-employee;
+sh:message "has-category-direct-employee: Category must not be empty"
+];
+sh:sparql[sh:prefixes :PrefixesEmbeddedSHsparql;
+sh:select """SELECT $this ?n
+WHERE
+{
+$this :has-category-direct-employee ?n.
+FILTER((?n!="Management")&&(?n!="Technical Core Staff")&&(?n!="Other")&&(?n!="")).
+}""";
+sh:message "has-category-direct-employee: The value stored in the database for this cell ('{?n}') is invalid. Please select either 'Management', 'Technical Core Staff', or 'Other' from the list.";
+];
+
+
+#Job description (responsibilities)
+sh:property[
+sh:pattern "^(?!\\s*$).+" ;
+sh:path :has-job-description-responsibilities-direct-employee;
+sh:message "has-job-description-responsibilities-direct-employee: Job description (responsibilities) must not be empty"
+];
+
+
+#Required Expertise/skills
+sh:property[
+sh:pattern "^(?!\\s*$).+" ;
+sh:path :has-required-expertise-or-skills-direct-employee;
+sh:message "has-required-expertise-or-skills-direct-employee: Required Expertise/skills must not be empty"
+];
+
+
+#Expenditure/year (USD)
+sh:property[
+sh:pattern "^[+-]?[0-9]*\\.?[0-9]+$" ;
+sh:path :has-expenditure-per-year-in-usd-direct-employee;
+sh:message "has-expenditure-per-year-in-usd-direct-employee: Insert a valid number. If you wish to specify a decimal number use '.', e.g., '3.5'";
+]
+
+.

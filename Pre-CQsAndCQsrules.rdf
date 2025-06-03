@@ -1,0 +1,1233 @@
+@prefix : <https://w3id.org/ontology/uslcp#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix xml: <http://www.w3.org/XML/1998/namespace>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix lkif-legal-action: <http://www.estrellaproject.org/lkif-core/legal-action.owl#>.
+@prefix lkif-mereology: <http://www.estrellaproject.org/lkif-core/mereology.owl#>.
+@prefix lkif-role: <http://www.estrellaproject.org/lkif-core/role.owl#>.
+@prefix wd: <http://www.wikidata.org/entity/>.
+@prefix wdt: <http://www.wikidata.org/prop/direct/>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix tvc: <http://www.essepuntato.it/2012/04/tvc/#>.
+@prefix ti: <http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#>.
+@prefix time: <http://www.w3.org/2006/time#>.
+@prefix xmldsig: <http://www.w3.org/2000/09/xmldsig#>.
+@base <https://w3id.org/ontology/uslcpo#> .
+
+<https://w3id.org/ontology/uslcpo#> rdf:type owl:Ontology .
+
+###########################################################################################################
+
+
+:compliance-message rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:CompliantWithR7Submission :CompliantWithR27OrR28 :CompliantWithR29 :CompliantWithR31 :CompliantWithR33 :CompliantWithS2ABefore5Years :CompliantWithS2A5YearsOnwards :CompliantWithS2A10YearsOnwards :CompliantWithS2BBefore5Years :CompliantWithS2B5YearsOnwards :CompliantWithS2B10YearsOnwards :CompliantWithS2CBefore5Years :CompliantWithS2C5YearsOnwards :CompliantWithS2C10YearsOnwards)];
+	rdfs:range xsd:string;
+rdfs:comment "this property associate a message to each company reported as compliant with respect to some rule.".
+
+:violation-message rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:NotSubmittedALCP :NotCompliantWithR7Submission :NotCompliantWithR27OrR28 :NotCompliantWithR29 :NotCompliantWithR31 :NotCompliantWithR33 :NotCompliantWithS2ABefore5Years :NotCompliantWithS2A5YearsOnwards :NotCompliantWithS2A10YearsOnwards :NotCompliantWithS2BBefore5Years :NotCompliantWithS2B5YearsOnwards :NotCompliantWithS2B10YearsOnwards :NotCompliantWithS2CBefore5Years :NotCompliantWithS2C5YearsOnwards :NotCompliantWithS2C10YearsOnwards)];
+	rdfs:range xsd:string;
+rdfs:comment "this property associate a message to each company reported as non-compliant with respect to some rule.".
+
+
+#defines all prefixes used in at least one SHACL SPARQLRule rule.
+:PrefixesEmbeddedSPARQLRules sh:declare 
+	[sh:prefix"rdf";sh:namespace"http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI],
+	[sh:prefix"rdfs";sh:namespace"http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI],
+	[sh:prefix"owl";sh:namespace"http://www.w3.org/2002/07/owl#"^^xsd:anyURI],
+	[sh:prefix"xsd";sh:namespace"http://www.w3.org/2001/XMLSchema#"^^xsd:anyURI],
+	[sh:prefix"xml";sh:namespace"http://www.w3.org/XML/1998/namespace"^^xsd:anyURI],
+	[sh:prefix"lkif";sh:namespace"http://www.estrellaproject.org/lkif-core/lkif-top.owl#"^^xsd:anyURI],
+	[sh:prefix"wd";sh:namespace"http://www.wikidata.org/entity/"^^xsd:anyURI],
+	[sh:prefix"wdt";sh:namespace"http://www.wikidata.org/prop/direct/"^^xsd:anyURI],
+	[sh:prefix"tvc";sh:namespace"http://www.essepuntato.it/2012/04/tvc/#"^^xsd:anyURI],
+	[sh:prefix"ti";sh:namespace"http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#"^^xsd:anyURI],
+	[sh:prefix"time";sh:namespace"http://www.w3.org/2006/time#"^^xsd:anyURI],
+	[sh:prefix"";sh:namespace"https://w3id.org/ontology/uslcp#"^^xsd:anyURI].
+
+
+[rdf:type sh:NodeShape;
+
+#this rule states that an area will only be validly opened if the public body employee opening it plays the role of the minister of energy.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 0; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?oa rdf:type :OpenArea.
+}
+WHERE
+{
+?oa :area-opened-by ?po.
+?po :play-public-body-employment-role :ministerOfEnergy.
+}
+"""];
+
+#This rule states that a Licence to install and operate facilities for transportation, treatment and storage of petroleum is valid if it is granted by a public body employee who plays the role of minister of energy and has a fix duration.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 0; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?li rdf:type :ValidLicenceToInstallAndOperateFacilitiesForTransportationTreatmentAndStorageOfPetroleum.
+:ValidLicenceToInstallAndOperateFacilitiesForTransportationTreatmentAndStorageOfPetroleum rdf:type owl:Class;
+rdfs:subClassOf :ValidPetroleumLicense;
+rdfs:comment "this classifies valid Licences to install and operate facilities for transportation, treatment and storage of petroleum which are granted by a public body employee who plays the role of minister of energy and have fix durations".
+}
+WHERE
+{
+?li rdf:type  :LicenseForTheInstallationAndOperationOfStorageFacility ;
+:has-petroleum-license-for-transportation-treatment-storage-start-date ?sd;
+:has-petroleum-license-for-transportation-treatment-storage-end-date ?ed;
+:granted-to ?c.
+?me :grant ?li ;
+ rdf:type wd:Q3796928;
+:has-public-employee-name ?men;
+:play-public-body-employment-role :ministerOfEnergy.
+}
+"""];
+
+#this shacl rule states that the grant of a petroleum reconnaissance licence is said to be valid, when it is granted by a public body employee and that public body employee plays the role of minister of energy and granted the licence in consultation with the petroleum commission and the license has a defined open area and the license has a three-year duration.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 1; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?vrl rdf:type :ValidPetroleumReconnaissanceLicence.
+:ValidPetroleumReconnaissanceLicence rdf:type owl:Class;
+rdfs:subClassOf :ValidPetroleumLicense ;
+rdfs:comment "this classifies petroleum reconnaissance licenses which have been granted by a public body employee and that public body employee plays the role of minister of energy and granted the licence in consultation with the petroleum commission and the license has a defined open area and the license has a three-year duration".
+}
+WHERE
+{
+?vrl  rdf:type  :PetroleumReconnaissanceLicence;
+:has-petroleum-reconnaissance-licence-start-date ?sd;
+:has-petroleum-reconnaissance-licence-end-date ?ed;
+:granted-to ?c;
+:grant-in-consultation-with wd:Q85793009;
+:has-defined-area ?oa.
+?oa rdf:type :OpenArea.
+?me :grant ?vrl ;
+ rdf:type wd:Q3796928;
+:has-public-employee-name ?men;
+:play-public-body-employment-role :ministerOfEnergy.
+FILTER((?ed-?sd) <= "P3Y"^^xsd:duration)
+}
+"""];
+
+#This rule states that if an oil company or a service provider has been granted a valid license, then that oil company or service provider plays the upstream company role of licensee.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 2; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?c :plays-upstream-company-role :licensee.
+}
+WHERE
+{
+?l :granted-to ?c.
+{?l rdf:type :ValidLicenceToInstallAndOperateFacilitiesForTransportationTreatmentAndStorageOfPetroleum }
+UNION
+{?l rdf:type :ValidPetroleumReconnaissanceLicence }
+}
+"""];
+
+#this rule states that a petroleum agreement is valid if one of the parties to the petroleum agreement is Ghana and the agreement has been ratified by Ghana and the agreement is not more than 25 years.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 0; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?vpa rdf:type :ValidPetroleumAgreement.
+:ValidPetroleumAgreement rdf:type owl:Class;
+rdfs:subClassOf :PetroleumAgreement;
+rdfs:comment " this classifies all petroleum agreements that have been ratified by the parliament of Ghana, have been entered into by Ghana and oil companies, have contract areas and their duration do not excede 25 years".
+}
+WHERE
+{
+?vpa rdf:type :PetroleumAgreement;
+:has-petroleum-agreement-contractor-party ?pac;
+:has-petroleum-agreement-state-party wd:Q117;
+:has-contract-area ?ca;
+:has-petroleum-agreement-start-date ?sd;
+:has-petroleum-agreement-end-date ?ed;
+:ratified-by ?pg.
+FILTER((?ed - ?sd < "P25Y"^^xsd:duration) || (?ed - ?sd = "P25Y"^^xsd:duration))
+}
+"""];
+
+#this rule states that if an oil company enters into a valid petroleum agreement , then that oil company plays the upstream company role of contractor.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 2; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?c :plays-upstream-company-role :contractor.
+}
+WHERE
+{
+?vpa rdf:type  :ValidPetroleumAgreement .
+?vpa :has-petroleum-agreement-contractor-party ?c.
+}
+"""];
+
+#this rule states that if an oil company or a service provider which is registered with the petroleum commission enters into a petroleum subcontract with the written approval of the petroleum commission, then that oil company or service provider plays the upstream company role of subcontractor.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 0; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?awardee :plays-upstream-company-role :subcontractor .
+}
+WHERE
+{
+?psc rdf:type :PetroleumSubcontract;
+:has-subcontract-awarding-party ?awardingParty;
+:has-subcontract-awardee-party ?awardee.
+?pscwa rdf:type :PetroleumSubcontractWrittenApproval;
+:has-written-approval-for ?psc;
+:written-approval-by wd:Q85793009.
+?rp rdf:type :RegistrationPermit;
+:issued-to ?awardee.
+}
+"""];
+
+
+#this rule check whether a company has submitted its annual local content plan within the stipulated window.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 4; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+#:CompliantWithR7Submission rdf:type owl:Class.
+?com rdf:type :CompliantWithR7Submission;
+:compliance-message ?msg.
+}
+WHERE
+{
+?com :plays-upstream-company-role ?role.
+?com :has-submitted ?lcp.
+?lcp :submitted-to wd:Q85793009.
+?lcp :submitted-on ?lcpsd.
+?lws rdf:type :SubmissionWindowLCP.
+?lws ti:hasIntervalStartDate ?sd.
+?lws ti:hasIntervalEndDate ?ed.
+FILTER(?lcpsd>=?sd&&?lcpsd<=?ed)
+
+# Extract only the date part (YYYY-MM-DD) from xsd:dateTime
+BIND(SUBSTR(STR(?sd), 1, 10) AS ?sdDate) # Extracts the first 10 characters
+BIND(SUBSTR(STR(?ed), 1, 10) AS ?edDate) # Extracts the first 10 characters
+BIND(CONCAT("submitted its ALCP within the submission window, (from ",STR(?sdDate), " to ", STR(?edDate),"); See reg 7(2)(b).") AS ?msg)
+}
+"""];
+
+#this rule check whether a company has submitted its annual local content plan within the stipulated window.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 4; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+#:NotCompliantWithR7Submission rdf:type owl:Class.
+?com rdf:type :NotCompliantWithR7Submission;
+:violation-message ?msg.
+}
+WHERE
+{
+?com :plays-upstream-company-role ?role.
+?com :has-submitted ?lcp.
+?lcp :submitted-to wd:Q85793009.
+?lcp :submitted-on ?lcpsd.
+?lws rdf:type :SubmissionWindowLCP.
+?lws ti:hasIntervalStartDate ?sd.
+?lws ti:hasIntervalEndDate ?ed.
+FILTER(?lcpsd<?sd||?lcpsd>?ed)
+
+# Extract only the date part (YYYY-MM-DD) from xsd:dateTime
+BIND(SUBSTR(STR(?sd), 1, 10) AS ?sdDate) # Extracts the first 10 characters
+BIND(SUBSTR(STR(?ed), 1, 10) AS ?edDate) # Extracts the first 10 characters
+BIND(CONCAT("submitted its ALCP outside the submission window, (from ",STR(?sdDate), " to ", STR(?edDate),"); See reg 7(2)(b).") AS ?msg)
+}
+"""];
+
+
+#this rule states that a company is compliant if it either insures or reinsures its assets with an indigenous insurance provider or reinsurance provider or a insurance broker or a reinsurance broker.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+#:CompliantWithR27OrR28 rdf:type owl:Class.
+?com rdf:type :CompliantWithR27OrR28;
+:compliance-message "insured its assets through an indigenous brokerage firm or a reinsurance broker or through an approved foreign insurance firm by NIC; see reg 27 & 28".
+}
+WHERE
+{
+{
+?com rdf:type :CompliantWithR7Submission;
+:employ-the-service-of ?rsp.
+?rsp rdf:type :ReinsuranceServiceProvider;
+:has-reinsurance-name ?rspn.
+?grsp rdf:type :IndigenousReinsuranceProvider;
+:has-reinsurance-name ?grspn.
+FILTER(str(?rspn) = str(?grspn))
+}
+UNION
+{
+?com rdf:type :CompliantWithR7Submission;
+:employ-the-service-of ?rsp.
+?rsp rdf:type :ReinsuranceServiceProvider;
+:has-reinsurance-name ?rspn.
+FILTER NOT EXISTS{?grsp rdf:type :IndigenousReinsuranceProvider;
+:has-reinsurance-name ?grspn.
+FILTER(str(?rspn) = str(?grspn))}
+?com :has-reason-or-explanation-for-not-insuring-or-reinsuring ?roi.
+}
+}
+"""];
+
+#this rule states that a company is not compliant if it does not either insures or reinsures its assets with an indigenous insurance provider or reinsurance provider or a insurance broker or a reinsurance broker.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+#:NotCompliantWithR27OrR28 rdf:type owl:Class.
+?com rdf:type :NotCompliantWithR27OrR28;
+:violation-message "did not insure its assets through an indigenous brokerage firm or a reinsurance broker or through an approved foreign insurance firm by NIC; see reg 27 & 28".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission;
+:employ-the-service-of ?rsp.
+?rsp rdf:type :ReinsuranceServiceProvider;
+:has-reinsurance-name ?rspn.
+FILTER NOT EXISTS{?grsp rdf:type :IndigenousReinsuranceProvider;
+:has-reinsurance-name ?grspn.
+FILTER(str(?rspn) = str(?grspn))}
+FILTER NOT EXISTS{?com :has-reason-or-explanation-for-not-insuring-or-reinsuring ?roi}
+}
+"""];
+
+#this rule states that a company is compliant if it either insures or reinsures its assets with an indigenous insurance provider or reinsurance provider or a insurance broker or a reinsurance broker.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+#:CompliantWithR27OrR28 rdf:type owl:Class.
+?com rdf:type :CompliantWithR27OrR28;
+:compliance-message "insured its assets through an indigenous brokerage firm or a reinsurance broker or through an approved foreign insurance firm by NIC; see reg 27 & 28".
+}
+WHERE
+{
+{
+?com rdf:type :CompliantWithR7Submission;
+:employ-the-service-of ?bf.
+?bf rdf:type wd:Q2073644;
+:has-insurance-name ?bfn.
+?ibf rdf:type :IndigenousBrokerageFirm;
+:has-insurance-name ?ibfn.
+FILTER(str(?bfn) = str(?ibfn))
+}
+UNION
+{
+?com rdf:type :CompliantWithR7Submission;
+:employ-the-service-of ?bf.
+?bf rdf:type wd:Q2073644;
+:has-insurance-name ?bfn.
+FILTER NOT EXISTS{?ibf rdf:type :IndigenousBrokerageFirm;
+:has-insurance-name ?ibfn.
+FILTER(str(?bfn) = str(?ibfn))}
+?com :has-reason-or-explanation-for-not-insuring-or-reinsuring ?roi.
+}
+}
+"""];
+
+#this rule states that a company is not compliant if it does not either insures or reinsures its assets with an indigenous insurance provider or reinsurance provider or a insurance broker or a reinsurance broker.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+#:NotCompliantWithR27OrR28 rdf:type owl:Class.
+?com rdf:type :NotCompliantWithR27OrR28;
+:violation-message "did not insure its assets through an indigenous brokerage firm or a reinsurance broker or through an approved foreign insurance firm by NIC; see reg 27 & 28".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission;
+:employ-the-service-of ?bf.
+?bf rdf:type wd:Q2073644;
+:has-insurance-name ?bfn.
+FILTER NOT EXISTS{?ibf rdf:type :IndigenousBrokerageFirm;
+:has-insurance-name ?ibfn.
+FILTER(str(?bfn) = str(?ibfn))}
+FILTER NOT EXISTS{?com :has-reason-or-explanation-for-not-insuring-or-reinsuring ?roi}
+}
+"""];
+
+#this rule states that a company is compliant if it either insures or reinsures its assets with an indigenous insurance provider or reinsurance provider or a insurance broker or a reinsurance broker.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+#:CompliantWithR27OrR28 rdf:type owl:Class.
+?com rdf:type :CompliantWithR27OrR28;
+:compliance-message "insured its assets through an indigenous brokerage firm or a reinsurance broker or through an approved foreign insurance firm by NIC; see reg 27 & 28".
+}
+WHERE
+{
+{
+?com rdf:type :CompliantWithR7Submission;
+:employ-the-service-of ?Ib.
+?ib rdf:type wd:Q285759 ;
+:has-insurance-name ?ibn.
+?gib rdf:type :IndigenousInsuranceBroker;
+:has-insurance-name ?gibn.
+FILTER(str(?ibn) = str(?gibn))
+}
+UNION
+{
+?com rdf:type :CompliantWithR7Submission;
+:employ-the-service-of ?Ib.
+?ib rdf:type wd:Q285759 ;
+:has-insurance-name ?ibn.
+FILTER NOT EXISTS{?gib rdf:type :IndigenousInsuranceBroker;
+:has-insurance-name ?gibn.
+FILTER(str(?ibn) = str(?gibn))}
+?com :has-reason-or-explanation-for-not-insuring-or-reinsuring ?roi.
+}
+}
+"""];
+
+#this rule states that a company is not compliant if it does not either insures or reinsures its assets with an indigenous insurance provider or reinsurance provider or a insurance broker or a reinsurance broker.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+#:NotCompliantWithR27OrR28 rdf:type owl:Class.
+?com rdf:type :NotCompliantWithR27OrR28;
+:violation-message "did not insure its assets through an indigenous brokerage firm or a reinsurance broker or through an approved foreign insurance firm by NIC; see reg 27 & 28".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission;
+:employ-the-service-of ?Ib.
+?ib rdf:type wd:Q285759 ;
+:has-insurance-name ?ibn.
+FILTER NOT EXISTS{?gib rdf:type :IndigenousInsuranceBroker;
+:has-insurance-name ?gibn.
+FILTER(str(?ibn) = str(?gibn))}
+FILTER NOT EXISTS{?com :has-reason-or-explanation-for-not-insuring-or-reinsuring ?roi}
+}
+"""];
+
+#this rule states that a company is compliant if it employs the legal services of an indigenous legal practitioner or law firm.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+#:CompliantWithR29 rdf:type owl:Class.
+?com rdf:type :CompliantWithR29;
+:compliance-message "employed the legal services of a Ghanaian lawyer or law firm; see reg 29".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission;
+:employ-the-service-of ?lf.
+?lf rdf:type :LegalPractitionerOrFirm;
+:has-name-of-legal-practitioner-or-firm ?lfn.
+{
+?glf rdf:type :IndigenousLawFirm;
+:has-name-of-legal-practitioner-or-firm ?glfn.
+FILTER(str(?lfn) = str(?glfn))
+}
+UNION
+{
+?glp rdf:type :GhanaianLegalPractitioner;
+:has-name-of-legal-practitioner-or-firm ?glpn.
+FILTER(str(?lfn) = str(?glpn))
+}
+}
+"""];
+
+#this rule states that a company is not compliant if it does not employ the legal services of an indigenous legal practitioner or law firm.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+#:NotCompliantWithR29 rdf:type owl:Class.
+?com rdf:type :NotCompliantWithR29;
+:violation-message "did not employ the legal services of a Ghanaian lawyer or law firm; see reg 29".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission;
+:employ-the-service-of ?lf.
+?lf rdf:type :LegalPractitionerOrFirm;
+:has-name-of-legal-practitioner-or-firm ?lfn.
+FILTER NOT EXISTS{{
+?glf rdf:type :IndigenousLawFirm;
+:has-name-of-legal-practitioner-or-firm ?glfn.
+FILTER(str(?lfn) = str(?glfn))
+}
+UNION
+{
+?glp rdf:type :GhanaianLegalPractitioner;
+:has-name-of-legal-practitioner-or-firm ?glpn.
+FILTER(str(?lfn) = str(?glpn))
+}}
+}
+"""];
+
+
+#this rule states that a company is not compliant if it does not employ the financial services of an indigenous financial institution .
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+#:NotCompliantWithR31 rdf:type owl:Class.
+?com rdf:type :NotCompliantWithR31;
+:violation-message "did not employ the financial services of a Ghanaian financial institution; see reg 31".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission;
+:employ-the-service-of ?fi.
+?fi rdf:type wd:Q650241;
+:has-financial-institution-name ?fin.
+FILTER NOT EXISTS{?gfi rdf:type :GhanaianFinancialInstitution;
+:has-financial-institution-name ?gfin.
+FILTER(str(?fin) = str(?gfin))}
+}
+"""];
+
+#this rule states that a company is compliant if it employs the financial services of an indigenous financial institution .
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+#:CompliantWithR31 rdf:type owl:Class.
+?com rdf:type :CompliantWithR31;
+:compliance-message "employed the financial services of a Ghanaian financial institution; see reg 31".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission;
+:employ-the-service-of ?fi.
+?fi rdf:type wd:Q650241;
+:has-financial-institution-name ?fin.
+?gfi rdf:type :GhanaianFinancialInstitution;
+:has-financial-institution-name ?gfin.
+FILTER(str(?fin) = str(?gfin))
+}
+"""];
+
+#this rule states that a company is compliant if it employs the bank services of an indigenous bank.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+#:CompliantWithR33 rdf:type owl:Class.
+?com rdf:type :CompliantWithR33;
+:compliance-message "employed the bank services of a Ghanaian bank; see reg 33".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission;
+:employ-the-service-of ?b.
+?b rdf:type wd:Q22687;
+:has-bank-name ?bn.
+?Ib rdf:type :IndigenousGhanaianBank;
+:has-bank-name ?ibn.
+FILTER(str(?bn) = str(?ibn))
+}
+"""];
+
+#this rule states that a company is compliant if it does not employ the bank services of an indigenous bank.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+#:NotCompliantWithR33 rdf:type owl:Class.
+?com rdf:type :NotCompliantWithR33;
+:violation-message "did not employ the bank services of a Ghanaian bank; see reg 33".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission;
+:employ-the-service-of ?b.
+?b rdf:type wd:Q22687;
+:has-bank-name ?bn.
+FILTER NOT EXISTS{?Ib rdf:type :IndigenousGhanaianBank;
+:has-bank-name ?ibn.
+FILTER(str(?bn) = str(?ibn))}
+}
+"""];
+
+
+
+#this SHACL rule counts the total number of management staff a contractor, subcontractor, licensee or allied entity a company CURRENTLY has.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 3; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com :has-total-management-staff ?manemp.
+}
+{
+SELECT ?com (count(distinct ?e) as ?manemp)
+WHERE
+{
+?com :plays-upstream-company-role ?ur.
+?e :has-employment ?ep.
+?ep :with-company ?com.
+?e :has-employment-role ?erp.
+?erp :within-employment-context ?ep.
+?erp :with-role ?man.
+?man rdf:type :ManagementStaff.
+}
+GROUP BY ?com
+}
+""";
+];
+
+#this SHACL rule counts the total number of Ghanaian management staff a contractor, subcontractor, licensee or allied entity a company CURRENTLY has.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 3; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com :has-total-Ghanaian-management-staff ?ghmanemp.
+}
+{
+SELECT ?com (count(distinct ?e) as ?ghmanemp)
+WHERE
+{
+?com :plays-upstream-company-role ?ur.
+?e :has-employee-nationality ?en.
+FILTER(?en ="Ghanaian"^^xsd:string)
+?e :has-employment ?ep.
+?ep :with-company ?com.
+?e :has-employment-role ?erp.
+?erp :within-employment-context ?ep.
+?erp :with-role ?man.
+?man rdf:type :ManagementStaff.
+}
+GROUP BY ?com
+}
+""";
+];
+
+#this SHACL rule allocates 0 to the total number of management staff where there are no management  staff.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 4; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com :has-total-management-staff 0.
+}
+WHERE
+{
+?com :plays-upstream-company-role ?ur.
+NOT EXISTS{?com :has-total-management-staff ?manemp}.
+}
+""";
+];
+
+#this SHACL rule allocates 0 to the total number of ghanaian management staff where there are no Ghanaian management staff.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 4; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com :has-total-Ghanaian-management-staff 0.
+}
+WHERE
+{
+?com :plays-upstream-company-role ?ur.
+NOT EXISTS{?com :has-total-Ghanaian-management-staff ?ghmanemp}.
+}
+""";
+];
+
+#this SHACL rule counts the total number of technical core staff a contractor, subcontractor, licensee or allied entity a company CURRENTLY has.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 3; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com :has-total-technical-core-staff ?tcemp.
+}
+{
+SELECT ?com (count(distinct ?e) as ?tcemp)
+WHERE
+{
+?com :plays-upstream-company-role ?ur.
+?e :has-employment ?ep.
+?ep :with-company ?com.
+?e :has-employment-role ?erp.
+?erp :within-employment-context ?ep.
+?erp :with-role ?tc.
+?tc rdf:type :TechnicalCoreStaff.
+}
+GROUP BY ?com
+}
+""";
+];
+
+#this SHACL rule counts the total number of Ghanaian technical core staff a contractor, subcontractor, licensee or allied entity a company CURRENTLY has.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 3; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com :has-total-Ghanaian-technical-core-staff ?ghtcemp.
+}
+{
+SELECT ?com (count(distinct ?e) as ?ghtcemp)
+WHERE
+{
+?com :plays-upstream-company-role ?ur.
+?e :has-employee-nationality ?en.
+FILTER(?en ="Ghanaian"^^xsd:string)
+?e :has-employment ?ep.
+?ep :with-company ?com.
+?e :has-employment-role ?erp.
+?erp :within-employment-context ?ep.
+?erp :with-role ?tc.
+?tc rdf:type :TechnicalCoreStaff.
+}
+GROUP BY ?com
+}
+""";
+];
+
+#this SHACL rule allocates 0 to the total number of technical core staff where there are no technical core staff.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 4; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com :has-total-technical-core-staff 0.
+}
+WHERE
+{
+?com :plays-upstream-company-role ?ur.
+NOT EXISTS{?com :has-total-technical-core-staff ?tcemp}.
+}
+""";
+];
+
+#this SHACL rule allocates 0 to the total number of ghanaian technical core staff where there are no Ghanaian technical core staff.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 4; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com :has-total-Ghanaian-technical-core-staff 0.
+}
+WHERE
+{
+?com :plays-upstream-company-role ?ur.
+NOT EXISTS{?com :has-total-Ghanaian-technical-core-staff ?ghtcemp}.
+}
+""";
+];
+
+#this SHACL rule counts the total number of other staff a contractor, subcontractor, licensee or allied entity a company CURRENTLY has.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 3; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com :has-total-other-staff ?oemp.
+}
+{
+SELECT ?com (count(distinct ?e) as ?oemp)
+WHERE
+{
+?com :plays-upstream-company-role ?ur.
+?e :has-employment ?ep.
+?ep :with-company ?com.
+?e :has-employment-role ?erp.
+?erp :within-employment-context ?ep.
+?erp :with-role ?o.
+?o rdf:type :OtherStaff.
+}
+GROUP BY ?com
+}
+""";
+];
+
+#this SHACL rule counts the total number of ghanaian other staff a contractor, subcontractor, licensee or allied entity a company CURRENTLY has.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 3; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com :has-total-Ghanaian-other-staff ?goemp.
+}
+{
+SELECT ?com (count(distinct ?e) as ?goemp)
+WHERE
+{
+?com :plays-upstream-company-role ?ur.
+?e :has-employee-nationality ?en.
+FILTER(?en ="Ghanaian"^^xsd:string)
+?e :has-employment ?ep.
+?ep :with-company ?com.
+?e :has-employment-role ?erp.
+?erp :within-employment-context ?ep.
+?erp :with-role ?o.
+?o rdf:type :OtherStaff.
+}
+GROUP BY ?com
+}
+""";
+];
+
+#this SHACL rule allocates 0 to the total number of other staff where there are no other staff.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 4; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com :has-total-other-staff 0.
+}
+WHERE
+{
+?com :plays-upstream-company-role ?ur.
+NOT EXISTS{?com :has-total-other-staff ?oemp}.
+}
+""";
+];
+
+#this SHACL rule allocates 0 to the total number of ghanaian other staff where there are no Ghanaian other staff.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 4; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com :has-total-Ghanaian-other-staff 0.
+}
+WHERE
+{
+?com :plays-upstream-company-role ?ur.
+NOT EXISTS{?com :has-total-Ghanaian-other-staff ?goemp}.
+}
+""";
+];
+
+#This SHACL rule checks whether a contractor, subcontractor, licensee or other allied entity has more than 30% of its management staff being Ghanaians within less than five years of its incorporation in ghana.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com rdf:type :CompliantWithS2ABefore5Years;
+:has-operational-duration ?od;
+:compliance-message "employed at least 30% Ghanaians as management staff; see Section 2(a) of the First Schedule".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission.
+?com :has-date-of-business-commencement ?doi.
+?lws rdf:type :SubmissionWindowLCP.
+?lws ti:hasIntervalStartDate ?sd.
+BIND(?sd-?doi AS ?od)
+FILTER(?od<"P5Y"^^xsd:duration).
+?com :has-total-management-staff ?manemp.
+?com :has-total-Ghanaian-management-staff ?ghmanemp.
+FILTER(?ghmanemp>=(?manemp*0.3)).
+}
+""";
+];
+
+#This SHACL rule checks whether a contractor, subcontractor, licensee or other allied entity has less than 30% of its management staff being Ghanaians within less than five years of its incorporation in ghana.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com rdf:type :NotCompliantWithS2ABefore5Years;
+:has-operational-duration ?od;
+:violation-message "employed less than 30% Ghanaians as management staff; see Section 2(a) of the First Schedule ".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission.
+?com :has-date-of-business-commencement ?doi.
+?lws rdf:type :SubmissionWindowLCP.
+?lws ti:hasIntervalStartDate ?sd.
+BIND(?sd-?doi AS ?od)
+FILTER(?od<"P5Y"^^xsd:duration).
+?com :has-total-management-staff ?manemp.
+?com :has-total-Ghanaian-management-staff ?ghmanemp.
+FILTER(?ghmanemp<(?manemp*0.3)).
+}
+""";
+];
+
+#This SHACL rule checks whether a contractor, subcontractor, licensee or other allied entity has at least 50% to 60% of its management staff being Ghanaians within not less than five and less than ten years of its incorporation in ghana.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com rdf:type :CompliantWithS2A5YearsOnwards;
+:has-operational-duration ?od;
+:compliance-message "employed at least 50% -60% Ghanaians as management staff; see Section 2(a) of the First Schedule".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission.
+?com :has-date-of-business-commencement ?doi.
+?lws rdf:type :SubmissionWindowLCP.
+?lws ti:hasIntervalStartDate ?sd.
+BIND(?sd-?doi AS ?od)
+FILTER((?od>= "P5Y"^^xsd:duration)&&(?od < "P10Y"^^xsd:duration)).
+?com :has-total-management-staff ?manemp.
+?com :has-total-Ghanaian-management-staff ?ghmanemp.
+FILTER(?ghmanemp>=(?manemp*0.5)&&?ghmanemp<=(?manemp*0.6)).
+}
+""";
+];
+
+#This SHACL rule checks whether a contractor, subcontractor, licensee or other allied entity has less than 50% to 60% of its management staff being Ghanaians within not less than five and less than ten years of its incorporation in ghana.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com rdf:type :NotCompliantWithS2A5YearsOnwards;
+:has-operational-duration ?od;
+:violation-message "employed less than 50% -60% Ghanaians as management staff; see Section 2(a) of the First Schedule".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission.
+?com :has-date-of-business-commencement ?doi.
+?lws rdf:type :SubmissionWindowLCP.
+?lws ti:hasIntervalStartDate ?sd.
+BIND(?sd-?doi AS ?od)
+FILTER((?od>= "P5Y"^^xsd:duration)&&(?od < "P10Y"^^xsd:duration)).
+?com :has-total-management-staff ?manemp.
+?com :has-total-Ghanaian-management-staff ?ghmanemp.
+FILTER(?ghmanemp<(?manemp*0.5)).
+}
+""";
+];
+
+#This SHACL rule checks whether a contractor, subcontractor, licensee or other allied entity has at least 70% to 80% of its management staff being Ghanaians within ten or more years of its incorporation in ghana.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com rdf:type :CompliantWithS2A10YearsOnwards;
+:has-operational-duration ?od;
+:compliance-message "employed at least 70% -80% Ghanaians as management staff; see Section 2(a) of the First Schedule".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission;
+:has-date-of-business-commencement ?doi.
+?lws rdf:type :SubmissionWindowLCP.
+?lws ti:hasIntervalStartDate ?sd.
+BIND(?sd - ?doi AS ?od)
+FILTER(?od>="P10Y"^^xsd:duration).
+?com :has-total-management-staff ?manemp;
+:has-total-Ghanaian-management-staff ?ghmanemp.
+FILTER(?ghmanemp>=(?manemp*0.7)&&?ghmanemp<=(?manemp*0.8)).
+}
+""";
+];
+
+#This SHACL rule checks whether a contractor, subcontractor, licensee or other allied entity has less than 70% to 80% of its management staff being Ghanaians within ten or more years of its incorporation in ghana.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com rdf:type :NotCompliantWithS2A10YearsOnwards;
+:has-operational-duration ?od;
+:violation-message "employed less than 70% -80% Ghanaians as management staff; see Section 2(a) of the First Schedule".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission;
+:has-date-of-business-commencement ?doi.
+?lws rdf:type :SubmissionWindowLCP.
+?lws ti:hasIntervalStartDate ?sd.
+BIND(?sd - ?doi AS ?od)
+FILTER(?od>="P10Y"^^xsd:duration).
+?com :has-total-management-staff ?manemp;
+:has-total-Ghanaian-management-staff ?ghmanemp.
+FILTER(?ghmanemp<(?manemp*0.7)).
+}
+""";
+];
+
+#This SHACL rule checks whether a contractor, subcontractor, licensee or other allied entity has at least 20% of its technical core staff being Ghanaians within less than five years of its incorporation in ghana.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com rdf:type :CompliantWithS2BBefore5Years;
+:has-operational-duration ?od;
+:compliance-message "employed at least 20% Ghanaians as technical core staff; see Section 2(b) of the First Schedule".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission.
+?com :has-date-of-business-commencement ?doi.
+?lws rdf:type :SubmissionWindowLCP.
+?lws ti:hasIntervalStartDate ?sd.
+BIND(?sd-?doi AS ?od)
+FILTER(?od<"P5Y"^^xsd:duration).
+?com :has-total-technical-core-staff ?tcemp.
+?com :has-total-Ghanaian-technical-core-staff ?ghtcemp.
+FILTER(?ghtcemp>=(?tcemp*0.2)).
+}
+""";
+];
+
+#This SHACL rule checks whether a contractor, subcontractor, licensee or other allied entity has less than 20% of its technical core staff being Ghanaians within less than five years of its incorporation in ghana.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com rdf:type :NotCompliantWithS2BBefore5Years;
+:has-operational-duration ?od;
+:violation-message "employed less than 20% Ghanaians as technical core staff; see Section 2(b) of the First Schedule".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission.
+?com :has-date-of-business-commencement ?doi.
+?lws rdf:type :SubmissionWindowLCP.
+?lws ti:hasIntervalStartDate ?sd.
+BIND(?sd-?doi AS ?od)
+FILTER(?od<"P5Y"^^xsd:duration).
+?com :has-total-technical-core-staff ?tcemp.
+?com :has-total-Ghanaian-technical-core-staff ?ghtcemp.
+FILTER(?ghtcemp<(?tcemp*0.2)).
+}
+""";
+];
+
+#This SHACL rule checks whether a contractor, subcontractor, licensee or other allied entity has at least 50% to 60% of its technical core staff being Ghanaians within not less than five and less than ten years of its incorporation in ghana.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com rdf:type :CompliantWithS2B5YearsOnwards;
+:has-operational-duration ?od;
+:compliance-message "employed at least 50% -60% Ghanaians as technical core staff; see Section 2(b) of the First Schedule".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission.
+?com :has-date-of-business-commencement ?doi.
+?lws rdf:type :SubmissionWindowLCP.
+?lws ti:hasIntervalStartDate ?sd.
+BIND(?sd-?doi AS ?od)
+FILTER((?od>= "P5Y"^^xsd:duration)&&(?od < "P10Y"^^xsd:duration)).
+?com :has-total-technical-core-staff ?tcemp.
+?com :has-total-Ghanaian-technical-core-staff ?ghtcemp.
+FILTER(?ghtcemp>=(?tcemp*0.5)&&?ghtcemp<=(?tcemp*0.6)).
+}
+""";
+];
+
+#This SHACL rule checks whether a contractor, subcontractor, licensee or other allied entity has less than 50% to 60% of its technical core staff being Ghanaians within not less than five and less than ten years of its incorporation in ghana.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com rdf:type :NotCompliantWithS2B5YearsOnwards;
+:has-operational-duration ?od;
+:violation-message "employed less than 50% -60% Ghanaians as technical core staff; see Section 2(b) of the First Schedule".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission.
+?com :has-date-of-business-commencement ?doi.
+?lws rdf:type :SubmissionWindowLCP.
+?lws ti:hasIntervalStartDate ?sd.
+BIND(?sd-?doi AS ?od)
+FILTER((?od>= "P5Y"^^xsd:duration)&&(?od < "P10Y"^^xsd:duration)).
+?com :has-total-technical-core-staff ?tcemp.
+?com :has-total-Ghanaian-technical-core-staff ?ghtcemp.
+FILTER(?ghtcemp<(?tcemp*0.5)).
+}
+""";
+];
+
+#This SHACL rule checks whether a contractor, subcontractor, licensee or other allied entity has at least 70% to 80% of its technical core staff being Ghanaians within ten or more years of its incorporation in ghana.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com rdf:type :CompliantWithS2B10YearsOnwards;
+:has-operational-duration ?od;
+:compliance-message "employed at least 70% -80% Ghanaians as technical core staff; see Section 2(b) of the First Schedule".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission;
+:has-date-of-business-commencement ?doi.
+?lws rdf:type :SubmissionWindowLCP.
+?lws ti:hasIntervalStartDate ?sd.
+BIND(?sd-?doi AS ?od)
+FILTER(?od>="P10Y"^^xsd:duration).
+?com :has-total-technical-core-staff ?tcemp.
+?com :has-total-Ghanaian-technical-core-staff ?ghtcemp.
+FILTER(?ghtcemp>=(?tcemp*0.7)&&?ghtcemp<=(?tcemp*0.8)).
+}
+""";
+];
+
+#This SHACL rule checks whether a contractor, subcontractor, licensee or other allied entity has less than 70% to 80% of its technical core staff being Ghanaians within ten or more years of its incorporation in ghana.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com rdf:type :NotCompliantWithS2B10YearsOnwards;
+:has-operational-duration ?od;
+:violation-message "employed less than 70% -80% Ghanaians as technical core staff; see Section 2(b) of the First Schedule".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission;
+:has-date-of-business-commencement ?doi.
+?lws rdf:type :SubmissionWindowLCP.
+?lws ti:hasIntervalStartDate ?sd.
+BIND(?sd-?doi AS ?od)
+FILTER(?od>="P10Y"^^xsd:duration).
+?com :has-total-technical-core-staff ?tcemp.
+?com :has-total-Ghanaian-technical-core-staff ?ghtcemp.
+FILTER(?ghtcemp<(?tcemp*0.7)).
+}
+""";
+];
+
+#This SHACL rule checks whether a contractor, subcontractor, licensee or other allied entity has at least 80% of its other staff being Ghanaians within less than five years of its incorporation in ghana.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com rdf:type :CompliantWithS2CBefore5Years;
+:has-operational-duration ?od;
+:compliance-message "employed at least 80% Ghanaians as other staff; see Section 2(c) of the First Schedule".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission.
+?com :has-date-of-business-commencement ?doi.
+?lws rdf:type :SubmissionWindowLCP.
+?lws ti:hasIntervalStartDate ?sd.
+BIND(?sd-?doi AS ?od)
+FILTER(?od<"P5Y"^^xsd:duration).
+?com :has-total-other-staff ?oemp.
+?com :has-total-Ghanaian-other-staff ?goemp.
+FILTER(?goemp>=(?oemp*0.8)).
+}
+""";
+];
+
+#This SHACL rule checks whether a contractor, subcontractor, licensee or other allied entity has at least 80% of its other staff being Ghanaians within less than five years of its incorporation in ghana.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com rdf:type :NotCompliantWithS2CBefore5Years;
+:has-operational-duration ?od;
+:violation-message "employed less than 80% Ghanaians as other staff; see Section 2(c) of the First Schedule".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission.
+?com :has-date-of-business-commencement ?doi.
+?lws rdf:type :SubmissionWindowLCP.
+?lws ti:hasIntervalStartDate ?sd.
+BIND(?sd-?doi AS ?od)
+FILTER(?od<"P5Y"^^xsd:duration).
+?com :has-total-other-staff ?oemp.
+?com :has-total-Ghanaian-other-staff ?goemp.
+FILTER(?goemp<(?oemp*0.8)).
+}
+""";
+];
+
+#This SHACL rule checks whether a contractor, subcontractor, licensee or other allied entity has at least 90% of its other staff being Ghanaians within not less than five and less than ten years of its incorporation in ghana.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com rdf:type :CompliantWithS2C5YearsOnwards;
+:has-operational-duration ?od;
+:compliance-message "employed at least 90% Ghanaians as other staff; see Section 2(c) of the First Schedule".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission.
+?com :has-date-of-business-commencement ?doi.
+?lws rdf:type :SubmissionWindowLCP.
+?lws ti:hasIntervalStartDate ?sd.
+BIND(?sd-?doi AS ?od)
+FILTER((?od>= "P5Y"^^xsd:duration)&&(?od < "P10Y"^^xsd:duration)).
+?com :has-total-other-staff ?oemp.
+?com :has-total-Ghanaian-other-staff ?goemp.
+FILTER(?goemp>=(?oemp*0.9)).
+}
+""";
+];
+
+#This SHACL rule checks whether a contractor, subcontractor, licensee or other allied entity has less than 90% of its other staff being Ghanaians within not less than five and less than ten years of its incorporation in ghana.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com rdf:type :NotCompliantWithS2C5YearsOnwards;
+:has-operational-duration ?od;
+:violation-message "employed less than 90% Ghanaians as other staff; see Section 2(c) of the First Schedule".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission.
+?com :has-date-of-business-commencement ?doi.
+?lws rdf:type :SubmissionWindowLCP.
+?lws ti:hasIntervalStartDate ?sd.
+BIND(?sd-?doi AS ?od)
+FILTER((?od>= "P5Y"^^xsd:duration)&&(?od < "P10Y"^^xsd:duration)).
+?com :has-total-other-staff ?oemp.
+?com :has-total-Ghanaian-other-staff ?goemp.
+FILTER(?goemp<(?oemp*0.9)).
+}
+""";
+];
+
+#This SHACL rule checks whether a contractor, subcontractor, licensee or other allied entity has at least 100% of its other staff being Ghanaians within ten or more years of its incorporation in ghana.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com rdf:type :CompliantWithS2C10YearsOnwards;
+:has-operational-duration ?od;
+:compliance-message "employed at least 100% Ghanaians as other staff; see Section 2(c) of the First Schedule".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission;
+:has-date-of-business-commencement ?doi.
+?lws rdf:type :SubmissionWindowLCP.
+?lws ti:hasIntervalStartDate ?sd.
+BIND(?sd-?doi AS ?od)
+FILTER(?od>="P10Y"^^xsd:duration).
+?com :has-total-other-staff ?oemp.
+?com :has-total-Ghanaian-other-staff ?goemp.
+FILTER(?goemp>=(?oemp*1.0)).
+}
+""";
+];
+
+#This SHACL rule checks whether a contractor, subcontractor, licensee or other allied entity has less than 100% of its other staff being Ghanaians within ten or more years of its incorporation in ghana.
+sh:rule[rdf:type sh:SPARQLRule; sh:order 5; sh:prefixes :PrefixesEmbeddedSPARQLRules;
+sh:construct """
+CONSTRUCT 
+{
+?com rdf:type :NotCompliantWithS2C10YearsOnwards;
+:has-operational-duration ?od;
+:violation-message "employed less than 100% Ghanaians as other staff; see Section 2(c) of the First Schedule".
+}
+WHERE
+{
+?com rdf:type :CompliantWithR7Submission;
+:has-date-of-business-commencement ?doi.
+?lws rdf:type :SubmissionWindowLCP.
+?lws ti:hasIntervalStartDate ?sd.
+BIND(?sd-?doi AS ?od)
+FILTER(?od>="P10Y"^^xsd:duration).
+?com :has-total-other-staff ?oemp.
+?com :has-total-Ghanaian-other-staff ?goemp.
+FILTER(?goemp<(?oemp*1.0)).
+}
+"""];
+
+
+
+sh:targetClass owl:Class
+].

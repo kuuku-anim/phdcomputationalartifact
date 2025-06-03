@@ -1,0 +1,1277 @@
+@prefix : <https://w3id.org/ontology/uslcp#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix xml: <http://www.w3.org/XML/1998/namespace>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix lkif-legal-action: <http://www.estrellaproject.org/lkif-core/legal-action.owl#>.
+@prefix lkif-mereology: <http://www.estrellaproject.org/lkif-core/mereology.owl#>.
+@prefix lkif-role: <http://www.estrellaproject.org/lkif-core/role.owl#>.
+@prefix wd: <http://www.wikidata.org/entity/>.
+@prefix wdt: <http://www.wikidata.org/prop/direct/>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix tvc: <http://www.essepuntato.it/2012/04/tvc/#>.
+@prefix ti: <http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#>.
+@prefix time: <http://www.w3.org/2006/time#>.
+@prefix xmldsig: <http://www.w3.org/2000/09/xmldsig#>.
+@base <https://w3id.org/ontology/uslcpo#> .
+
+<https://w3id.org/ontology/uslcpo#> rdf:type owl:Ontology .
+
+
+#login.
+:login :has-textual-content "PC_CPE_08889116_010-98R"^^xsd:string.
+
+:PC_CPE_08889116_010-98R rdf:type :RegistrationPermit;
+:issued-by wd:Q85793009;
+:issued-to :CompanyB;
+:has-permit-start-date "2022-05-10T00:00:00Z"^^xsd:dateTime;
+:has-permit-end-date "2023-05-09T00:00:00Z"^^xsd:dateTime;
+:has-registration-permit-number "PC_CPE_08889116_010-98R"^^xsd:string.
+
+
+
+
+####################
+# PARTS:
+####################
+
+:AnnualLocalContentPlan :has-part :CompanyDetails, :LCPlan, :Appendix, :Declaration.
+
+:CompanyDetails rdf:type :DocumentPart;
+rdfs:comment "this part contains all the details concerning the company submitting its local content plan.".
+
+:LCPlan rdf:type :DocumentPart;
+rdfs:comment "this part contains details such as the employment and training sub-plan in the annual local content plan".
+
+:Appendix rdf:type :DocumentPart;
+rdfs:comment "this part contains all the attached relevant certifications and documentation to show evidence of information provided in the local content plan".
+
+:Declaration rdf:type :DocumentPart;
+rdfs:comment "this part contains the head of entity's signature declaring that the content of the local content plan is accurate and without falsehood".
+
+
+####################################
+# PART1: CompanyDetails
+####################################
+
+#------------------------------------------------------------------------------
+# Sections in Part1 (CompanyDetails):
+#------------------------------------------------------------------------------
+:CompanyDetails :has-section :ContactDetails, :OfficeAddressAndLocation, :HeadOfEntity, :ContactPerson.
+
+:ContactDetails rdf:type :DocumentSection;
+rdfs:comment "this section contains all the details concerning the companies submitting their local content plan. ".
+
+:OfficeAddressAndLocation rdf:type :DocumentSection;
+rdfs:comment "this section contains all the addres and location of the companies.".
+
+:HeadOfEntity rdf:type :DocumentSection;
+rdfs:comment "this section specifies information about the person who should have the authority to endorse this document".
+
+:ContactPerson rdf:type :DocumentSection;
+rdfs:comment "this section specifies information about the person responsible for answering questions on data provided".
+
+
+
+
+#company details.
+
+:has-registered-company-name rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:CompanyDetails)];
+	rdfs:range xsd:string;
+rdfs:comment "this property refers to the slot containing the registered name of the company.".
+
+:has-company-registration-number rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:CompanyDetails)];
+	rdfs:range xsd:string;
+rdfs:comment "this property refers to the slot containing the registered number of the company.".
+
+:has-tax-identification-number rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:CompanyDetails)];
+	rdfs:range xsd:string;
+rdfs:comment "this property refers to the slot containing the tax identification number of the company.".
+
+:has-date-of-incorporation rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:CompanyDetails)];
+	rdfs:range xsd:dateTime;
+rdfs:comment "this property refers to the slot containing the date on which the company was incorporated in Ghana.".
+
+:has-date-of-business-commencement rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:CompanyDetails)];
+	rdfs:range xsd:dateTime;
+rdfs:comment "this property refers to the slot containing the date on which the company began doing business in Ghana.".
+
+:has-petroleum-commission-registration-permit-number rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:CompanyDetails)];
+	rdfs:range xsd:string;
+rdfs:comment "This property refers to the slot containing the Petroleum Commission Registration Permit Number of the companies.".
+
+:has-services-provided rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:CompanyDetails)];
+	rdfs:range xsd:string;
+rdfs:comment "this property refers to the slot containing the Services Provided by the company (as stated on PC Permit) ".
+
+:CompanyDetails  :has-registered-company-name "Company B"^^xsd:string ;
+    :has-company-registration-number "Cz02015223"^^xsd:string ;
+    :has-tax-identification-number "P123"^^xsd:string ;
+    :has-date-of-incorporation "2009-10-06T00:00:00"^^xsd:dateTime ;
+    :has-date-of-business-commencement "2009-10-07T00:00:00"^^xsd:dateTime ;
+    :has-petroleum-commission-registration-permit-number "PC_CPE_08889116_010-98R"^^xsd:string ;
+        :Names-of-Shareholders-of-the-company-with-Percentage-Ownership "GNPC has 10% ownership, and Company B parent company has 90% ownership" ;
+    :has-services-provided "construction of an onshore receiving facility"^^xsd:string .
+
+
+:Names-of-Shareholders-of-the-company-with-Percentage-Ownership rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:CompanyDetails)];
+	rdfs:range xsd:string;
+rdfs:comment "This property shows the shares the owners hold in the company".
+
+# Section OfficeAddressAndLocation.
+:has-postal-address rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:OfficeAddressAndLocation)];
+	rdfs:range xsd:string;
+rdfs:comment "this property refers to the slot containing the postal address of the company.".
+
+:has-telephone-number rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:OfficeAddressAndLocation)];
+	rdfs:range xsd:integer;
+rdfs:comment "this property refers to the telephone number of the company.".
+
+:has-fax-number rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:OfficeAddressAndLocation)];
+	rdfs:range xsd:integer;
+rdfs:comment "this property refers to the fax number of the company.".
+
+:has-website-address rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:OfficeAddressAndLocation)];
+	rdfs:range xsd:string;
+rdfs:comment "this property refers to the website address of the company".
+
+:has-house-or-plot-number rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:OfficeAddressAndLocation)];
+	rdfs:range xsd:string;
+rdfs:comment "this property refers to the House/Plot Number of the company.".
+
+:has-street-name rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:OfficeAddressAndLocation)];
+	rdfs:range xsd:string;
+rdfs:comment "this property refers to the street name of the company.".
+
+:has-town-or-city rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:OfficeAddressAndLocation)];
+	rdfs:range xsd:string;
+rdfs:comment "this property refers to the town or city of the company".
+
+:has-region rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:OfficeAddressAndLocation)];
+	rdfs:range xsd:string;
+rdfs:comment "this individual refers to the region of the company.".
+
+#Abox for eni's office location and address.
+:OfficeAddressAndLocation  :has-postal-address "P.O. Box LL 1700, Accra"^^xsd:string ;
+    :has-telephone-number "+23315481390867"^^xsd:integer;
+    :has-fax-number "+233449626364"^^xsd:integer;
+    :has-website-address "www.CompanyB.com"^^xsd:string ;
+    :has-house-or-plot-number "No. PGR13"^^xsd:string ;
+    :has-street-name "Pumpkin Tree Avenue"^^xsd:string ;
+    :has-town-or-city "Accra"^^xsd:string ;
+    :has-region "Greater Accra"^^xsd:string .
+
+# Section HeadOfEntity.
+:has-name-of-head-of-entity rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:HeadOfEntity)];
+	rdfs:range xsd:string;
+rdfs:comment "this refers to the name of the head of the entity.".
+
+:has-position-of-head-of-entity rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:HeadOfEntity)];
+	rdfs:range xsd:string;
+rdfs:comment "this refers to the position of the head of the entity.".
+
+:has-telephone-number-of-head-of-entity rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:HeadOfEntity)];
+	rdfs:range xsd:integer;
+rdfs:comment "this refers to the telephone number of the head of the entity.".
+
+:has-fax-number-of-head-of-entity rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:HeadOfEntity)];
+	rdfs:range xsd:integer;
+rdfs:comment "this refers to the fax number of the head of the entity.".
+
+:has-email-address-of-head-of-entity rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:HeadOfEntity)];
+	rdfs:range xsd:string;
+rdfs:comment "this refers to the e-mail address of the head of the entity.".
+
+#Abox for eni head of entity.
+:HeadOfEntity  :has-name-of-head-of-entity "Michelangelo"^^xsd:string ;
+    :has-position-of-head-of-entity "Managing Director"^^xsd:string ;
+    :has-telephone-number-of-head-of-entity "+2330178964"^^xsd:integer;
+    :has-fax-number-of-head-of-entity "+23321238965"^^xsd:integer;
+    :has-email-address-of-head-of-entity "Michelangelo@CompanyB.com"^^xsd:string .
+
+# Section ContactPerson.
+:has-name-of-contact-person rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:ContactPerson)];
+	rdfs:range xsd:string;
+rdfs:comment "this refers to the name of the contact person of the company.".
+
+:has-position-of-contact-person rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:ContactPerson)];
+	rdfs:range xsd:string;
+rdfs:comment "this refers to the position of the contact person of the company.".
+
+:has-business-address-of-contact-person rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:ContactPerson)];
+	rdfs:range xsd:string;
+rdfs:comment "this refers to the business address of the contact person of the company.".
+
+:has-telephone-number-of-contact-person rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:ContactPerson)];
+	rdfs:range xsd:integer;
+rdfs:comment "this refers to the telephone number of the contact person of the company.".
+
+:has-fax-number-of-contact-person rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:ContactPerson)];
+	rdfs:range xsd:integer;
+rdfs:comment "this refers to the fax number of the contact person.".
+
+:has-email-address-of-contact-person rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:ContactPerson)];
+	rdfs:range xsd:string;
+rdfs:comment "this refers to the e-mail address of the contact person of the company.".
+
+#Abox for eni contact person.
+:ContactPerson :has-name-of-contact-person "Yaa Asantewaa"^^xsd:string ;
+    :has-position-of-contact-person "Public Relations Manager"^^xsd:string ;
+    :has-business-address-of-contact-person "No. PGR13 Pumpkin Tree Avenue, Accra, Ghana"^^xsd:string ;
+    :has-telephone-number-of-contact-person "+233184419570603"^^xsd:integer;
+    :has-fax-number-of-contact-person "+2330197002069"^^xsd:integer;
+    :has-email-address-of-contact-person "Yaa.Asantewaa@CompanyB.com"^^xsd:string .
+
+
+####################################
+# PART2: Local Content Plan
+####################################
+
+#------------------------------------------------------------------------------
+# Sections in Part2 (LCPlan):
+#------------------------------------------------------------------------------
+
+#Sections in Part :LCPlan
+
+:LCPlan :has-section :EmploymentSubPlan, :TrainingSubPlan, :SuccessionPlan, :ResearchAndDevelopmentSubPlan, :TechnologyTransferProgram, :InsuranceAndReinsuranceServicesSubPlan, :LegalServicesSubPlan, :FinancialServicesSubPlan, :IndigenousBank.
+
+:EmploymentSubPlan rdf:type :DocumentSection;
+rdfs:comment "this section contains the sub-plan on companies' employment.".
+
+:TrainingSubPlan rdf:type :DocumentSection;
+rdfs:comment "this section contains the sub-plan of the training measures undertaken by the company.".
+
+:SuccessionPlan rdf:type :DocumentSection;
+rdfs:comment "this section contains the sub-plan of Ghanaian succeeding Expatriate in the company.".
+
+:ResearchAndDevelopmentSubPlan rdf:type :DocumentSection;
+rdfs:comment "this section contains the sub-plan on research and development undertaken by the company.".
+
+:TechnologyTransferProgram rdf:type :DocumentSection;
+rdfs:comment "this section contains the sub-plan of technology transfer undertaken by the company.".
+
+:InsuranceAndReinsuranceServicesSubPlan rdf:type :DocumentSection;
+rdfs:comment "this section contains the sub-plan on companies' Insurance and Reinsurance Services obtained.".
+
+:LegalServicesSubPlan rdf:type :DocumentSection;
+rdfs:comment "this section contains the sub-plan on legal services employed by companies.".
+
+:FinancialServicesSubPlan rdf:type :DocumentSection;
+rdfs:comment "this section contains the sub-plan on financial services employed by companies.".
+
+:IndigenousBank rdf:type :DocumentSection;
+rdfs:comment "this section contains the details of the indigenous bank employed by the company for its services.".
+
+
+#------------------------------------------------------------------------------
+# Section employment sub-plan content.
+#------------------------------------------------------------------------------
+
+
+:DirectEmployment rdf:type :DocumentTable;
+rdfs:comment "this table contains the details of the employees directly employed by a company, i.e., not employed indirectly through a third party.".
+
+:FunctionalDistributionTable rdf:type :DocumentTable;
+rdfs:comment "this table contains the number of the employees directly employed by a company I.E., the number of female, the number of males, the number of Ghanaians, etc.".
+
+:EmploymentExpenditureTable rdf:type :DocumentTable;
+rdfs:comment "this table contains the expenditure incurd in employing the direct employees.".
+
+:ThirdPartyStaff rdf:type :DocumentTable;
+rdfs:comment "this table contains the details of the third party employees employed indirectly through a third party agency or company.".
+
+:EmploymentSubPlan :has-table :DirectEmployment, :ThirdPartyStaff.
+
+#The individual :DirectEmployment can be associated, via the property :has-row, with one or more individuals of the class :DirectEmploymentRow. Each individual of the class
+#DirectEmploymentRow is associated with the slots listed below, as encoded via datatype properties and qualifiedCardinality restrictions. Therefore, we have a *set* of values.
+:DirectEmploymentRow rdf:type owl:Class;
+rdfs:subClassOf :DocumentTableRow;
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-index-direct-employee; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-name-direct-employee; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-gender-direct-employee; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-nationality-direct-employee; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-department-direct-employee; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-employment-start-date-direct-employee; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:dateTime];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-position-direct-employee; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-position-start-date-direct-employee; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:dateTime];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-category-direct-employee; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-job-description-responsibilities-direct-employee; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-required-expertise-or-skills-direct-employee; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-expenditure-per-year-in-usd-direct-employee; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:decimal].
+
+#abox for eni direct employees.
+
+# Management Staff
+
+:b16 rdf:type :DirectEmploymentRow ;
+    :has-index-direct-employee "16"^^xsd:string ;
+    :has-name-direct-employee "Joseph Boakye Danquah"^^xsd:string ;
+    :has-gender-direct-employee "M"^^xsd:string ;
+    :has-nationality-direct-employee "Ghanaian"^^xsd:string ;
+    :has-department-direct-employee "Executive"^^xsd:string ;
+    :has-employment-start-date-direct-employee "2023-03-15T00:00:00Z"^^xsd:dateTime ;
+    :has-position-direct-employee "Chief Financial Officer"^^xsd:string ;
+    :has-position-start-date-direct-employee "2023-03-15T00:00:00Z"^^xsd:dateTime ;
+    :has-category-direct-employee "Management"^^xsd:string ;
+    :has-job-description-responsibilities-direct-employee "Oversee financial operations and strategy"^^xsd:string ;
+    :has-required-expertise-or-skills-direct-employee "Finance, Strategic Planning, Oil & Gas Industry Knowledge"^^xsd:string ;
+    :has-expenditure-per-year-in-usd-direct-employee "180000.00"^^xsd:decimal .
+
+:b17 rdf:type :DirectEmploymentRow ;
+    :has-index-direct-employee "17"^^xsd:string ;
+    :has-name-direct-employee "Ebenezer Ako-Adjei"^^xsd:string ;
+    :has-gender-direct-employee "M"^^xsd:string ;
+    :has-nationality-direct-employee "Ghanaian"^^xsd:string ;
+    :has-department-direct-employee "Human Resources"^^xsd:string ;
+    :has-employment-start-date-direct-employee "2023-07-01T00:00:00Z"^^xsd:dateTime ;
+    :has-position-direct-employee "HR Director"^^xsd:string ;
+    :has-position-start-date-direct-employee "2023-07-01T00:00:00Z"^^xsd:dateTime ;
+    :has-category-direct-employee "Management"^^xsd:string ;
+    :has-job-description-responsibilities-direct-employee "Manage HR strategies and operations"^^xsd:string ;
+    :has-required-expertise-or-skills-direct-employee "HR Management, Employee Relations, Talent Acquisition"^^xsd:string ;
+    :has-expenditure-per-year-in-usd-direct-employee "150000.00"^^xsd:decimal .
+
+:b18 rdf:type :DirectEmploymentRow ;
+    :has-index-direct-employee "18"^^xsd:string ;
+    :has-name-direct-employee "Edward Akufo-Addo"^^xsd:string ;
+    :has-gender-direct-employee "M"^^xsd:string ;
+    :has-nationality-direct-employee "Ghanaian"^^xsd:string ;
+    :has-department-direct-employee "Operations"^^xsd:string ;
+    :has-employment-start-date-direct-employee "2022-11-10T00:00:00Z"^^xsd:dateTime ;
+    :has-position-direct-employee "Operations Manager"^^xsd:string ;
+    :has-position-start-date-direct-employee "2023-11-10T00:00:00Z"^^xsd:dateTime ;
+    :has-category-direct-employee "Management"^^xsd:string ;
+    :has-job-description-responsibilities-direct-employee "Oversee daily operations and production"^^xsd:string ;
+    :has-required-expertise-or-skills-direct-employee "Operations Management, Project Management, Oil & Gas Operations"^^xsd:string ;
+    :has-expenditure-per-year-in-usd-direct-employee "160000.00"^^xsd:decimal .
+
+:b19 rdf:type :DirectEmploymentRow ;
+    :has-index-direct-employee "19"^^xsd:string ;
+    :has-name-direct-employee "William Ofori Atta"^^xsd:string ;
+    :has-gender-direct-employee "M"^^xsd:string ;
+    :has-nationality-direct-employee "Ghanaian"^^xsd:string ;
+    :has-department-direct-employee "Legal"^^xsd:string ;
+    :has-employment-start-date-direct-employee "2023-02-15T00:00:00Z"^^xsd:dateTime ;
+    :has-position-direct-employee "Legal Affairs Manager"^^xsd:string ;
+    :has-position-start-date-direct-employee "2023-02-15T00:00:00Z"^^xsd:dateTime ;
+    :has-category-direct-employee "Management"^^xsd:string ;
+    :has-job-description-responsibilities-direct-employee "Manage legal affairs and compliance"^^xsd:string ;
+    :has-required-expertise-or-skills-direct-employee "Corporate Law, Oil & Gas Regulations, Contract Negotiation"^^xsd:string ;
+    :has-expenditure-per-year-in-usd-direct-employee "145000.00"^^xsd:decimal .
+
+:b20 rdf:type :DirectEmploymentRow ;
+    :has-index-direct-employee "20"^^xsd:string ;
+    :has-name-direct-employee "Galileo Galilei"^^xsd:string ;
+    :has-gender-direct-employee "M"^^xsd:string ;
+    :has-nationality-direct-employee "Expatriate"^^xsd:string ;
+    :has-department-direct-employee "Executive"^^xsd:string ;
+    :has-employment-start-date-direct-employee "2022-09-01T00:00:00Z"^^xsd:dateTime ;
+    :has-position-direct-employee "Chief Technical Officer"^^xsd:string ;
+    :has-position-start-date-direct-employee "2022-09-01T00:00:00Z"^^xsd:dateTime ;
+    :has-category-direct-employee "Management"^^xsd:string ;
+    :has-job-description-responsibilities-direct-employee "Lead technical strategy and innovation"^^xsd:string ;
+    :has-required-expertise-or-skills-direct-employee "Petroleum Engineering, Project Management, Technical Leadership"^^xsd:string ;
+    :has-expenditure-per-year-in-usd-direct-employee "200000.00"^^xsd:decimal .
+
+
+# Technical Core Staff
+
+:b6 rdf:type :DirectEmploymentRow ;
+    :has-index-direct-employee "6"^^xsd:string ;
+    :has-name-direct-employee "Kwame Owusu Ansah"^^xsd:string ;
+    :has-gender-direct-employee "M"^^xsd:string ;
+    :has-nationality-direct-employee "Ghanaian"^^xsd:string ;
+    :has-department-direct-employee "Engineering"^^xsd:string ;
+    :has-employment-start-date-direct-employee "2016-04-01T00:00:00"^^xsd:dateTime ;
+    :has-position-direct-employee "Senior Petroleum Engineer"^^xsd:string ;
+    :has-position-start-date-direct-employee "2016-04-01T00:00:00"^^xsd:dateTime ;
+    :has-category-direct-employee "Technical Core Staff"^^xsd:string ;
+    :has-job-description-responsibilities-direct-employee "Oversee petroleum engineering projects"^^xsd:string ;
+    :has-required-expertise-or-skills-direct-employee "Petroleum Engineering, Reservoir Management, Well Design"^^xsd:string ;
+    :has-expenditure-per-year-in-usd-direct-employee "120000.00"^^xsd:decimal .
+
+:b7 rdf:type :DirectEmploymentRow ;
+    :has-index-direct-employee "7"^^xsd:string ;
+    :has-name-direct-employee "Suzzy Williams"^^xsd:string ;
+    :has-gender-direct-employee "F"^^xsd:string ;
+    :has-nationality-direct-employee "Ghanaian"^^xsd:string ;
+    :has-department-direct-employee "Geology"^^xsd:string ;
+    :has-employment-start-date-direct-employee "2017-08-15T00:00:00"^^xsd:dateTime ;
+    :has-position-direct-employee "Lead Geologist"^^xsd:string ;
+    :has-position-start-date-direct-employee "2017-08-15T00:00:00"^^xsd:dateTime ;
+    :has-category-direct-employee "Technical Core Staff"^^xsd:string ;
+    :has-job-description-responsibilities-direct-employee "Conduct geological surveys and analyses"^^xsd:string ;
+    :has-required-expertise-or-skills-direct-employee "Geology, Seismic Interpretation, Resource Estimation"^^xsd:string ;
+    :has-expenditure-per-year-in-usd-direct-employee "110000.00"^^xsd:decimal .
+
+:b8 rdf:type :DirectEmploymentRow ;
+    :has-index-direct-employee "8"^^xsd:string ;
+    :has-name-direct-employee "Komla Dumor"^^xsd:string ;
+    :has-gender-direct-employee "M"^^xsd:string ;
+    :has-nationality-direct-employee "Ghanaian"^^xsd:string ;
+    :has-department-direct-employee "Production"^^xsd:string ;
+    :has-employment-start-date-direct-employee "2015-10-01T00:00:00"^^xsd:dateTime ;
+    :has-position-direct-employee "Production Engineer"^^xsd:string ;
+    :has-position-start-date-direct-employee "2015-10-01T00:00:00"^^xsd:dateTime ;
+    :has-category-direct-employee "Technical Core Staff"^^xsd:string ;
+    :has-job-description-responsibilities-direct-employee "Optimize oil and gas production processes"^^xsd:string ;
+    :has-required-expertise-or-skills-direct-employee "Production Engineering, Process Optimization, Equipment Maintenance"^^xsd:string ;
+    :has-expenditure-per-year-in-usd-direct-employee "105000.00"^^xsd:decimal .
+
+:b9 rdf:type :DirectEmploymentRow ;
+    :has-index-direct-employee "9"^^xsd:string ;
+    :has-name-direct-employee "Theodosia Okoh"^^xsd:string ;
+    :has-gender-direct-employee "F"^^xsd:string ;
+    :has-nationality-direct-employee "Ghanaian"^^xsd:string ;
+    :has-department-direct-employee "HSE"^^xsd:string ;
+    :has-employment-start-date-direct-employee "2018-03-01T00:00:00"^^xsd:dateTime ;
+    :has-position-direct-employee "HSE Specialist"^^xsd:string ;
+    :has-position-start-date-direct-employee "2018-03-01T00:00:00"^^xsd:dateTime ;
+    :has-category-direct-employee "Technical Core Staff"^^xsd:string ;
+    :has-job-description-responsibilities-direct-employee "Ensure health, safety, and environmental compliance"^^xsd:string ;
+    :has-required-expertise-or-skills-direct-employee "HSE Management, Risk Assessment, Environmental Regulations"^^xsd:string ;
+    :has-expenditure-per-year-in-usd-direct-employee "95000.00"^^xsd:decimal .
+
+:b10 rdf:type :DirectEmploymentRow ;
+    :has-index-direct-employee "10"^^xsd:string ;
+    :has-name-direct-employee "Leonardo da Vinci"^^xsd:string ;
+    :has-gender-direct-employee "M"^^xsd:string ;
+    :has-nationality-direct-employee "Expatriate"^^xsd:string ;
+    :has-department-direct-employee "Drilling"^^xsd:string ;
+    :has-employment-start-date-direct-employee "2019-01-15T00:00:00"^^xsd:dateTime ;
+    :has-position-direct-employee "Senior Drilling Engineer"^^xsd:string ;
+    :has-position-start-date-direct-employee "2019-01-15T00:00:00"^^xsd:dateTime ;
+    :has-category-direct-employee "Technical Core Staff"^^xsd:string ;
+    :has-job-description-responsibilities-direct-employee "Plan and oversee drilling operations"^^xsd:string ;
+    :has-required-expertise-or-skills-direct-employee "Drilling Engineering, Well Planning, Offshore Operations"^^xsd:string ;
+    :has-expenditure-per-year-in-usd-direct-employee "130000.00"^^xsd:decimal .
+
+# Other Staff
+
+:b11 rdf:type :DirectEmploymentRow ;
+    :has-index-direct-employee "11"^^xsd:string ;
+    :has-name-direct-employee "Ama Ata Aidoo"^^xsd:string ;
+    :has-gender-direct-employee "F"^^xsd:string ;
+    :has-nationality-direct-employee "Ghanaian"^^xsd:string ;
+    :has-department-direct-employee "Finance"^^xsd:string ;
+    :has-employment-start-date-direct-employee "2017-06-01T00:00:00"^^xsd:dateTime ;
+    :has-position-direct-employee "Accountant"^^xsd:string ;
+    :has-position-start-date-direct-employee "2017-06-01T00:00:00"^^xsd:dateTime ;
+    :has-category-direct-employee "Other"^^xsd:string ;
+    :has-job-description-responsibilities-direct-employee "Manage financial records and reports"^^xsd:string ;
+    :has-required-expertise-or-skills-direct-employee "Accounting, Financial Reporting, SAP"^^xsd:string ;
+    :has-expenditure-per-year-in-usd-direct-employee "65000.00"^^xsd:decimal .
+
+:b12 rdf:type :DirectEmploymentRow ;
+    :has-index-direct-employee "12"^^xsd:string ;
+    :has-name-direct-employee "Bob Santo"^^xsd:string ;
+    :has-gender-direct-employee "M"^^xsd:string ;
+    :has-nationality-direct-employee "Ghanaian"^^xsd:string ;
+    :has-department-direct-employee "IT"^^xsd:string ;
+    :has-employment-start-date-direct-employee "2018-09-15T00:00:00"^^xsd:dateTime ;
+    :has-position-direct-employee "IT Support Specialist"^^xsd:string ;
+    :has-position-start-date-direct-employee "2018-09-15T00:00:00"^^xsd:dateTime ;
+    :has-category-direct-employee "Other"^^xsd:string ;
+    :has-job-description-responsibilities-direct-employee "Provide IT support and maintain systems"^^xsd:string ;
+    :has-required-expertise-or-skills-direct-employee "IT Support, Network Administration, Cybersecurity"^^xsd:string ;
+    :has-expenditure-per-year-in-usd-direct-employee "55000.00"^^xsd:decimal .
+
+:b13 rdf:type :DirectEmploymentRow ;
+    :has-index-direct-employee "13"^^xsd:string ;
+    :has-name-direct-employee "Efua Sutherland"^^xsd:string ;
+    :has-gender-direct-employee "F"^^xsd:string ;
+    :has-nationality-direct-employee "Ghanaian"^^xsd:string ;
+    :has-department-direct-employee "Admin"^^xsd:string ;
+    :has-employment-start-date-direct-employee "2019-03-01T00:00:00"^^xsd:dateTime ;
+    :has-position-direct-employee "Administrative Assistant"^^xsd:string ;
+    :has-position-start-date-direct-employee "2019-03-01T00:00:00"^^xsd:dateTime ;
+    :has-category-direct-employee "Other"^^xsd:string ;
+    :has-job-description-responsibilities-direct-employee "Provide administrative support to various departments"^^xsd:string ;
+    :has-required-expertise-or-skills-direct-employee "Office Administration, Time Management, Communication Skills"^^xsd:string ;
+    :has-expenditure-per-year-in-usd-direct-employee "45000.00"^^xsd:decimal .
+
+:b14 rdf:type :DirectEmploymentRow ;
+    :has-index-direct-employee "14"^^xsd:string ;
+    :has-name-direct-employee "Kwame Nkrumah"^^xsd:string ;
+    :has-gender-direct-employee "M"^^xsd:string ;
+    :has-nationality-direct-employee "Ghanaian"^^xsd:string ;
+    :has-department-direct-employee "Logistics"^^xsd:string ;
+    :has-employment-start-date-direct-employee "2020-01-15T00:00:00"^^xsd:dateTime ;
+    :has-position-direct-employee "Logistics Coordinator"^^xsd:string ;
+    :has-position-start-date-direct-employee "2020-01-15T00:00:00"^^xsd:dateTime ;
+    :has-category-direct-employee "Other"^^xsd:string ;
+    :has-job-description-responsibilities-direct-employee "Coordinate logistics for equipment and supplies"^^xsd:string ;
+    :has-required-expertise-or-skills-direct-employee "Supply Chain Management, Inventory Control, Transportation Logistics"^^xsd:string ;
+    :has-expenditure-per-year-in-usd-direct-employee "50000.00"^^xsd:decimal .
+
+:b15 rdf:type :DirectEmploymentRow ;
+    :has-index-direct-employee "15"^^xsd:string ;
+    :has-name-direct-employee "Florence Abena Dolphyne"^^xsd:string ;
+    :has-gender-direct-employee "F"^^xsd:string ;
+    :has-nationality-direct-employee "Ghanaian"^^xsd:string ;
+    :has-department-direct-employee "Public Relations"^^xsd:string ;
+    :has-employment-start-date-direct-employee "2021-06-01T00:00:00"^^xsd:dateTime ;
+    :has-position-direct-employee "PR Assistant"^^xsd:string ;
+    :has-position-start-date-direct-employee "2021-06-01T00:00:00"^^xsd:dateTime ;
+    :has-category-direct-employee "Other"^^xsd:string ;
+    :has-job-description-responsibilities-direct-employee "Assist in public relations and communications activities"^^xsd:string ;
+    :has-required-expertise-or-skills-direct-employee "Public Relations, Media Relations, Social Media Management"^^xsd:string ;
+    :has-expenditure-per-year-in-usd-direct-employee "48000.00"^^xsd:decimal .
+ 
+ 
+#Properties that denote the columns of DirectEmploymentRow:
+:has-index-direct-employee  rdf:type owl:DatatypeProperty;
+	rdfs:domain :DirectEmploymentRow; rdfs:range xsd:string.
+
+:has-name-direct-employee rdf:type owl:DatatypeProperty;
+	rdfs:domain :DirectEmploymentRow;rdfs:range xsd:string.
+
+:has-gender-direct-employee rdf:type owl:DatatypeProperty;
+	rdfs:domain :DirectEmploymentRow;rdfs:range xsd:string.
+
+:has-nationality-direct-employee rdf:type owl:DatatypeProperty;
+	rdfs:domain :DirectEmploymentRow;rdfs:range xsd:string.
+
+:has-department-direct-employee rdf:type owl:DatatypeProperty;
+	rdfs:domain :DirectEmploymentRow;rdfs:range xsd:string.
+
+:has-employment-start-date-direct-employee rdf:type owl:DatatypeProperty;
+	rdfs:domain :DirectEmploymentRow;rdfs:range xsd:dateTime.
+
+:has-position-direct-employee rdf:type owl:DatatypeProperty;
+	rdfs:domain :DirectEmploymentRow;rdfs:range xsd:string.
+
+:has-position-start-date-direct-employee rdf:type owl:DatatypeProperty;
+	rdfs:domain :DirectEmploymentRow;rdfs:range xsd:dateTime.
+
+:has-category-direct-employee rdf:type owl:DatatypeProperty;
+	rdfs:domain :DirectEmploymentRow;rdfs:range xsd:string.
+
+:has-job-description-responsibilities-direct-employee rdf:type owl:DatatypeProperty;
+	rdfs:domain :DirectEmploymentRow;rdfs:range xsd:string.
+
+:has-required-expertise-or-skills-direct-employee rdf:type owl:DatatypeProperty;
+	rdfs:domain :DirectEmploymentRow;rdfs:range xsd:string.
+
+:has-expenditure-per-year-in-usd-direct-employee rdf:type owl:DatatypeProperty;
+	rdfs:domain :DirectEmploymentRow;rdfs:range xsd:decimal.
+
+
+
+#Same as above: the individual :ThirdPartyStaff can be associated, via the property :has-row, with one or more individuals of the class :ThirdPartyStaffRow. 
+:ThirdPartyStaffRow rdf:type owl:Class;
+rdfs:subClassOf :DocumentTableRow;
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-index-third-party-staff; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-name-third-party-staff; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-gender-third-party-staff; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-nationality-third-party-staff; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-position-third-party-staff; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-agency-or-company; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:dateTime];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-job-description-responsibilities-third-party-staff; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-required-expertise-or-skills-thirdparty-staff; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string].
+
+#Abox for eni third party employees.
+:c1 rdf:type :ThirdPartyStaffRow ;
+    :has-index-third-party-staff "1"^^xsd:string ;
+    :has-name-third-party-staff "Kofi Annan"^^xsd:string ;
+    :has-gender-third-party-staff "M"^^xsd:string ;
+    :has-nationality-third-party-staff "Ghanaian"^^xsd:string ;
+    :has-position-third-party-staff "Environmental Consultant"^^xsd:string ;
+    :has-agency-or-company "Agency 1"^^xsd:string ;
+    :has-job-description-responsibilities-third-party-staff "Conduct environmental impact assessments and ensure compliance with local regulations"^^xsd:string ;
+    :has-required-expertise-or-skills-thirdparty-staff "Environmental Science, Regulatory Compliance, Impact Assessment"^^xsd:string .
+
+
+
+
+#Properties that denote the columns of third party employment row:
+:has-index-third-party-staff rdf:type owl:DatatypeProperty;
+	rdfs:domain :ThirdPartyStaffRow; rdfs:range xsd:string.
+
+:has-name-third-party-staff rdf:type owl:DatatypeProperty;
+	rdfs:domain :ThirdPartyStaffRow;rdfs:range xsd:string.
+
+:has-gender-third-party-staff rdf:type owl:DatatypeProperty;
+	rdfs:domain :ThirdPartyStaffRow;rdfs:range xsd:string.
+
+:has-nationality-third-party-staff rdf:type owl:DatatypeProperty;
+	rdfs:domain :ThirdPartyStaffRow;rdfs:range xsd:string.
+
+:has-position-third-party-staff rdf:type owl:DatatypeProperty;
+	rdfs:domain :ThirdPartyStaffRow;rdfs:range xsd:string.
+
+:has-agency-or-company rdf:type owl:DatatypeProperty;
+	rdfs:domain :ThirdPartyStaffRow;rdfs:range xsd:string.
+
+:has-job-description-responsibilities-third-party-staff rdf:type owl:DatatypeProperty;
+	rdfs:domain :ThirdPartyStaffRow;rdfs:range xsd:string.
+
+:has-required-expertise-or-skills-thirdparty-staff rdf:type owl:DatatypeProperty;
+	rdfs:domain :ThirdPartyStaffRow;rdfs:range xsd:string.
+
+
+
+#The next ones are the fields related to the part "Additionally, the company should provide the following information:"
+#These are all strings, which will need to be analyzed via Large Language Models.
+
+:has-forecast-hiring-needs rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:EmploymentSubPlan)]; rdfs:range xsd:string;
+rdfs:comment "this refers to the forecast of the hiring needs a company may have.".
+
+:has-report-on-anticipated-skill-shortage-per-human-resource-need rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:EmploymentSubPlan)]; rdfs:range xsd:string;
+rdfs:comment "this refers to report on the skill shortage a company is anticipating pertaining to its human resource needs.".
+
+:has-organizational-strategies-to-bridge-skill-shortage rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:EmploymentSubPlan)]; rdfs:range xsd:string;
+rdfs:comment "this refers to the strategies adopted by a company to bridge the skill shortages.".
+
+:has-quarterly-employment-statistics-report rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:EmploymentSubPlan)]; rdfs:range xsd:string;
+rdfs:comment "this refers to the report on quarterly statistics on employment.".
+
+#Abox free text for employment subplan:
+:EmploymentSubPlan :has-forecast-hiring-needs "Company B anticipates hiring 50 new staff in 2024 for offshore operations in Ghana."^^xsd:string ;
+:has-report-on-anticipated-skill-shortage-per-human-resource-need "There is a critical shortage of skilled offshore rig operators and geologists in the Ghanaian market."^^xsd:string ;
+    :has-organizational-strategies-to-bridge-skill-shortage "Company B plans to establish a partnership with local universities to provide targeted training for offshore rig operations."^^xsd:string ;
+    :has-quarterly-employment-statistics-report "In Q1 2024, Company B reported a 5% increase in local employment, contributing to its local content compliance objectives."^^xsd:string .
+
+# Section TrainingSubPlan.
+:has-report-on-efforts-and-procedures-for-training-of-ghanaian-staff rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:TrainingSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the Report on the efforts made and procedures adopted for the accelerated training of Ghanaian staff.".
+
+#abox for training report.
+:TrainingSubPlan :has-report-on-efforts-and-procedures-for-training-of-ghanaian-staff "In 2024, ENI implemented an accelerated training program for Ghanaian staff, focusing on offshore operations, with a curriculum designed in collaboration with the Takoradi Technical University. The program included both classroom training and hands-on experience on ENI's offshore platforms."^^xsd:string .
+
+#Training plan for all staff.
+:AllStaffTrainingPlan rdf:type :DocumentTable;
+rdfs:comment "this refers to the Training plan for all staff (this includes Ghanaians under succession and those that are not)".
+
+
+:AllStaffTrainingPlanRow rdf:type owl:Class;
+rdfs:subClassOf :DocumentTableRow;
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-name-trained-employee; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-position-trained-employee; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-type-of-training; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-details-of-training; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-training-start-date; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:dateTime];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-training-end-date; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:dateTime];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-training-outcomes; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-training-cost-in-USD; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:decimal];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-training-remarks; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string].
+
+#Abox for training plan.
+:d1 rdf:type :AllStaffTrainingPlanRow ;
+
+    :has-name-trained-employee "Araba Stamp"^^xsd:string ;
+
+    :has-position-trained-employee "Offshore Rig Supervisor"^^xsd:string ;
+
+    :has-type-of-training "Advanced Offshore Safety and Operations"^^xsd:string ;
+
+    :has-details-of-training "This training covered advanced safety protocols, emergency response drills, and operational best practices for offshore platforms."^^xsd:string ;
+
+    :has-training-start-date "2024-02-01T08:00:00Z"^^xsd:dateTime ;
+
+    :has-training-end-date "2024-03-01T17:00:00Z"^^xsd:dateTime ;
+
+    :has-training-outcomes "Successfully passed all assessments, showing proficiency in emergency response and offshore safety."^^xsd:string ;
+
+    :has-training-cost-in-USD "5000.00"^^xsd:decimal ;
+
+    :has-training-remarks "Araba Stamp demonstrated excellent leadership and quick decision-making abilities during practical drills."^^xsd:string .
+
+
+:has-name-trained-employee rdf:type owl:DatatypeProperty;
+	rdfs:domain :AllStaffTrainingPlanRow ;
+rdfs:range xsd:string;
+rdfs:comment "this refers to the name of an employee  who has recieved training.".
+
+:has-position-trained-employee rdf:type owl:DatatypeProperty;
+	rdfs:domain :AllStaffTrainingPlanRow ;
+rdfs:range xsd:string;
+rdfs:comment "this refers to the position of an employee  who has recieved training.".
+
+:has-type-of-training rdf:type owl:DatatypeProperty;
+	rdfs:domain :AllStaffTrainingPlanRow ;
+rdfs:range xsd:string;
+rdfs:comment "this refers to the type of training an employee has recieved.".
+
+:has-details-of-training rdf:type owl:DatatypeProperty;
+	rdfs:domain :AllStaffTrainingPlanRow ;
+rdfs:range xsd:string;
+rdfs:comment "this refers to the details of the training an employee recieved.".
+
+:has-training-start-date rdf:type owl:DatatypeProperty;
+	rdfs:domain :AllStaffTrainingPlanRow ;
+rdfs:range xsd:dateTime;
+rdfs:comment "this refers to the date on which the training started.".
+
+:has-training-end-date rdf:type owl:DatatypeProperty;
+	rdfs:domain :AllStaffTrainingPlanRow ;
+rdfs:range xsd:dateTime;
+rdfs:comment "this refers to the date on which the training ended.".
+
+:has-training-outcomes rdf:type owl:DatatypeProperty;
+	rdfs:domain :AllStaffTrainingPlanRow ;
+rdfs:range xsd:string;
+rdfs:comment "this refers to the outcomes of the training.".
+
+:has-training-cost-in-USD rdf:type owl:DatatypeProperty;
+	rdfs:domain :AllStaffTrainingPlanRow ;
+rdfs:range xsd:decimal;
+rdfs:comment "this refers to how much the training cost in dollars.".
+
+:has-training-remarks rdf:type owl:DatatypeProperty;
+	rdfs:domain :AllStaffTrainingPlanRow ;
+rdfs:range xsd:string;
+rdfs:comment "this refers to any other remarks about the training.".
+
+
+# Section SuccessionPlan
+
+:has-report-on-succession-and-localization-strategy rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:TrainingSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the  report on the organization’s succession/localization strategy;".
+
+#Abox for succession plan report.
+:TrainingSubPlan :has-report-on-succession-and-localization-strategy "Company B's 2024 succession and localization strategy aims to increase the proportion of Ghanaian nationals in senior management positions by 20% over the next five years. The strategy includes mentorship programs, leadership training for high-potential local staff, and accelerated career paths for Ghanaians in technical and management roles."^^xsd:string .
+
+#succession plan table.
+#The table :SuccessionPlan merges together both "b. A succession plan for each expatriate using the Succession Plan Template as shown below:" and "c.	Specific training
+#requirement of each Ghanaian successor using the Succession Training Plan Template as shown below:". The latter only adds three fields to the former.
+
+:SuccessionPlan :has-table :SuccessionPlanTable.
+
+:SuccessionPlanTable rdf:type :DocumentTable;
+rdfs:comment "this refers to the Plan for any employment position occupied by an expatriate for Succession by a Ghanaian.".
+
+:SuccessionPlanTableRow rdf:type owl:Class;
+rdfs:subClassOf :DocumentTableRow;
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-name-expat; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-name-Ghanaian-successor; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-position-expat; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-position-Ghanaian-successor; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-qualifications-or-certifications-expat; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-qualifications-or-certifications-Ghanaian-successor; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-years-of-working-experience-expat; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:integer];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-years-of-working-experience-Ghanaian-successor; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:integer];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-localisation-duration-for-Ghanaian-successor; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:duration];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-localisation-start-date; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:dateTime];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-localisation-end-date; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:dateTime];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-skills-required; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-training-and-certifications-to-be-undertaken; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-KPI; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-localisation-remarks; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string].
+#Abox for succession plan row table.
+:SuccessionPlanRow_2024_CompanyB rdf:type :SuccessionPlanTableRow ;
+
+    :has-name-expat "Pablo Picasso"^^xsd:string ;
+
+    :has-name-Ghanaian-successor "Jerry John Rawlings"^^xsd:string ;
+
+    :has-position-expat "Senior Offshore Operations Manager"^^xsd:string ;
+
+    :has-position-Ghanaian-successor "Offshore Operations Manager"^^xsd:string ;
+
+    :has-qualifications-or-certifications-expat "Master's in Petroleum Engineering, Offshore Safety Certification"^^xsd:string ;
+
+    :has-qualifications-or-certifications-Ghanaian-successor "Bachelor's in Mechanical Engineering, Offshore Safety Certification"^^xsd:string ;
+
+    :has-years-of-working-experience-expat "20"^^xsd:integer ;
+
+    :has-years-of-working-experience-Ghanaian-successor "8"^^xsd:integer ;
+
+    :has-localisation-duration-for-Ghanaian-successor "P2Y"^^xsd:duration ;
+
+    :has-localisation-start-date "2024-01-01T08:00:00Z"^^xsd:dateTime ;
+
+    :has-localisation-end-date "2026-01-01T17:00:00Z"^^xsd:dateTime ;
+
+    :has-skills-required "Advanced offshore drilling techniques, safety management, and team leadership."^^xsd:string ;
+
+    :has-training-and-certifications-to-be-undertaken "Leadership Development Program, Advanced Offshore Safety Management"^^xsd:string ;
+
+    :has-KPI "Demonstrate proficiency in offshore drilling safety within 18 months, achieve zero lost-time incidents during localisation period."^^xsd:string ;
+
+    :has-localisation-remarks "Jerry John Rawlings has shown significant progress and leadership potential, requiring minimal further mentorship to assume the expat role."^^xsd:string .
+
+
+
+:has-name-expat rdf:type owl:DatatypeProperty;
+	rdfs:domain :SuccessionPlanTableRow;
+rdfs:range xsd:string;
+rdfs:comment "this refers to the names of the expatriates.".
+
+:has-name-Ghanaian-successor rdf:type owl:DatatypeProperty;
+	rdfs:domain :SuccessionPlanTableRow;
+rdfs:range xsd:string;
+rdfs:comment "this refers to the name of a Ghanaian successor".
+
+:has-position-expat rdf:type owl:DatatypeProperty;
+	rdfs:domain :SuccessionPlanTableRow;
+rdfs:range xsd:string;
+rdfs:comment "this refers to the position occupied by an expatriate".
+
+:has-position-Ghanaian-successor rdf:type owl:DatatypeProperty;
+	rdfs:domain :SuccessionPlanTableRow;
+rdfs:range xsd:string;
+rdfs:comment "this refers to the position of the Ghanaian successor".
+
+:has-qualifications-or-certifications-expat rdf:type owl:DatatypeProperty;
+	rdfs:domain :SuccessionPlanTableRow;
+rdfs:range xsd:string;
+rdfs:comment "this refers to the qualification or certifications held by the expatriate.".
+
+:has-qualifications-or-certifications-Ghanaian-successor rdf:type owl:DatatypeProperty;
+	rdfs:domain :SuccessionPlanTableRow;
+rdfs:range xsd:string;
+rdfs:comment "this refers to the qualification or certifications held by the Ghanaian successor.".
+
+:has-years-of-working-experience-expat rdf:type owl:DatatypeProperty;
+	rdfs:domain :SuccessionPlanTableRow;
+rdfs:range xsd:integer;
+rdfs:comment "this refers to the number of years of experience the expatriate has.".
+
+:has-years-of-working-experience-Ghanaian-successor rdf:type owl:DatatypeProperty;
+	rdfs:domain :SuccessionPlanTableRow;
+rdfs:range xsd:integer;
+rdfs:comment "this refers to the number of years of work experience the Ghanaian successor has.".
+
+:has-localisation-duration-for-Ghanaian-successor rdf:type owl:DatatypeProperty;
+	rdfs:domain :SuccessionPlanTableRow;
+rdfs:range xsd:duration;
+rdfs:comment "this refers to the time period allotted for the Ghanaian successor to fully transition into and assume the responsibilities of the expatriate's position.".
+
+:has-localisation-start-date rdf:type owl:DatatypeProperty;
+	rdfs:domain :SuccessionPlanTableRow;
+rdfs:range xsd:dateTime;
+rdfs:comment "this refers to the date on which the localisation started.".
+
+:has-localisation-end-date rdf:type owl:DatatypeProperty;
+	rdfs:domain :SuccessionPlanTableRow;
+rdfs:range xsd:dateTime;
+rdfs:comment "this refers to the date on which the localisation ended.".
+
+:has-skills-required rdf:type owl:DatatypeProperty;
+	rdfs:domain :SuccessionPlanTableRow;
+rdfs:range xsd:string;
+rdfs:comment "this refers to the skills required to hold the position which will be localised.".
+
+:has-training-and-certifications-to-be-undertaken rdf:type owl:DatatypeProperty;
+	rdfs:domain :SuccessionPlanTableRow;
+rdfs:range xsd:string;
+rdfs:comment "this refers to the training and certification to be undertaken by the Ghanaian successor for the position which will be localised.".
+
+:has-KPI rdf:type owl:DatatypeProperty;
+	rdfs:domain :SuccessionPlanTableRow;
+rdfs:range xsd:string;
+rdfs:comment "this refers to the key performance indecators for the position.".
+
+:has-localisation-remarks rdf:type owl:DatatypeProperty;
+	rdfs:domain :SuccessionPlanTableRow;
+rdfs:range xsd:string;
+rdfs:comment "this refers to any other remarks concerning the localisation.".
+
+
+
+# Section ResearchAndDevelopmentSubPlan.
+:has-type-of-project-or-research-to-be-undertaken rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:ResearchAndDevelopmentSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the type of project or research to be undertaken outlining the objectives of the programme.".
+
+:has-research-and-development-expected-expenditure rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:ResearchAndDevelopmentSubPlan)];
+rdfs:range xsd:decimal;
+rdfs:comment "this refers to the Expected expenditure and indicating total spend to be incurred in-country for the research and development.".
+
+:has-research-and-development-implementation-strategy rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:ResearchAndDevelopmentSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the Implementation strategy and timelines for commencement and completion of  the research and development.".
+
+:has-Collaboration-with-institutions rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:ResearchAndDevelopmentSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the Collaboration with institutions (if any) for the research and development.".
+
+#Abox for R&D subplan.
+:ResearchAndDevelopmentSubPlan :has-type-of-project-or-research-to-be-undertaken "Development of advanced drilling technologies for deepwater oil extraction, focusing on enhancing efficiency and reducing environmental impact."^^xsd:string ;
+
+    :has-research-and-development-expected-expenditure "10000000.00"^^xsd:decimal ;
+
+    :has-research-and-development-implementation-strategy "The research will be conducted over a three-year period, starting in Q2 2024 and ending in Q2 2027. It will follow a phased approach with key milestones every six months."^^xsd:string ;
+
+    :has-Collaboration-with-institutions "Collaboration with the Kwame Nkrumah University of Science and Technology (KNUST) and the Ghana National Petroleum Corporation (GNPC) for joint research and testing."^^xsd:string .
+
+# Section TechnologyTransferProgram.
+
+:has-initiatives-or-programmes-to-be-pursued rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:TechnologyTransferProgram)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the Initiatives or programmes to be pursued under the technology transfer.".
+
+:has-implementation-strategy-and-timelines rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:TechnologyTransferProgram)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the Implementation strategy and timelines for the technology transfer.".
+
+:has-expenditure-to-be-incurred rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:TechnologyTransferProgram)];
+rdfs:range xsd:decimal;
+rdfs:comment "this refers to the Expenditure to be incurred for the technology transfer.".
+
+:has-roles-and-responsibilities-of-foreign-and-local-partner-in-JV rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:TechnologyTransferProgram)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the roles and responsibilities of the foreign and local partner in the JV under the technology transfer in the case of a JV company.".
+
+:has-strategy-for-transfer-of-technology-and-skills-to-indigenous-Ghanaian-company rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:TechnologyTransferProgram)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the Strategy for the transfer of technology and skills to the indigenous Ghanaian company under the technology transfer in the case of a JV company.".
+
+:has-skills-and-know-how-obtained-from-JV-post-incorporation rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:TechnologyTransferProgram)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the the skills and know-how obtained from the JV post incorporation under the technology transfer in the case of a JV company. this is for the indigenous Ghanaian company partner in the JV.".
+
+#Abox for eni technology transfer plan.
+:TechnologyTransferProgram :has-initiatives-or-programmes-to-be-pursued "Development and deployment of offshore drilling technology, with a focus on enhancing local capacity for deepwater operations."^^xsd:string ;
+
+    :has-implementation-strategy-and-timelines "The program will be implemented in two phases, with Phase 1 starting in Q1 2024 and focusing on knowledge transfer. Phase 2 will begin in Q3 2025, centered on technology transfer and capacity building through joint ventures."^^xsd:string ;
+
+    :has-expenditure-to-be-incurred "5000000.00"^^xsd:decimal ;
+
+    :has-roles-and-responsibilities-of-foreign-and-local-partner-in-JV "The foreign partner will provide technical expertise and advanced equipment, while the local partner will manage operations, ensure compliance with local regulations, and lead training initiatives for the Ghanaian workforce."^^xsd:string ;
+
+    :has-strategy-for-transfer-of-technology-and-skills-to-indigenous-Ghanaian-company "The strategy includes on-the-job training, workshops, and direct mentorship by foreign engineers, ensuring that the Ghanaian company gains the necessary skills to operate independently within two years."^^xsd:string ;
+
+    :has-skills-and-know-how-obtained-from-JV-post-incorporation "The indigenous Ghanaian company will acquire skills in deepwater drilling, safety management, and advanced operational techniques post-incorporation of the JV."^^xsd:string .
+
+
+
+# Section InsuranceAndReinsuranceServicesSubPlan.
+
+:has-name-of-insurance-service-provider rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:InsuranceAndReinsuranceServicesSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the name of the insurance service provider.".
+
+:has-office-location-of-insurance-service-provider rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:InsuranceAndReinsuranceServicesSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the office location of the insurance service provider.".
+
+:has-asset-insured rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:InsuranceAndReinsuranceServicesSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the asset insured.".
+
+:has-sum-insured rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:InsuranceAndReinsuranceServicesSubPlan)];
+rdfs:range xsd:decimal;
+rdfs:comment "this refers to the sum insured.".
+
+:has-type-of-insurance-cover rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:InsuranceAndReinsuranceServicesSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the type of insurance cover.".
+
+:has-insurance-broker rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:InsuranceAndReinsuranceServicesSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the insurance broker.".
+
+:has-name-of-reinsurance-service-provider rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:InsuranceAndReinsuranceServicesSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the name of the reinsurance service provider.".
+
+:has-asset-reinsured rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:InsuranceAndReinsuranceServicesSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the asset reinsured.".
+
+:has-sum-reinsured rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:InsuranceAndReinsuranceServicesSubPlan)];
+rdfs:range xsd:decimal;
+rdfs:comment "this refers to the asset reinsured.".
+
+:has-reason-for-omission-and-explanation rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:InsuranceAndReinsuranceServicesSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the Reason for Omission and explanation.".
+
+#Abox for eni insurance and reinsurance subplan.
+:InsuranceAndReinsuranceServicesSubPlan :has-name-of-insurance-service-provider "insurance service provider 1"^^xsd:string;
+
+    :has-office-location-of-insurance-service-provider "Give House, No. 89 Burnes Road Farmer Avenue, Adabraka Accra"^^xsd:string ;
+
+    :has-asset-insured "Offshore oil rigs and drilling platforms"^^xsd:string ;
+
+    :has-sum-insured "150000000.00"^^xsd:decimal ;
+
+    :has-type-of-insurance-cover "Comprehensive coverage for asset damage, liability, and operational risk"^^xsd:string ;
+
+    :has-insurance-broker "insurance Broker 1"^^xsd:string;
+
+    :has-name-of-reinsurance-service-provider "reinsurance service provider 1"^^xsd:string;
+
+    :has-asset-reinsured "Offshore oil rigs and drilling platforms"^^xsd:string ;
+
+    :has-sum-reinsured "100000000.00"^^xsd:decimal .
+
+
+# Section LegalServicesSubPlan
+#NB. the USD expenditure will be automatically converted into GHS expenditure. That is why the GHS slot was not included.
+
+:has-name-of-legal-practitioner-or-firm rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:LegalServicesSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the name of the legal practitioner or law firm.".
+
+:has-legal-practitioner-or-firm-date-of-engagement rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:LegalServicesSubPlan)];
+rdfs:range xsd:dateTime;
+rdfs:comment "this refers to the date on which the legal practitioner or law firm was engaged.".
+
+:has-legal-practitioner-or-firm-location rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:LegalServicesSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the location of the legal practitioner or law firm.".
+
+:has-legal-services-to-be-obtained-past-6-months rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:LegalServicesSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the legal services which have been obtained for the previous six months.".
+
+:has-legal-services-to-be-obtained-projection-for-next-6-months rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:LegalServicesSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the legal services which ought to be obtained in the subsequent six months.".
+
+:has-legal-expenditure-past-6-months-USD rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:LegalServicesSubPlan)];
+rdfs:range xsd:decimal;
+rdfs:comment "this refers to the legal expenditure incurred for the past six months.".
+
+:has-legal-expenditure-projection-for-next-6-months-USD rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:LegalServicesSubPlan)];
+rdfs:range xsd:decimal;
+rdfs:comment "this refers to the legal expenditure which will be incurred for the subsequent six months.".
+
+:has-external-solicitors-legal-services-for-past-6-months rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:LegalServicesSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the legal service for the past six months which was obtained from an external solicitor.".
+
+:has-external-solicitors-nature-of-work rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:LegalServicesSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the nature of work of an external solicitor.".
+
+:has-external-solicitors-expenditure-USD rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:LegalServicesSubPlan)];
+rdfs:range xsd:decimal;
+rdfs:comment "this refers to the expenditure incurred in employing the legal services of an external solicitor.".
+
+:has-comprehensive-report-of-legal-services-required rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:LegalServicesSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this class refers to the Comprehensive report of Legal Services Required (where applicable).".
+
+#Abox for Eni legal services subplan.
+:LegalServicesSubPlan :has-name-of-legal-practitioner-or-firm "law firm 2"^^xsd:string ;
+
+    :has-legal-practitioner-or-firm-date-of-engagement "2024-01-15T09:00:00"^^xsd:dateTime ;
+
+    :has-legal-practitioner-or-firm-location "No 67. PortShip Road, PortShip Residential Area, Accra, Ghana. P. O. Box AR17, Cantonments, Accra"^^xsd:string ;
+
+    :has-legal-services-to-be-obtained-past-6-months "Contractual agreements review and legal representation in disputes"^^xsd:string ;
+
+    :has-legal-services-to-be-obtained-projection-for-next-6-months "Legal consultancy on compliance issues and local content regulations"^^xsd:string ;
+
+    :has-legal-expenditure-past-6-months-USD "25000.00"^^xsd:decimal ;
+
+    :has-legal-expenditure-projection-for-next-6-months-USD "30000.00"^^xsd:decimal ;
+
+    :has-external-solicitors-legal-services-for-past-6-months "Litigation services and arbitration for upstream oil and gas disputes"^^xsd:string ;
+
+    :has-external-solicitors-nature-of-work "Dispute resolution and contract enforcement"^^xsd:string ;
+
+    :has-external-solicitors-expenditure-USD "10000.00"^^xsd:decimal ;
+
+    :has-comprehensive-report-of-legal-services-required "Comprehensive analysis of local content compliance and contract negotiations for joint ventures."^^xsd:string .
+
+
+
+# Section FinancialServicesSubPlan.
+
+#NB. As above, the USD expenditure will be automatically converted into GHS expenditure. That is why the GHS slot was not included.
+
+:has-name-of-financial-institution rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:FinancialServicesSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the name of the financial institution.".
+
+:has-account-number rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:FinancialServicesSubPlan)];
+rdfs:range xsd:integer;
+rdfs:comment "this refers to the Account Number.".
+
+:has-financial-institution-branch rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:FinancialServicesSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this class refers to the branch of the financial institution.".
+
+:has-financial-institution-date-of-engagement rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:FinancialServicesSubPlan)];
+rdfs:range xsd:dateTime;
+rdfs:comment "this refers to the date on which the financial institution was engaged.".
+
+:has-financial-services-to-be-obtained-past-6-months rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:FinancialServicesSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the financial services obtained for the previous six months.".
+
+:has-financial-services-to-be-obtained-projection-of-next-6-months rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:FinancialServicesSubPlan)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the financial services to be obtained for the subsequent six  months.".
+
+:has-financial-expenditure-past-6-months-USD rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:FinancialServicesSubPlan)];
+rdfs:range xsd:decimal;
+rdfs:comment "this refers to the financial expenditure incurred for the previous six months.".
+
+:has-financial-expenditure-projection-for-next-6-months-USD rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:FinancialServicesSubPlan)];
+rdfs:range xsd:decimal;
+rdfs:comment "this refers to the financial expenditure to be incurred for the subsequent six  months.".
+
+#Abox for eni financial services subplan.
+:FinancialServicesSubPlan :has-name-of-financial-institution "financial institution 4"^^xsd:string ;
+
+    :has-account-number "1234567890"^^xsd:integer ;
+
+    :has-financial-institution-branch "Delmina Place, 148th Orphan Cresent, Labone, P. O. Box OP 88914, Osu-Accra"^^xsd:string ;
+
+    :has-financial-institution-date-of-engagement "2023-12-01T10:00:00"^^xsd:dateTime ;
+
+    :has-financial-services-to-be-obtained-past-6-months "Currency exchange and local bank guarantees"^^xsd:string ;
+
+    :has-financial-services-to-be-obtained-projection-of-next-6-months "Loan syndication and foreign currency hedging"^^xsd:string ;
+
+    :has-financial-expenditure-past-6-months-USD "150000.00"^^xsd:decimal ;
+
+    :has-financial-expenditure-projection-for-next-6-months-USD "200000.00"^^xsd:decimal .
+
+#list of financial services.
+:FinancialServicesSubPlan :has-table :ListOfFinancialServices.
+
+:ListOfFinancialServices rdf:type :DocumentTable;
+rdfs:comment "this table refers to the list of financial services obtained for the past six  months.".
+
+:ListOfFinancialServicesRow rdf:type owl:Class;
+rdfs:subClassOf :DocumentTableRow;
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-financial-services-for-past-6-months; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-financial-services-nature-of-work; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:string];
+rdfs:subClassOf[rdf:type owl:Restriction; owl:onProperty :has-financial-services-expenditure-USD; owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger; owl:onDataRange xsd:decimal].
+
+#Abox for eni list of financial services.
+:e1 rdf:type :ListOfFinancialServicesRow ;
+
+    :has-financial-services-for-past-6-months "Bank guarantee for local content projects"^^xsd:string ;
+
+    :has-financial-services-nature-of-work "Issuance of a performance bond for local content compliance"^^xsd:string ;
+
+    :has-financial-services-expenditure-USD "50000.00"^^xsd:decimal .
+
+:has-financial-services-for-past-6-months rdf:type owl:DatatypeProperty;
+	rdfs:domain :ListOfFinancialServicesRow;
+rdfs:range xsd:string;
+rdfs:comment "this refers to the list of financial services obtained for the past six  months.".
+
+:has-financial-services-nature-of-work rdf:type owl:DatatypeProperty;
+	rdfs:domain :ListOfFinancialServicesRow;
+rdfs:range xsd:string;
+rdfs:comment "this refers to the list of financial services nature of work.".
+
+:has-financial-services-expenditure-USD rdf:type owl:DatatypeProperty;
+	rdfs:domain :ListOfFinancialServicesRow;
+rdfs:range xsd:decimal;
+rdfs:comment "this refers to the expenditure in USD for the list of financial services.".
+
+
+
+
+# Section IndigenousBank.
+
+:has-name-of-indigenous-bank rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:IndigenousBank)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the name of the indigenous bank.".
+
+:has-indigenous-bank-date-of-engagement rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:IndigenousBank)];
+rdfs:range xsd:dateTime;
+rdfs:comment "this refers to the date on which the indigenous bank was engaged.".
+
+:has-indigenous-bank-office-location-and-address rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:IndigenousBank)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the office location and address of the indigenous bank.".
+
+:has-bank-services-utilised rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:IndigenousBank)];
+rdfs:range xsd:string;
+rdfs:comment "this refers to the bank services employed.".
+
+:has-bank-services-expenditure-incurred rdf:type owl:DatatypeProperty;
+	rdfs:domain [rdf:type owl:Class; owl:oneOf(:IndigenousBank)];
+rdfs:range xsd:decimal;
+rdfs:comment "this refers to the bank services expenditure.".
+
+#Abox for eni indigenous bank.
+:IndigenousBank :has-name-of-indigenous-bank "Bank 5"^^xsd:string ;
+
+    :has-indigenous-bank-date-of-engagement "2022-05-15T00:00:00"^^xsd:dateTime ;
+
+    :has-indigenous-bank-office-location-and-address "Head Office 49 Independence Ave P.O. Box 908596 Accra-Ghana"^^xsd:string ;
+
+    :has-bank-services-utilised "Issuance of Letters of Credit and Trade Finance Services"^^xsd:string ;
+
+    :has-bank-services-expenditure-incurred "150000.00"^^xsd:decimal .
